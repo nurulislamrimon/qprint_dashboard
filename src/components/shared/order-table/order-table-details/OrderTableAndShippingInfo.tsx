@@ -1,0 +1,49 @@
+import React from "react";
+import { useUpdateOrderStatusMutation } from "@/store/features/order/ordersApi";
+import { useQuickOrderUpdateOrderStatusMutation } from "@/store/features/quickOrder/quickOrderApi";
+
+const OrderTableAndShippingInfo = ({ allOrder, quickOrder }: any) => {
+  const [updateStatus] = useUpdateOrderStatusMutation();
+  const [quickOrderUpdate] = useQuickOrderUpdateOrderStatusMutation();
+
+  const handleSubmit = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    e.preventDefault();
+    const status = e.target.value;
+
+    try {
+      if (quickOrder) {
+        await quickOrderUpdate({ id: quickOrder.data._id, data: { status } });
+      } else if (allOrder) {
+        await updateStatus({ id: allOrder.data._id, data: { status } });
+      } else {
+        console.error("Neither quickOrder nor allOrder is available.");
+      }
+    } catch (error) {
+      console.error("Error updating order status:", error);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-7">
+      <span className="text-lg font-medium">Order & Shipping Info</span>
+      <div className="flex flex-col gap-5">
+        <label className="flex flex-col gap-2.5 text-black-opacity-70">
+          Order Status
+          <select
+            onChange={handleSubmit}
+            className="border outline-none px-5 py-2.5 rounded-custom-5px text-black-opacity-60 bg-transparent"
+          >
+            <option value="Order Placed">Order Placed</option>
+            <option value="Packaging">Packaging</option>
+            <option value="Shipping">Shipping</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancel">Cancel</option>
+            <option value="Returned">Returned</option>
+          </select>
+        </label>
+      </div>
+    </div>
+  );
+};
+
+export default OrderTableAndShippingInfo;

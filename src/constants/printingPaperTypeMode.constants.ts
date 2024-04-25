@@ -1,0 +1,42 @@
+export const printingPaperSizeDemoData = [
+  {
+    _id: "1",
+    width: 240,
+    height: 150,
+    price: 5021,
+    type: "Inkjet printer paper",
+    mode: "RGB",
+  },
+  {
+    _id: "2",
+    width: 120,
+    height: 150,
+    price: 1000,
+    type: "Laser Printer paper",
+    mode: "Black & White",
+  },
+  {
+    _id: "3",
+    width: 160,
+    height: 150,
+    price: 2000,
+    type: "Bond & Label paper",
+    mode: "Yellow",
+  },
+  {
+    _id: "4",
+    width: 150,
+    height: 150,
+    price: 1000,
+    type: "Matte paper",
+    mode: "RGB",
+  },
+  {
+    _id: "5",
+    width: 350,
+    height: 150,
+    price: 6000,
+    type: "Glossy paper",
+    mode: "Green Chele",
+  },
+];
