@@ -16,6 +16,7 @@ const AddProduct = () => {
   const { product, productFiles, isLoading } = useAppSelector(
     (state) => state.addProduct
   );
+
   const formData = new FormData();
 
   if (isLoading) {

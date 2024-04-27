@@ -4,11 +4,10 @@ interface GlobalCustomSelectProps {
   containerStyle?: string;
   disabled?: boolean;
   name?: string;
-  value?: string;
+  defaultValue: string;
   options?: Array<string | { label: string; value: string | number }>;
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
-
 const GlobalCustomSelect = ({
   label,
   className,
@@ -16,6 +15,7 @@ const GlobalCustomSelect = ({
   disabled,
   name,
   options,
+  defaultValue,
   onChange,
 }: GlobalCustomSelectProps) => {
   return (
@@ -33,8 +33,8 @@ const GlobalCustomSelect = ({
         onChange={onChange}
         className={`border  rounded-custom-5px py-3 px-3.5 outline-none active:border-fuchsia-800 focus:border-fuchsia-800 bg-transparent ${className}`}
       >
-        <option value="" selected disabled>
-          Please select
+        <option value="" disabled selected>
+          {defaultValue}
         </option>
         {options?.map((option) => {
           if (typeof option === "string") {

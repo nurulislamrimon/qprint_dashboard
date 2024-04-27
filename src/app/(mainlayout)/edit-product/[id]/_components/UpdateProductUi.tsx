@@ -48,7 +48,7 @@ const UpdateProductUi = ({
   return (
     <div>
       <div>
-        <TopBar title="Add New Product" />
+        <TopBar title="Update Product" />
       </div>
       <form
         className="bg-body-main-bg-color mt-1 flex flex-col gap-2.5 h-[calc(100vh-90px)] overflow-y-scroll"

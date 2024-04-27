@@ -127,9 +127,9 @@ const AddProductUi = ({
 
             <DynamicTextEditor
               handleChange={(value) =>
-                dispatch(setAddProduct({ shortDescription: value }))
+                dispatch(setAddProduct({ description: value }))
               }
-              value={product?.shortDescription}
+              value={product?.description}
             />
           </div>
         </div>

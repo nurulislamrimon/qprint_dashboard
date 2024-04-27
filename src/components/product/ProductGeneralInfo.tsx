@@ -3,7 +3,7 @@ import FileUploader from "../shared/FileUploader/FileUploader";
 import GlobalCustomSelect from "../shared/GlobalCustomSelect";
 import { IBrand, ICategory, ISubcategory, IVariant } from "@/types";
 import { useBrandsQuery } from "@/store/features/brand/brandApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCategoriesQuery } from "@/store/features/category/categoryApi";
 
 const ProductGeneralInfo = ({
@@ -28,9 +28,23 @@ const ProductGeneralInfo = ({
   const { data: categories, isLoading: isCategoriesLoading } =
     useCategoriesQuery("limit=1000");
 
-  const [subCategories, setSubcategories] = useState([
-    "Select a category first!",
-  ]);
+  const [subCategories, setSubcategories] = useState([]);
+
+  // initial setup subCategories
+  useEffect(() => {
+    if (categories && categories?.data?.length > 0) {
+      setSubcategories(
+        categories.data
+          .find(
+            (category: ICategory) =>
+              category?._id === product?.category?.categoryId
+          )
+          ?.subcategories.map(
+            (subcategory: ISubcategory) => subcategory?.subcategoryName
+          )
+      );
+    }
+  }, [categories, product.category]);
 
   // handle subCategories
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -103,6 +117,7 @@ const ProductGeneralInfo = ({
                     value: brand?._id,
                   }))
             }
+            defaultValue={product?.brand?.brandName || "Select a brand"}
             onChange={handleChange}
           />
           <CustomGlobalInput
@@ -138,8 +153,8 @@ const ProductGeneralInfo = ({
               onChange={handleCategoryChange}
               className="border  rounded-custom-5px py-3 px-3.5 outline-none active:border-fuchsia-800 focus:border-fuchsia-800 bg-transparent"
             >
-              <option value="" selected disabled>
-                Please select
+              <option value="" disabled selected>
+                {product?.category?.categoryName || "Select a category!"}
               </option>
               {isCategoriesLoading ? (
                 <option key="category loading" value="Loading...">
@@ -160,6 +175,10 @@ const ProductGeneralInfo = ({
             label="Sub Category"
             onChange={handleChange}
             options={subCategories}
+            defaultValue={
+              product?.category?.subcategory?.subcategoryName ||
+              "Please select a subcategory"
+            }
           />
           <CustomGlobalInput
             name="warranty"
