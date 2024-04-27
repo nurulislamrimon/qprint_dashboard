@@ -43,8 +43,7 @@ const FileUploader = ({
     : (fieldName as string);
 
   // check if the file path is a valid URL, if not, use the default path
-  const url =
-    path && !path?.includes("blob:http://") ? `${mainUrl}${path}` : path;
+  const url = path && !path?.includes("blob:http") ? `${mainUrl}${path}` : path;
 
   return (
     <label className={className}>

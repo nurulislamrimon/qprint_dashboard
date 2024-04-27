@@ -52,8 +52,6 @@ const AddProductUi = ({
 }) => {
   const dispatch = useAppDispatch();
 
-  console.log("product::", product);
-
   return (
     <div>
       <div>
