@@ -29,12 +29,21 @@ const addProductSlice = createSlice({
     setAddProductFiles: (state, action) => {
       state.productFiles = { ...state.productFiles, ...action.payload };
     },
+    clearAddProductState: (state) => {
+      state.product = initialState.product;
+      state.productFiles = initialState.productFiles;
+      state.isLoading = initialState.isLoading;
+    },
     setIsLoading: (state, action) => {
       state.isLoading = action.payload;
     },
   },
 });
-export const { setAddProduct, setAddProductFiles, setIsLoading } =
-  addProductSlice.actions;
+export const {
+  setAddProduct,
+  setAddProductFiles,
+  clearAddProductState,
+  setIsLoading,
+} = addProductSlice.actions;
 
 export default addProductSlice.reducer;

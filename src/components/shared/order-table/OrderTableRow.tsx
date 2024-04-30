@@ -93,8 +93,8 @@ const OrderTableRow = ({
         {datas ? datas?.buyer?.fullName : ""}
         {quickOrder ? quickOrder?.buyer?.fullName : ""}
         <small className="md:hidden">
-          {datas ? getDateFormat(datas.createdAt) : ""}
-          {quickOrder ? getDateFormat(quickOrder.createdAt) : ""}
+          {datas ? getDateFormat(datas.updatedAt) : ""}
+          {quickOrder ? getDateFormat(quickOrder.updatedAt) : ""}
         </small>
       </td>
       <td className="px-6  font-normal hidden md:table-cell">

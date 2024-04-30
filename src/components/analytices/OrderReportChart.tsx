@@ -32,7 +32,7 @@ const OrderReportChart = () => {
 
     setStartDate(formattedStartDate);
     setEndDate(formattedEndDate);
-  }, []);
+  }, [data]);
 
   const handleDateRangeChange = (range: {
     startDate: string;
@@ -57,22 +57,18 @@ const OrderReportChart = () => {
       </div>
       <div className="w-full h-[267px] md:h-[400px] mx-auto pr-2.5 md:pr-0">
         {isLoading ? (
-          <div className="flex items-end justify-end ml-8 mb-3 ">
-            <OrderReportChartSkaleton />
-          </div>
+          <OrderReportChartSkaleton />
         ) : (
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data?.data}>
+            <BarChart data={data?.data} margin={{ left: 20 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
-
               <XAxis
                 dataKey="date"
-                scale="point"
+                // scale="point"
                 className="[font-size:clamp(13.5px,2vw,16px)]"
               />
               <YAxis className="[font-size:clamp(13.5px,2vw,16px)]" />
               <Tooltip />
-              {/* <Legend /> */}
               <Bar
                 dataKey="Delivered"
                 radius={[20, 20, 0, 0]}

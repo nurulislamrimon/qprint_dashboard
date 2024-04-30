@@ -32,14 +32,34 @@ export const axiosBaseQuery =
           "Content-Type": contentType,
         },
       });
+
       return result;
     } catch (axiosError) {
+      // const err = axiosError as AxiosError;
+      // return {
+      //   error: {
+      //     status: err.response?.status,
+      //     data: err.response,
+      //   },
+      // };
       const err = axiosError as AxiosError;
-      return {
-        error: {
-          status: err.response?.status,
-          data: err.response,
+      const errorData = err.response?.data || {
+        status: err.response?.status || 500,
+        message: "Something went wrong",
+        errorMessages: [],
+      };
+
+      // Strip out non-serializable parts of the error response
+      const serializableErrorData = {
+        status: err.response?.status,
+        data: {
+          ...errorData,
+          headers: undefined, // Exclude headers
         },
+      };
+
+      return {
+        error: serializableErrorData,
       };
     }
   };

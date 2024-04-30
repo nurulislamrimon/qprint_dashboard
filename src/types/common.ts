@@ -115,3 +115,11 @@ export interface IProduct {
 }
 
 // Product type end
+
+export interface IError {
+  status: number;
+  data: {
+    message: string;
+    errorMessages: Array<IGenericErrorMessage>;
+  };
+}

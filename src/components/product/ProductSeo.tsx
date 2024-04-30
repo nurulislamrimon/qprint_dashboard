@@ -54,6 +54,7 @@ const ProductSeo = ({
           multiple={true}
           onChange={handleChange}
           accept="image/jpg,image/jpeg,image/png"
+          maxSize={2}
         >
           <IconPhotoPlus width={30} height={30} stroke={1} />
         </FileUploader>

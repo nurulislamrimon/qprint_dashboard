@@ -227,6 +227,7 @@ const ProductGeneralInfo = ({
               uid={index}
               accept="image/jpg,image/jpeg,image/png"
               onChange={handleChange}
+              maxSize={2}
             ></FileUploader>
           ))}
         </div>

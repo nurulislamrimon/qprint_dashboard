@@ -21,6 +21,7 @@ const AllOrderReportDetails = () => {
         : ""
     }`
   );
+  console.log(data);
 
   const { data: allOrder } = useOnlineOrdersQuery("");
 
@@ -30,6 +31,7 @@ const AllOrderReportDetails = () => {
   const { data: delivered } = useGetbusinessAnalyticsQuery(
     "orderStatus.status=Delivered"
   );
+  console.log(delivered);
 
   const { data: shipping } = useGetbusinessAnalyticsQuery(
     "orderStatus.status=Shipping"
@@ -52,7 +54,7 @@ const AllOrderReportDetails = () => {
         orderReportTitle="Delivered"
         tendingIcon={<IconTrendingUp />}
         tendingIConClassName="text-green-color"
-        productNumber={20}
+        parcentageNumber={20}
         firstCircleClassName="text-green-100"
         secondCircleClassName="text-green-500"
         percentage={30}
@@ -71,7 +73,7 @@ const AllOrderReportDetails = () => {
         orderReportTitle="Shipping"
         tendingIcon={<IconTrendingDown />}
         tendingIConClassName=" text-fuchsia-600"
-        productNumber={10}
+        parcentageNumber={10}
         firstCircleClassName="text-[#d9d9d9]"
         secondCircleClassName="text-fuchsia-800"
         initialProgress={parseFloat(
@@ -90,7 +92,7 @@ const AllOrderReportDetails = () => {
         orderReportTitle="Returned"
         tendingIcon={<IconTrendingUp />}
         tendingIConClassName="text-red-400"
-        productNumber={10}
+        parcentageNumber={10}
         firstCircleClassName="text-yellow-100"
         secondCircleClassName="text-red-400"
         initialProgress={parseFloat(
@@ -109,7 +111,7 @@ const AllOrderReportDetails = () => {
         orderReportTitle="Canceled"
         tendingIcon={<IconTrendingDown />}
         tendingIConClassName="text-black-opacity-60"
-        productNumber={10}
+        parcentageNumber={10}
         firstCircleClassName="text-[#d9d9d9]"
         secondCircleClassName="text-[#00000080]"
         initialProgress={parseFloat(

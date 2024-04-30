@@ -11,6 +11,8 @@ const StatusConfirm = ({
   data,
   updateStatus,
 }: any) => {
+  console.log(data);
+
   useEffect(() => {
     if (!isVisible) {
       handleModal();

@@ -1,6 +1,5 @@
 "use client";
 
-import { assets } from "@/assets";
 import { mainUrl } from "@/constants/mainUrl";
 import { IconPhotoPlus } from "@tabler/icons-react";
 import Image from "next/image";
@@ -13,6 +12,7 @@ export interface IFileUploaderProps {
   placeholder?: string;
   accept?: string;
   multiple?: boolean;
+  maxSize?: number;
   error?: string;
   className?: string;
   disabled?: boolean;
@@ -26,6 +26,7 @@ const FileUploader = ({
   onChange,
   multiple = false,
   accept,
+  maxSize,
   error,
   className,
   disabled,
@@ -45,19 +46,45 @@ const FileUploader = ({
   // check if the file path is a valid URL, if not, use the default path
   const url = path && !path?.includes("blob:http") ? `${mainUrl}${path}` : path;
 
+  const checkSizeAndHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (
+      maxSize &&
+      e?.target?.files &&
+      e?.target?.files[0]?.size > maxSize * 1024 * 1024
+    ) {
+      alert(`File size should be less than ${maxSize} MB`);
+      return;
+    }
+    if (onChange) {
+      onChange(e);
+    }
+  };
+
   return (
     <label className={className}>
       {/* check if data exist or children exist, if so, render the corresponding content */}
       {url ? (
         <Image src={url} alt={name} fill className="inset-0 object-contain" />
       ) : children ? (
-        children
+        <span className="flex flex-col items-center justify-center">
+          {children}
+          {maxSize && (
+            <small className="text-gray-500">
+              Max size: <span className="text-orange-700"> {maxSize} MB</span>
+            </small>
+          )}
+        </span>
       ) : (
         <>
           <IconPhotoPlus width={30} height={30} stroke={1} />
           <span className="flex flex-col">
             <span>Select Your Image</span>
-            <span className="text-fuchsia-800 underline font-medium ">
+            {maxSize && (
+              <small className="text-gray-500">
+                Max size: <span className="text-orange-700"> {maxSize} MB</span>
+              </small>
+            )}
+            <span className="text-fuchsia-800 underline font-medium">
               Click to browse
             </span>
           </span>
@@ -68,7 +95,7 @@ const FileUploader = ({
         name={name}
         id={uid.toString()}
         type="file"
-        onChange={onChange}
+        onChange={checkSizeAndHandleChange}
         accept={accept}
         multiple={multiple}
         disabled={disabled}

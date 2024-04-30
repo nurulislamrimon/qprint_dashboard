@@ -23,15 +23,10 @@ const Login = () => {
   const [userLogin] = useUserLoginMutation();
   const router = useRouter();
 
-
-
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const res = await userLogin({ email, password }).unwrap();
-
-      console.log("Logging in");
-
       if (res?.data?.accessToken) {
         router.push("/dashboard");
       }

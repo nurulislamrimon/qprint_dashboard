@@ -11,6 +11,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import EarningStatisticsChartSkeleton from "../shared/skeleton/EarningStatisticsChartSkaleton";
 
 const SellingStatisticsChart = () => {
   const [startDate, setStartDate] = useState("");
@@ -30,7 +31,7 @@ const SellingStatisticsChart = () => {
 
     setStartDate(formattedStartDate);
     setEndDate(formattedEndDate);
-  }, []);
+  }, [data, endDate, startDate]);
 
   const handleDateRangeChange = (range: {
     startDate: string;
@@ -60,56 +61,60 @@ const SellingStatisticsChart = () => {
         </div>
       </div>
       <div className="w-full [height:clamp(200px,50vw,400px)]">
-        <ResponsiveContainer className={"[height:clamp(200px,50vw,400px)] "}>
-          <AreaChart
-            data={data?.data}
-            margin={{
-              top: 22,
-              right: 0,
-              left: 7,
-              bottom: 0,
-            }}
-          >
-            {/* Add rest of your chart configuration here */}
-            <defs>
-              <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="55%" stopColor="#7f35cd80" stopOpacity={1} />
-                <stop offset="95%" stopColor="#fff" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid
-              horizontal={false}
-              // vertical={false}
-              strokeDasharray="3 3"
-            />
-            <XAxis
-              dataKey="createdAt"
-              className="[font-size:clamp(12px,2vw,15px)]"
-            />
+        {isLoading ? (
+          <EarningStatisticsChartSkeleton />
+        ) : (
+          <ResponsiveContainer className={"[height:clamp(200px,50vw,400px)] "}>
+            <AreaChart
+              data={data?.data}
+              margin={{
+                top: 22,
+                right: 0,
+                left: 7,
+                bottom: 0,
+              }}
+            >
+              {/* Add rest of your chart configuration here */}
+              <defs>
+                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="55%" stopColor="#7f35cd80" stopOpacity={1} />
+                  <stop offset="95%" stopColor="#fff" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid
+                horizontal={false}
+                // vertical={false}
+                strokeDasharray="3 3"
+              />
+              <XAxis
+                dataKey="createdAt"
+                className="[font-size:clamp(12px,2vw,15px)]"
+              />
 
-            {/* <RechartsYAxis
+              {/* <RechartsYAxis
               tickFormatter={formatYAxisTick}
               domain={[0, "dataMax"]}
               className="[font-size:clamp(12px,2vw,15px)]"
               tickMargin={10}
             /> */}
-            <YAxis
-              tickFormatter={formatYAxisTick}
-              // domain={[0, "dataMax"]}
-              className="[font-size:clamp(12px,2vw,15px)]"
-              tickMargin={10}
-            />
+              <YAxis
+                tickFormatter={formatYAxisTick}
+                // domain={[0, "dataMax"]}
+                className="[font-size:clamp(12px,2vw,15px)]"
+                tickMargin={10}
+              />
 
-            <Tooltip />
-            <Area
-              type="monotone"
-              dataKey="totalAmount"
-              stroke="#7f35cdcc"
-              fill="url(#colorUv)"
-              fillOpacity={0.3}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+              <Tooltip />
+              <Area
+                type="monotone"
+                dataKey="totalAmount"
+                stroke="#7f35cdcc"
+                fill="url(#colorUv)"
+                fillOpacity={0.3}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        )}
       </div>
     </div>
   );

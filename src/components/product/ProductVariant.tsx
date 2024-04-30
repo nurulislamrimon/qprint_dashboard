@@ -59,6 +59,7 @@ const ProductVariant = ({
                 multiple={true}
                 accept="image/jpg,image/jpeg,image/png"
                 onChange={handleVaraintEdit}
+                maxSize={2}
               >
                 <IconPhotoPlus width={30} height={30} stroke={1} />
               </FileUploader>

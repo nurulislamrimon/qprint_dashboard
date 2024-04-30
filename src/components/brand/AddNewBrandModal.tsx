@@ -56,6 +56,7 @@ const AddNewBrandModal = ({ open, handleClose }: any) => {
     <div>
       <CustomGlobalDrawer
         isVisible={open}
+        setOpenDrawer={handleClose}
         drawerControllerClassName="z-50"
         modalWidthControlClassName="w-full md:w-[500px]"
       >
@@ -67,14 +68,15 @@ const AddNewBrandModal = ({ open, handleClose }: any) => {
             <DrawerModalCloseBTN handleClose={handleClose} />
           </div>
           <form onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-[30px]"><div>
-              <FileInput
-                name="brandPhoto"
-                onChange={handleFileChange}
-                imageBottomText="Add Brand Logo"
-                localUrl={brandlocalUrl}
-              />
-            </div>
+            <div className="flex flex-col gap-[30px]">
+              <div>
+                <FileInput
+                  name="brandPhoto"
+                  onChange={handleFileChange}
+                  imageBottomText="Add Brand Logo"
+                  localUrl={brandlocalUrl}
+                />
+              </div>
               <div>
                 <CustomGlobalInput
                   label="Brand Name"
@@ -84,10 +86,13 @@ const AddNewBrandModal = ({ open, handleClose }: any) => {
                   type="text"
                 />
               </div>
-
             </div>
             <div className="fixed bottom-5 md:w-[450px] w-[calc(100vw-40px)]">
-              <ButtonPrimary type="submit" buttonText="Add Brand" className="w-full " />
+              <ButtonPrimary
+                type="submit"
+                buttonText="Add Brand"
+                className="w-full "
+              />
             </div>
           </form>
         </div>

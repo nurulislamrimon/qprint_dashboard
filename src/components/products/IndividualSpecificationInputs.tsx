@@ -4,6 +4,7 @@ import { IconX } from "@tabler/icons-react";
 import { IProduct } from "@/types";
 import { useAppDispatch } from "@/store/hook";
 import { setAddProduct } from "@/store/features/product/addProductSlice";
+import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 
 export interface IHandleChangeValueParams {
   sectionName: string;
@@ -17,6 +18,7 @@ const IndividualSpecificationInputs = ({
   sectionName,
   index,
   product,
+  setToProductState,
 }: {
   block?: {
     title: string;
@@ -25,6 +27,7 @@ const IndividualSpecificationInputs = ({
   sectionName: string;
   index: number;
   product: IProduct;
+  setToProductState: ActionCreatorWithPayload<any>;
 }) => {
   const dispatch = useAppDispatch();
 
@@ -75,7 +78,7 @@ const IndividualSpecificationInputs = ({
       : [updatedSection];
 
     // // update specification
-    dispatch(setAddProduct({ specifications: updatedSpecification }));
+    dispatch(setToProductState({ specifications: updatedSpecification }));
   };
   // ==========================================
   // remove a field from the specification section
@@ -112,7 +115,7 @@ const IndividualSpecificationInputs = ({
       : [];
 
     // update specification
-    dispatch(setAddProduct({ specifications: updatedSpecification }));
+    dispatch(setToProductState({ specifications: updatedSpecification }));
   };
 
   return (

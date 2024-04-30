@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  clearAddProductState,
   setAddProduct,
   setAddProductFiles,
 } from "@/store/features/product/addProductSlice";
@@ -8,20 +9,25 @@ import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { useCreateProductMutation } from "@/store/features/product/productApi";
 import AddProductUi from "./_components/AddProductUi";
 import { ISpecification, IVariant } from "@/types";
-import { ChangeEvent } from "react";
+import { ChangeEvent, Fragment } from "react";
+import { showError } from "@/helpers/showError";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import Loading from "../loading";
+import TransparentLoader from "@/components/shared/TransparentLoader";
 
 const AddProduct = () => {
+  const router = useRouter();
   const dispatch = useAppDispatch();
-  const [createProduct] = useCreateProductMutation();
-  const { product, productFiles, isLoading } = useAppSelector(
-    (state) => state.addProduct
-  );
+  const [createProduct, { isLoading: productAdding }] =
+    useCreateProductMutation();
+  const { product, productFiles } = useAppSelector((state) => state.addProduct);
 
   const formData = new FormData();
 
-  if (isLoading) {
-    return <p>Loading......</p>;
-  }
+  // if (productAdding) {
+  //   return <Loading />;
+  // }
 
   // ======================================
   // main functionalities
@@ -84,8 +90,7 @@ const AddProduct = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     try {
       // append all product data to the form data
       for (const key in product) {
@@ -120,9 +125,16 @@ const AddProduct = () => {
 
       // add new product using formData;
       const res = await createProduct(formData);
-      console.log(res);
+
+      if (res && "error" in res) {
+        showError(res.error);
+      } else {
+        dispatch(clearAddProductState());
+        toast.success(res?.data?.message || "Product created successfully!");
+        router.push("/products", { scroll: false });
+      }
     } catch (error) {
-      console.log(error);
+      showError(error);
     }
   };
 
@@ -238,16 +250,19 @@ const AddProduct = () => {
   };
 
   return (
-    <AddProductUi
-      handleChange={handleChange}
-      handleSubmit={handleSubmit}
-      product={product}
-      handleAddVariant={handleAddVariant}
-      handleRemoveVariant={handleRemoveVariant}
-      handleVariantDataChange={handleVariantDataChange}
-      handleAddSection={handleAddSection}
-      handleAddField={handleAddField}
-    />
+    <Fragment>
+      {productAdding && <TransparentLoader />}
+      <AddProductUi
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+        product={product}
+        handleAddVariant={handleAddVariant}
+        handleRemoveVariant={handleRemoveVariant}
+        handleVariantDataChange={handleVariantDataChange}
+        handleAddSection={handleAddSection}
+        handleAddField={handleAddField}
+      />
+    </Fragment>
   );
 };
 

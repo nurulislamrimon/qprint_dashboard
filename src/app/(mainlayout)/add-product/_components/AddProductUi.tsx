@@ -29,7 +29,7 @@ const AddProductUi = ({
   handleAddSection,
   handleAddField,
 }: {
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
+  handleSubmit: () => Promise<void>;
   handleChange: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -51,7 +51,9 @@ const AddProductUi = ({
   handleAddField: (sectionName: string) => void;
 }) => {
   const dispatch = useAppDispatch();
-
+  const preventSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
   return (
     <div>
       <div>
@@ -59,7 +61,7 @@ const AddProductUi = ({
       </div>
       <form
         className="bg-body-main-bg-color mt-1 flex flex-col gap-2.5 h-[calc(100vh-90px)] overflow-y-scroll"
-        onSubmit={(e) => handleSubmit(e)}
+        onSubmit={preventSubmit}
       >
         {/* General Information */}
         <ProductGeneralInfo
@@ -109,6 +111,7 @@ const AddProductUi = ({
           product={product}
           handleAddField={handleAddField}
           handleAddSection={handleAddSection}
+          setToProductState={setAddProduct}
         />
         {/* Specification */}
 
@@ -146,6 +149,7 @@ const AddProductUi = ({
             <button
               className="py-3.5 bg-main-bg-color text-lg px-8 r rounded-custom-5px text-white hover:scale-105 transition-all"
               type="submit"
+              onClick={handleSubmit}
             >
               Submit
             </button>

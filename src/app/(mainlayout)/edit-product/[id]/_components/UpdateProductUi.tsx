@@ -4,7 +4,7 @@ import ProductVariant from "@/components/product/ProductVariant";
 import Specifications from "@/components/product/Specifications";
 import TextEditor from "@/components/products/TextEditor";
 import TopBar from "@/components/shared/TopBar";
-import { setAddProduct } from "@/store/features/product/addProductSlice";
+import { setUpdateProduct } from "@/store/features/product/updateProductSlice";
 import { useAppDispatch } from "@/store/hook";
 import { IProduct, IVariant } from "@/types";
 import React, { ChangeEvent } from "react";
@@ -22,7 +22,7 @@ const UpdateProductUi = ({
   handleAddSection,
   handleAddField,
 }: {
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
+  handleSubmit: () => Promise<void>;
   handleChange: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -45,6 +45,10 @@ const UpdateProductUi = ({
 }) => {
   const dispatch = useAppDispatch();
 
+  const preventSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
+
   return (
     <div>
       <div>
@@ -52,7 +56,7 @@ const UpdateProductUi = ({
       </div>
       <form
         className="bg-body-main-bg-color mt-1 flex flex-col gap-2.5 h-[calc(100vh-90px)] overflow-y-scroll"
-        onSubmit={(e) => handleSubmit(e)}
+        onSubmit={preventSubmit}
       >
         {/* General Information */}
         <ProductGeneralInfo
@@ -83,7 +87,7 @@ const UpdateProductUi = ({
           <div className="mt-5">
             <TextEditor
               handleChange={(value) =>
-                dispatch(setAddProduct({ shortDescription: value }))
+                dispatch(setUpdateProduct({ shortDescription: value }))
               }
               value={product?.shortDescription}
             />
@@ -96,6 +100,7 @@ const UpdateProductUi = ({
           product={product}
           handleAddField={handleAddField}
           handleAddSection={handleAddSection}
+          setToProductState={setUpdateProduct}
         />
         {/* Specification */}
 
@@ -107,7 +112,7 @@ const UpdateProductUi = ({
           <div className="mt-5">
             <TextEditor
               handleChange={(value) =>
-                dispatch(setAddProduct({ description: value }))
+                dispatch(setUpdateProduct({ description: value }))
               }
               value={product?.description}
             />
@@ -126,6 +131,7 @@ const UpdateProductUi = ({
             <button
               className="py-3.5 bg-main-bg-color text-lg px-8 r rounded-custom-5px text-white hover:scale-105 transition-all"
               type="submit"
+              onClick={handleSubmit}
             >
               Submit
             </button>

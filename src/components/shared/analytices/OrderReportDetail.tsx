@@ -6,7 +6,7 @@ interface OrderReportDetailsProps {
   altName?: string;
   orderReportTitle?: string;
   tendingIcon?: string | any;
-  productNumber?: string | number;
+  parcentageNumber?: string | number;
   firstCircleClassName?: string;
   secondCircleClassName?: string;
   imageClassName?: string;
@@ -21,7 +21,7 @@ const OrderReportDetail = ({
   altName,
   orderReportTitle,
   tendingIcon,
-  productNumber,
+  parcentageNumber,
   imageClassName,
   firstCircleClassName,
   secondCircleClassName,
@@ -71,7 +71,7 @@ const OrderReportDetail = ({
             className={`${tendingIConClassName} text-base flex items-center gap-x-1.5 `}
           >
             {tendingIcon}
-            <span>{productNumber}</span>
+            <span>{parcentageNumber}</span>
           </span>
         </div>
       </div>

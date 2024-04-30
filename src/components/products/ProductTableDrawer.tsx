@@ -12,6 +12,7 @@ const ProductTableDrawer = ({ handleCloseDrawer, openDrawer, id }: any) => {
     <CustomGlobalDrawer
       modalWidthControlClassName="w-full md:w-[500px]"
       isVisible={openDrawer}
+      setOpenDrawer={handleCloseDrawer}
     >
       <div className="py-5 h-screen overflow-y-auto px-5 space-y-5">
         <div className="flex items-center justify-between">

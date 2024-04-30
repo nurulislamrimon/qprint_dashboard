@@ -52,6 +52,7 @@ const AddSubCategoryDrawer = ({
     <div className={loading ? "opacity-50 pointer-events-none" : ""}>
       <CustomGlobalDrawer
         isVisible={!!handleModal}
+        setOpenDrawer={handleModal}
         modalWidthControlClassName="w-full md:w-[500px]"
       >
         <form onSubmit={handleSubmit} className="md:px-5 p-5 md:py-7 ">

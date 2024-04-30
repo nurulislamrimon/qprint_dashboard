@@ -37,6 +37,12 @@ const updateProductSlice = createSlice({
         action.payload,
       ];
     },
+    clearUpdateProductState: (state) => {
+      state.product = initialState.product;
+      state.productFiles = initialState.productFiles;
+      state.deleteProductPhotos = initialState.deleteProductPhotos;
+      state.isLoading = initialState.isLoading;
+    },
     setIsLoading: (state, action) => {
       state.isLoading = action.payload;
     },
@@ -46,6 +52,7 @@ export const {
   setUpdateProduct,
   setUpdateProductFiles,
   setDeleteProductPhotos,
+  clearUpdateProductState,
   setIsLoading,
 } = updateProductSlice.actions;
 

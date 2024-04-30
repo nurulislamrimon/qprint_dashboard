@@ -35,12 +35,13 @@ instance.interceptors.response.use(
     return responseObject;
   },
   function (error) {
-    const responseObject = {
-      statusCode: error?.response?.data?.statusCode || 500,
-      message: error?.response?.data?.message || "Something went wrong",
-      errorMessages: error?.response?.data?.errorMessages || [],
-    };
-    return responseObject;
+    // const responseObject = {
+    //   statusCode: error?.response?.data?.statusCode || 500,
+    //   message: error?.response?.data?.message || "Something went wrong",
+    //   errorMessages: error?.response?.data?.errorMessages || [],
+    // };
+    // return responseObject;
+    throw error;
   }
 );
 

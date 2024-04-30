@@ -1,24 +1,35 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   useGetSingleProductQuery,
   useUpdateProductMutation,
 } from "@/store/features/product/productApi";
-import { ChangeEvent, useEffect } from "react";
+import { ChangeEvent, Fragment, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { ISpecification, IVariant } from "@/types";
 import {
+  clearUpdateProductState,
   setDeleteProductPhotos,
   setUpdateProduct,
   setUpdateProductFiles,
 } from "@/store/features/product/updateProductSlice";
 import UpdateProductUi from "./_components/UpdateProductUi";
+import { showError } from "@/helpers/showError";
+import { toast } from "react-toastify";
+import TransparentLoader from "@/components/shared/TransparentLoader";
 
 const EditProduct = () => {
   const { id } = useParams();
-  const { isLoading, isError, isSuccess, data } = useGetSingleProductQuery(id);
+  const router = useRouter();
+
+  const {
+    isLoading: productLoading,
+    data,
+    error,
+  } = useGetSingleProductQuery(id);
   const dispatch = useAppDispatch();
-  const [updateProduct] = useUpdateProductMutation();
+  const [updateProduct, { error: updateError, isLoading: productUpdating }] =
+    useUpdateProductMutation();
   const { product, productFiles, deleteProductPhotos } = useAppSelector(
     (state) => state.updateProduct
   );
@@ -29,9 +40,9 @@ const EditProduct = () => {
 
   const formData = new FormData();
 
-  if (isLoading) {
-    return <p>Loading......</p>;
-  }
+  // if (productLoading || productUpdating) {
+  //   return <TransparentLoader />;
+  // }
 
   // ======================================
   // main functionalities
@@ -101,8 +112,7 @@ const EditProduct = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     try {
       // append all product data to the form data
       for (const key in product) {
@@ -143,9 +153,16 @@ const EditProduct = () => {
 
       // add new product using formData;
       const res = await updateProduct({ id, data: formData });
-      console.log(res);
+      if (res && "error" in res) {
+        showError(res.error);
+      } else {
+        dispatch(clearUpdateProductState());
+        toast.success(res?.data?.message || "Product updated successfully");
+
+        router.push("/products", { scroll: false });
+      }
     } catch (error) {
-      console.log(error);
+      showError(error);
     }
   };
 
@@ -262,17 +279,25 @@ const EditProduct = () => {
     dispatch(setUpdateProduct({ specifications: updatedSpecification }));
   };
 
+  // show errors
+  if (error || updateError) {
+    showError(error);
+  }
+
   return (
-    <UpdateProductUi
-      handleChange={handleChange}
-      handleSubmit={handleSubmit}
-      product={product}
-      handleAddVariant={handleAddVariant}
-      handleRemoveVariant={handleRemoveVariant}
-      handleVariantDataChange={handleVariantDataChange}
-      handleAddSection={handleAddSection}
-      handleAddField={handleAddField}
-    />
+    <Fragment>
+      {(productLoading || productUpdating) && <TransparentLoader />}
+      <UpdateProductUi
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+        product={product}
+        handleAddVariant={handleAddVariant}
+        handleRemoveVariant={handleRemoveVariant}
+        handleVariantDataChange={handleVariantDataChange}
+        handleAddSection={handleAddSection}
+        handleAddField={handleAddField}
+      />
+    </Fragment>
   );
 };
 

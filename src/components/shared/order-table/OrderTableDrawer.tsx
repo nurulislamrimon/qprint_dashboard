@@ -29,6 +29,7 @@ const OrderTableDrawer = ({ handleCloseDrawer, openDrawer, id }: any) => {
       <div>
         <CustomGlobalDrawer
           isVisible={openDrawer}
+          setOpenDrawer={handleCloseDrawer}
           modalWidthControlClassName="w-full md:w-[750px]"
         >
           <div className="py-5 h-screen overflow-y-auto">

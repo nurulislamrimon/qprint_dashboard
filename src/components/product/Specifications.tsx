@@ -2,15 +2,18 @@ import { IconPlus } from "@tabler/icons-react";
 import React, { useState } from "react";
 import IndividualSpecificationInputs from "../products/IndividualSpecificationInputs";
 import { IProduct } from "@/types";
+import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 
 const Specifications = ({
   product,
   handleAddSection,
   handleAddField,
+  setToProductState,
 }: {
   product: IProduct;
   handleAddSection: (e: React.MouseEvent<HTMLButtonElement>) => void;
   handleAddField: (sectionName: string) => void;
+  setToProductState: ActionCreatorWithPayload<any>;
 }) => {
   const [openSectionTypes, setOpenSectionTypes] = useState(false);
   const specifications = product?.specifications;
@@ -110,6 +113,7 @@ const Specifications = ({
                     sectionName={specification.sectionName}
                     product={product}
                     index={i}
+                    setToProductState={setToProductState}
                   />
                 )
               )}
