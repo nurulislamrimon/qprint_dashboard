@@ -4,10 +4,9 @@ export const printingRequestApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     //get brands data
     printingRequests: build.query({
-      query: (data) => ({
-        url: `/printing-request?${data}`,
+      query: (query: string) => ({
+        url: `/printing-request?${query}`,
         method: "GET",
-        data,
       }),
       providesTags: ["printing-setup"],
     }),

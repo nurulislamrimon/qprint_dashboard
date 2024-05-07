@@ -4,35 +4,32 @@ export const usersApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     //get an admin data
     getUserById: build.query({
-      query: (id) => ({
+      query: (id: string) => ({
         url: `/user/${id}`,
         method: "GET",
       }),
       providesTags: ["user"],
     }),
     getAdmin: build.query({
-      query: (data) => ({
-        url: "/user?role=Admin",
+      query: (query: string) => ({
+        url: "/user?role=Admin&" + query,
         method: "GET",
-        data,
       }),
       providesTags: ["user"],
     }),
     //get super admin data
     getSuperAdmin: build.query({
-      query: (data) => ({
-        url: "/user?role=Super Admin",
+      query: (query: string) => ({
+        url: "/user?role=Super Admin&" + query,
         method: "GET",
-        data,
       }),
       providesTags: ["user"],
     }),
     //get manager data
     getManager: build.query({
-      query: (data) => ({
-        url: "/user?role=Manager",
+      query: (query: string) => ({
+        url: "/user?role=Manager&" + query,
         method: "GET",
-        data,
       }),
       providesTags: ["user"],
     }),

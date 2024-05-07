@@ -4,10 +4,9 @@ export const specialOfferApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     //get shipping data
     getSpecialOffer: build.query({
-      query: (data) => ({
-        url: "/settings/special-offer",
+      query: (query: string) => ({
+        url: "/settings/special-offer?" + query,
         method: "GET",
-        data,
       }),
       providesTags: ["shipping-charge"],
     }),

@@ -23,7 +23,7 @@ export type PaperSize = {
 const PrintingPaperSize = () => {
   const [openModal, setOpenModal] = useState(false);
   const [openSettingModal, setOpenSettingModal] = useState(false);
-  const { data, isLoading } = useAllPaperSizeQuery(undefined);
+  const { data, isLoading } = useAllPaperSizeQuery("");
   const { data: paperUnit } = usePaperUnitQuery("");
 
   const handleCloseSettingModal = () => {
@@ -68,11 +68,11 @@ const PrintingPaperSize = () => {
         <div className="flex items-center shrink-0 flex-wrap gap-5 border-b pb-5 md:pb-7">
           {isLoading
             ? [...Array(14)].map((_, index) => (
-              <PrintingRequestCardSkeleton key={index} />
-            ))
+                <PrintingRequestCardSkeleton key={index} />
+              ))
             : data?.data?.map((data: PaperSize, index: number) => (
-              <PrintingPaperSizeLayout key={index} data={data} />
-            ))}
+                <PrintingPaperSizeLayout key={index} data={data} />
+              ))}
         </div>
       </div>
       {/* ==Printing Page Top || Modal== */}

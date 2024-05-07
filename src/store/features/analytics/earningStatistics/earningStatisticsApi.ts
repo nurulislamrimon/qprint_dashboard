@@ -4,10 +4,9 @@ export const earningStatisticsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     //get all Amount data
     getEarningStatistics: build.query({
-      query: (data) => ({
-        url: "/user?sortBy=orders",
+      query: (query: string) => ({
+        url: "/user?sortBy=orders&" + query,
         method: "GET",
-        data,
       }),
       providesTags: ["order-Reports"],
     }),

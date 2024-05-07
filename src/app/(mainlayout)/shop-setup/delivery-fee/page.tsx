@@ -22,7 +22,7 @@ const DeliveryFee = () => {
     (state) => state.shippingCharge
   );
   const [addShippingCharge] = useAddShippingChargeMutation();
-  const { data } = useGetShippinghargeQuery(undefined);
+  const { data } = useGetShippinghargeQuery("");
   // console.log(data);
 
   useLayoutEffect(() => {
@@ -54,9 +54,7 @@ const DeliveryFee = () => {
     }
   };
 
-  function handleOnChange(_id: any, arg1: boolean): void {
-
-  }
+  function handleOnChange(_id: any, arg1: boolean): void {}
 
   return (
     <form className="p-8" onSubmit={handleSubmit}>
@@ -81,9 +79,7 @@ const DeliveryFee = () => {
       <hr className="w-full h-[1px] bg-black my-8" />
       <div>
         <h3>Free Shipping Feature</h3>{" "}
-
         <button onClick={() => handleOnChange(data?._id, !data?.isActive)}>
-
           {data?.isActive === true ? <RightToggle /> : <LeftToggle />}
         </button>
       </div>

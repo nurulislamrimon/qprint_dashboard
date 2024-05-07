@@ -4,10 +4,9 @@ export const orderReportChartApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     //get all Amount data
     getOrderReport: build.query({
-      query: (data) => ({
-        url: `/dashboard/order-summary?${data}`,
+      query: (query: string) => ({
+        url: `/dashboard/order-summary?${query}`,
         method: "GET",
-        data,
       }),
       providesTags: ["order-Reports"],
     }),

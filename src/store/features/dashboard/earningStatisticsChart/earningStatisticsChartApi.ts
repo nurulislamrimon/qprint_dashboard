@@ -4,10 +4,9 @@ export const earningStatisticsChartApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     //get all Amount data
     getEarningChartAllAmount: build.query({
-      query: (data) => ({
-        url: `/dashboard/order-amount?${data}`,
+      query: (query: string) => ({
+        url: `/dashboard/order-amount?${query}`,
         method: "GET",
-        data,
       }),
       providesTags: ["eaning-statistics-chart-all-amount"],
     }),

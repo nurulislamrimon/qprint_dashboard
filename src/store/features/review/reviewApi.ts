@@ -4,30 +4,27 @@ export const reviewApi: any = baseApi.injectEndpoints({
   endpoints: (build) => ({
     //get review data
     reviews: build.query({
-      query: (data) => ({
-        url: "/review",
+      query: (query: string) => ({
+        url: "/review?" + query,
         method: "GET",
-        data,
       }),
       providesTags: ["brand"],
     }),
 
     // review with reply
     reviewWithReply: build.query({
-      query: (data) => ({
-        url: "/review?reply=true",
+      query: (query: string) => ({
+        url: "/review?reply=true&" + query,
         method: "GET",
-        data,
       }),
       providesTags: ["brand"],
     }),
 
     // review with no reply
     reviewWithoutReply: build.query({
-      query: (data) => ({
-        url: "/review?reply=false",
+      query: (query: string) => ({
+        url: "/review?reply=false&" + query,
         method: "GET",
-        data,
       }),
       providesTags: ["brand"],
     }),

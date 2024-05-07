@@ -4,10 +4,9 @@ export const topSellingProductApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     //get all Business Analytics data
     getTopSellingProduct: build.query({
-      query: (data) => ({
-        url: "/product?sortBy=averageRating",
+      query: (query: string) => ({
+        url: "/product?sortBy=averageRating?" + query,
         method: "GET",
-        data,
       }),
       providesTags: ["top-selling-product"],
     }),

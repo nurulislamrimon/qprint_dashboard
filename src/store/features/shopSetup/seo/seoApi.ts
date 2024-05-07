@@ -4,10 +4,9 @@ export const seoApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     //get shipping data
     getSeo: build.query({
-      query: (data) => ({
-        url: "/settings/home-page-meta",
+      query: (query: string) => ({
+        url: "/settings/home-page-meta?" + query,
         method: "GET",
-        data,
       }),
       providesTags: ["seo"],
     }),

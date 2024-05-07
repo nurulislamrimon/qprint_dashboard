@@ -23,7 +23,7 @@ const Seo = () => {
 
   const [createSeo] = useCreateSeoMutation();
 
-  const { data } = useGetSeoQuery(undefined);
+  const { data } = useGetSeoQuery("");
 
   useLayoutEffect(() => {
     dispatch(setMetaPhoto(data?.data?.metaPhoto));

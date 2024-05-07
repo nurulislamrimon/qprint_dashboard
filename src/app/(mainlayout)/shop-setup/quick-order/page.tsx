@@ -13,7 +13,7 @@ const QuickOrder = () => {
   const [isQuickOrderActive, setIsQuickOrderActive] = useState(false);
   const [selectedOption, setSelectedOption] = useState("deliveryCharge");
   const [addQuickOrderCharge] = useAddQuickOrderChargeMutation();
-  const { data, isLoading } = useGetQuickOrderChargeQuery(undefined);
+  const { data, isLoading } = useGetQuickOrderChargeQuery("");
   const [deliveryCharge, setDeliveryCharge] = useState("");
 
   useEffect(() => {
@@ -95,10 +95,11 @@ const QuickOrder = () => {
         </div>
 
         <div
-          className={`flex items-center gap-2 my-[30px] ${!isQuickOrderActive || isLoading
-            ? "opacity-50 pointer-events-none"
-            : ""
-            }`}
+          className={`flex items-center gap-2 my-[30px] ${
+            !isQuickOrderActive || isLoading
+              ? "opacity-50 pointer-events-none"
+              : ""
+          }`}
         >
           <input
             type="radio"
@@ -113,10 +114,11 @@ const QuickOrder = () => {
         </div>
 
         <div
-          className={`flex md:flex-col flex-col-reverse gap-5 mb-[30px] ${!isQuickOrderActive || isLoading
-            ? "opacity-50 pointer-events-none"
-            : ""
-            }`}
+          className={`flex md:flex-col flex-col-reverse gap-5 mb-[30px] ${
+            !isQuickOrderActive || isLoading
+              ? "opacity-50 pointer-events-none"
+              : ""
+          }`}
         >
           <div className="flex items-center gap-2.5">
             <input

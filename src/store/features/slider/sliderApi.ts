@@ -4,10 +4,9 @@ export const sliderApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     //get slider
     getSlider: build.query({
-      query: (data) => ({
-        url: "/promotions/slider",
+      query: (query: string) => ({
+        url: "/promotions/slider?" + query,
         method: "GET",
-        data,
       }),
       providesTags: ["slider"],
     }),

@@ -4,10 +4,9 @@ export const customerApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     //get user data
     customers: build.query({
-      query: (data) => ({
-        url: `/user?sortBy=orders&isVerified=true&role=User`,
+      query: (query: string) => ({
+        url: `/user?sortBy=orders&isVerified=true&role=User&${query}`,
         method: "GET",
-        data,
       }),
       providesTags: ["customer"],
     }),

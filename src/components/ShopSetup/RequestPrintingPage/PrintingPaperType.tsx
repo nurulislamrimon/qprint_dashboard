@@ -18,7 +18,7 @@ export type PaperType = {
 const PrintingPaperType = () => {
   const [openModal, setOpenModal] = useState(false);
 
-  const { data, isLoading } = useAllPaperTypeQuery(undefined);
+  const { data, isLoading } = useAllPaperTypeQuery("");
   // console.log(data);
 
   const handleCloseModal = () => {
@@ -41,14 +41,11 @@ const PrintingPaperType = () => {
         {/* ==Printing Paper Type Card== */}
         <div className="flex items-start shrink-0 flex-wrap gap-5 mb-5 border-b pb-7">
           {" "}
-          {
-            isLoading
-              ? [...Array(14)].map((_, index) => (
+          {isLoading
+            ? [...Array(14)].map((_, index) => (
                 <PrintingRequestCardSkeleton key={index} />
               ))
-              :
-
-              data?.data?.map((data: PaperType, index: number) => (
+            : data?.data?.map((data: PaperType, index: number) => (
                 <PrintingPaperTypeLayout key={index} data={data} />
               ))}
         </div>

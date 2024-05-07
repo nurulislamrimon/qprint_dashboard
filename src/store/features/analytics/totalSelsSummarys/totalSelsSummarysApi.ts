@@ -4,26 +4,24 @@ export const totalSelsSummarysApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     //get all Amount data
     getTotalSoldAmount: build.query({
-      query: (data) => ({
-        url: "/dashboard/total-order-amount?orderStatus.status=Delivered&",
+      query: (query: string) => ({
+        url:
+          "/dashboard/total-order-amount?orderStatus.status=Delivered&" + query,
         method: "GET",
-        data,
       }),
       providesTags: ["order-Reports"],
     }),
     getProductSold: build.query({
-      query: (data) => ({
-        url: `/dashboard/total-order-items?${data}`,
+      query: (query: string) => ({
+        url: `/dashboard/total-order-items?${query}`,
         method: "GET",
-        data,
       }),
       providesTags: ["order-Reports"],
     }),
     getAllUsers: build.query({
-      query: (data) => ({
-        url: `/user?sortBy=orders`,
+      query: (query: string) => ({
+        url: `/user?sortBy=orders&${query}`,
         method: "GET",
-        data,
       }),
       providesTags: ["order-Reports"],
     }),

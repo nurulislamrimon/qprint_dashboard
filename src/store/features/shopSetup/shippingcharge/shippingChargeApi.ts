@@ -4,10 +4,9 @@ export const shippingChargeApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     //get shipping data
     getShippingharge: build.query({
-      query: (data) => ({
-        url: "/settings/shipping-charge",
+      query: (query: string) => ({
+        url: "/settings/shipping-charge?" + query,
         method: "GET",
-        data,
       }),
       providesTags: ["shipping-charge"],
     }),

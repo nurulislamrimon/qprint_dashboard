@@ -19,10 +19,9 @@ export type PrintingMode = {
 };
 
 const PrintingMode = () => {
-  const { data, isLoading } = useAllPrintingModeQuery(undefined);
+  const { data, isLoading } = useAllPrintingModeQuery("");
 
   // console.log(data);
-
 
   const [openModal, setOpenModal] = useState(false);
 
@@ -47,14 +46,11 @@ const PrintingMode = () => {
         {/* ==Printing Mode Card== */}
         <div className="flex items-start shrink-0 flex-wrap gap-5 mb-5 border-b pb-7">
           {" "}
-          {
-
-            isLoading
-              ? [...Array(14)].map((_, index) => (
+          {isLoading
+            ? [...Array(14)].map((_, index) => (
                 <PrintingRequestCardSkeleton key={index} />
               ))
-              :
-              data?.data?.map((data: PrintingMode, index: number) => (
+            : data?.data?.map((data: PrintingMode, index: number) => (
                 <PrintingModeLayout key={index} data={data} />
               ))}
         </div>

@@ -10,10 +10,9 @@ import AddUserModal from "./AddUserModal";
 import { useGetMeQuery } from "@/store/features/auth/authApi";
 import UserCardSkeleton from "../shared/skeleton/UserCardSkeleton";
 
-
 const UserPageContent = () => {
-  const { data: allAdmin, isLoading } = useGetAdminQuery(undefined);
-  const { data: allManger } = useGetManagerQuery(undefined);
+  const { data: allAdmin, isLoading } = useGetAdminQuery("");
+  const { data: allManger } = useGetManagerQuery("");
   const { data: userData } = useGetMeQuery("");
 
   const [openModal, setOpenModal] = useState(false);
@@ -21,7 +20,6 @@ const UserPageContent = () => {
   const handleClose = () => {
     setOpenModal((prevState) => !prevState);
   };
-
 
   return (
     <div className="p-5 md:p-8 md:h-[calc(100vh-90px)] overflow-y-auto bg-white mt-1">
@@ -31,37 +29,30 @@ const UserPageContent = () => {
       <div className="mb-10">
         <h1 className="text-xl mb-5">Admin</h1>
         <div className="user-card-grid-responsive gap-7 ">
-          {
-            isLoading ? (
-              [...Array(10)].map((_, index) => {
-                return (
-
-                  <UserCardSkeleton key={index} />
-                )
+          {isLoading
+            ? [...Array(10)].map((_, index) => {
+                return <UserCardSkeleton key={index} />;
               })
-            ) :
-             ( allAdmin?.data?.map((data: UserInformationProps, index: number) => (
-                <UsersCard key={index} data={data} />
-              )))}
+            : allAdmin?.data?.map(
+                (data: UserInformationProps, index: number) => (
+                  <UsersCard key={index} data={data} />
+                )
+              )}
         </div>
       </div>
       {/* manager */}
       <div className="mb-10">
         <h1 className="text-xl mb-5">Manager</h1>
         <div className="user-card-grid-responsive gap-7 ">
-          {
-
-            isLoading ? (
-              [...Array(10)].map((_, index) => {
-                return (
-
-                  <UserCardSkeleton key={index} />
-                )
+          {isLoading
+            ? [...Array(10)].map((_, index) => {
+                return <UserCardSkeleton key={index} />;
               })
-            ) :
-          allManger?.data?.map((data: UserInformationProps, index: number) => (
-            <UsersCard key={index} data={data} />
-          ))}
+            : allManger?.data?.map(
+                (data: UserInformationProps, index: number) => (
+                  <UsersCard key={index} data={data} />
+                )
+              )}
         </div>
       </div>
 
@@ -78,11 +69,7 @@ const UserPageContent = () => {
         )}
       </div>
 
-      {openModal && (
-        <AddUserModal
-          handleModal={handleClose}
-        ></AddUserModal>
-      )}
+      {openModal && <AddUserModal handleModal={handleClose}></AddUserModal>}
     </div>
   );
 };

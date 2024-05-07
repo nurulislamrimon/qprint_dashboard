@@ -7,7 +7,6 @@ export const saleByCategoryApi = baseApi.injectEndpoints({
       query: (data) => ({
         url: `/dashboard/order-amount-by-category?${data}`,
         method: "GET",
-        data,
       }),
       providesTags: ["sale-by-category"],
     }),

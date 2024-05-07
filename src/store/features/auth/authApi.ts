@@ -13,10 +13,9 @@ export const authApi = baseApi.injectEndpoints({
 
     // get me
     getMe: build.query({
-      query: (data) => ({
-        url: "/user/me",
+      query: (query: string) => ({
+        url: "/user/me?" + query,
         method: "GET",
-        data,
       }),
       providesTags: ["user"],
     }),

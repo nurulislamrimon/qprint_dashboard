@@ -4,10 +4,9 @@ export const bestDealsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     //get best-deals
     getBestDeals: build.query({
-      query: (data) => ({
-        url: "/promotions/best-deals",
+      query: (query: string) => ({
+        url: "/promotions/best-deals?" + query,
         method: "GET",
-        data,
       }),
       providesTags: ["best-deals"],
     }),

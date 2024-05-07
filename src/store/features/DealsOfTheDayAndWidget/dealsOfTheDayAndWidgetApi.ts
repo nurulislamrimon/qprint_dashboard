@@ -4,10 +4,9 @@ export const dealsOfTheDayAndWidgetApi: any = baseApi.injectEndpoints({
   endpoints: (build) => ({
     //get deals and widget
     getDealsOfTheDayAndWidget: build.query({
-      query: (data) => ({
-        url: "/promotions/deals-of-the-day",
+      query: (query: string) => ({
+        url: "/promotions/deals-of-the-day?" + query,
         method: "GET",
-        data,
       }),
       providesTags: ["deals-of-the-day-and-widget"],
     }),

@@ -4,10 +4,9 @@ export const quickOrderApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     //get all get add quickOrderApi sales
     getAllQuickOrder: build.query({
-      query: (data) => ({
-        url: `/quick-order?${data}`,
+      query: (query: string) => ({
+        url: `/quick-order?${query}`,
         method: "GET",
-        data,
       }),
       providesTags: ["order"],
     }),

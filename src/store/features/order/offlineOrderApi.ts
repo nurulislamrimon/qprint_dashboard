@@ -4,10 +4,9 @@ export const offlineOrderApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     //get all ofline sales
     oflineSales: build.query({
-      query: (data) => ({
-        url: "/offline-sale",
+      query: (query) => ({
+        url: "/offline-sale?" + query,
         method: "GET",
-        data,
       }),
       providesTags: ["sales"],
     }),

@@ -159,7 +159,7 @@ input[type="color"]::-webkit-color-swatch {
 
 /* <== Login Image By Poran ==> */
 .login-container-image {
-  background-image: url(https://picsum.photos/1920/1920/?random);
+  background-image: url("../assets/login-background.png");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;

@@ -4,17 +4,13 @@ export const businessAnalyticsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     //get all Business Analytics data
     getbusinessAnalytics: build.query({
-      query: (data) => ({
-        url: `/dashboard/order-counted?${data}`,
+      query: (query: string) => ({
+        url: `/dashboard/order-counted?${query}`,
         method: "GET",
-        data,
       }),
       providesTags: ["business-analytics"],
     }),
-
   }),
 });
 
-export const {
-  useGetbusinessAnalyticsQuery,
-} = businessAnalyticsApi;
+export const { useGetbusinessAnalyticsQuery } = businessAnalyticsApi;

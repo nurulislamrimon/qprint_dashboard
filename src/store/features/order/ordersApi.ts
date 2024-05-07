@@ -4,10 +4,9 @@ export const ordersApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     //get all Onlie sales
     getAllOnlineOrders: build.query({
-      query: (data) => ({
-        url: "/online-order",
+      query: (query: string) => ({
+        url: "/online-order?" + query,
         method: "GET",
-        data,
       }),
       providesTags: ["order"],
     }),
