@@ -15,6 +15,7 @@ const PrintingPaperSizeLayout = ({ data }: PaperSizeData) => {
   const [deletePrintingSetup] = useDeletePrintingSetupMutation();
   const [openModal, setOpenModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleDeleteModal = () => {
     setOpenDeleteModal((prevState) => !prevState);

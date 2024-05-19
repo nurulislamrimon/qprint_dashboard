@@ -1,17 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IconPalette, IconPhotoPlus } from "@tabler/icons-react";
-import ImagePlusInput from "@/assets/assetsSVG/ImagePlusInput";
 import LeftToggle from "@/assets/assetsSVG/LeftToggle";
 import RightToggle from "@/assets/assetsSVG/RightToggle";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
-import { setBestDeals } from "@/store/features/bestDeals/bestDealsSlice";
+import FileUploader from "@/components/shared/FileUploader/FileUploader";
+import {
+  clearBackgroundPhoto,
+  setBackgroundColor,
+} from "@/store/features/bestDeals/bestDealsSlice";
 
-const ChooseColorOrImage = () => {
+const ChooseColorOrImage = ({
+  handleChange,
+}: {
+  handleChange: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => void;
+}) => {
   const [isColorSelected, setColorSelected] = useState(true);
+  const bestDeals = useAppSelector((state) => state.bestDealsSlice);
   const dispatch = useAppDispatch();
-  const { backgroundColor } = useAppSelector((state) => state.bestDealsSlice);
-  // console.log(backgroundColor);
-  const formData = new FormData();
+
+  useEffect(() => {
+    if (isColorSelected) {
+      dispatch(clearBackgroundPhoto());
+    } else {
+      dispatch(setBackgroundColor());
+    }
+    // setColorSelected(bestDeals.backgroundColor !== "");
+  }, [isColorSelected, dispatch, bestDeals.backgroundColor]);
+
   const toggleSelection = () => {
     setColorSelected(!isColorSelected);
   };
@@ -22,9 +41,9 @@ const ChooseColorOrImage = () => {
         <p className="text-text-black-opacity-70">Background</p>
         <div className="flex items-center justify-center gap-2">
           <IconPalette className="text-black opacity-50" />
-          <button onClick={toggleSelection}>
+          <div onClick={toggleSelection}>
             {isColorSelected ? <LeftToggle /> : <RightToggle />}
-          </button>
+          </div>
           <IconPhotoPlus className="text-black opacity-50" />
         </div>
       </div>
@@ -37,12 +56,10 @@ const ChooseColorOrImage = () => {
                 <input
                   id="colorPicker"
                   type="color"
-                  defaultValue={backgroundColor}
+                  defaultValue={bestDeals?.backgroundColor}
                   className="h-full w-full"
                   name="backgroundColor"
-                  onChange={(e) =>
-                    dispatch(setBestDeals({ [e.target.name]: e.target.value }))
-                  }
+                  onChange={handleChange}
                 />
               </div>
             </label>
@@ -53,24 +70,16 @@ const ChooseColorOrImage = () => {
           </div>
         ) : (
           <div>
-            <label htmlFor="fileInput">
-              <div className=" h-48 w-full border  flex items-center justify-center rounded-lg ">
-                <ImagePlusInput />
-              </div>
-              <input
-                type="file"
-                id="fileInput"
-                name="backgroundPhoto"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  if (e.target?.files?.length) {
-                    formData.append(e.target.name, e.target?.files[0]);
-                    // create image url using file value
-                    const reader = URL.createObjectURL(e.target?.files[0]);
-                  }
-                }}
-                className=" hidden  "
-              />
-            </label>
+            <FileUploader
+              name="backgroundPhoto"
+              className="min-h-48  h-full min-w-48 w-auto relative cursor-pointer  flex items-center justify-center text-black-opacity-60 text-xs "
+              data={bestDeals}
+              multiple={true}
+              onChange={handleChange}
+              accept="image/jpg,image/jpeg,image/png"
+              maxSize={2}
+            ></FileUploader>
+
             <p className="mt-2 text-black-opacity-60 text-sm">
               You can change background image
             </p>

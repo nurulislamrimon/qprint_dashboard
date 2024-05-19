@@ -13,17 +13,19 @@ interface IBestDealsProduct {
   link: string;
   productId: string;
   averageRating: number;
+  _id: string;
 }
-export interface IBestDealsSlice {
+interface IBestDealsSlice {
   _id: string;
   title: string;
   startDate: string;
   endDate: string;
   description: string;
-  firstProductPhoto: File | null;
-  secondProductPhoto: File | null;
   products: IBestDealsProduct[];
   searchProduct: string;
+  bestDealsFiles: Record<string, File>;
+  backgroundPhoto: File | null;
+  backgroundColor: string;
 }
 
 const initialState: any | Record<string, unknown> = {};
@@ -46,6 +48,19 @@ const bestDealsSlice = createSlice({
       }
     },
 
+    setBestDealsFiles: (state, action) => {
+      state.bestDealsFiles = { ...state.bestDealsFiles, ...action.payload };
+    },
+    clearBackgroundPhoto: (state) => {
+      if (state.bestDealsFiles?.backgroundPhoto?.name) {
+        state.bestDealsFiles.backgroundPhoto = null;
+      }
+      state.backgroundPhoto = null;
+    },
+    setBackgroundColor: (state) => {
+      state.backgroundColor = "";
+    },
+
     addToBestDeals: (state, action: PayloadAction<IProduct>) => {
       const newProduct = action.payload;
       return {
@@ -59,7 +74,7 @@ const bestDealsSlice = createSlice({
       return {
         ...state,
         products: (state.products || []).filter(
-          // @ts-ignore
+          //@ts-ignore
           (product: any) => product._id !== action.payload._id
         ),
       };
@@ -74,7 +89,10 @@ export const {
   setBestDeals,
   addToBestDeals,
   removeFromBestDeals,
+  setBestDealsFiles,
   setSearchProductEmpty,
+  clearBackgroundPhoto,
+  setBackgroundColor,
 } = bestDealsSlice.actions;
 
 export default bestDealsSlice.reducer;

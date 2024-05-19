@@ -11,6 +11,13 @@ export const totalSelsSummarysApi = baseApi.injectEndpoints({
       }),
       providesTags: ["order-Reports"],
     }),
+    getLast30DaysTotalSoldAmount: build.query({
+      query: (query: string) => ({
+        url: "/dashboard/total-order-amount?" + query,
+        method: "GET",
+      }),
+      providesTags: ["order-Reports"],
+    }),
     getProductSold: build.query({
       query: (query: string) => ({
         url: `/dashboard/total-order-items?${query}`,
@@ -32,4 +39,5 @@ export const {
   useGetTotalSoldAmountQuery,
   useGetProductSoldQuery,
   useGetAllUsersQuery,
+  useGetLast30DaysTotalSoldAmountQuery,
 } = totalSelsSummarysApi;

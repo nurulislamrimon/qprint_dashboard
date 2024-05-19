@@ -9,16 +9,21 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { useCreatePrintingSetupMutation } from "@/store/features/shopSetup/printingSetup/printingSetupApi";
 import { toast } from "react-toastify";
+import { useState } from "react";
+import Loader from "@/components/shared/loaders/Loader";
 
 const PrintingModeModal = ({ openModal, handleCloseModal }: any) => {
   const dispatch = useAppDispatch();
   const { price, printingSetupType, printingColorMode } = useAppSelector(
     (state) => state.printingColorMode
   );
+  const [loading, setLoading] = useState(false);
 
   const [createPrintingSetup] = useCreatePrintingSetupMutation();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
+
     e.preventDefault();
     const data = {
       price: price,
@@ -38,6 +43,8 @@ const PrintingModeModal = ({ openModal, handleCloseModal }: any) => {
       }
     } catch (error) {
       console.log("Mode error:", error);
+    } finally {
+      setLoading(false);
     }
     handleCloseModal(false);
   };
@@ -48,7 +55,8 @@ const PrintingModeModal = ({ openModal, handleCloseModal }: any) => {
         isVisible={openModal}
         modalWidthControlClassName="w-full md:w-[500px]"
       >
-        <div className="p-5">
+        <div className="p-5 overflow-hidden">
+          {loading && <Loader />}
           <div className="flex items-center justify-between mb-[30px]">
             <p className="text-base md:text-lg text-black-opacity-70">
               Add Printing Mode

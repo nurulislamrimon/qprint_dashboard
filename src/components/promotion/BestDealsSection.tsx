@@ -1,13 +1,15 @@
 "use client";
 import React, { useLayoutEffect, useState } from "react";
 import ChooseColorOrImage from "./card/ChooseColorOrImage";
-import FileInput from "../ui/FileInput";
 import CustomGlobalInput from "../shared/CustomGlobalInput";
 import ButtonSecondary from "../ui/btn/ButtonSecondary";
 import ButtonPrimary from "../ui/btn/ButtonPrimary.";
 import BottomModal from "./BottomModal";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
-import { setBestDeals } from "@/store/features/bestDeals/bestDealsSlice";
+import {
+  setBestDeals,
+  setBestDealsFiles,
+} from "@/store/features/bestDeals/bestDealsSlice";
 import {
   useAddBestDealsMutation,
   useGetBestDealsQuery,
@@ -15,6 +17,8 @@ import {
 import { toast } from "react-toastify";
 import SearchProductModal from "./SearchProductModal";
 import ProductSmallCard from "./card/ProductSmallCard";
+import Loader from "../shared/loaders/Loader";
+import FileUploader from "../shared/FileUploader/FileUploader";
 
 const BestDealsSection = () => {
   const [loading, setLoading] = useState(false);
@@ -23,43 +27,88 @@ const BestDealsSection = () => {
   const [showBottomModal, setShowBottomModal] = useState(false);
   // get search data
   const dispatch = useAppDispatch();
-  const {
-    title,
-    description,
-    startDate,
-    endDate,
-    backgroundColor,
-    searchProduct,
-    products,
-  } = useAppSelector((state) => state.bestDealsSlice);
-
+  const bestDeals = useAppSelector((state) => state.bestDealsSlice);
+  console.log(bestDeals);
   const formData = new FormData();
 
   useLayoutEffect(() => {
     dispatch(setBestDeals(data?.data));
   }, [data, dispatch]);
 
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const fieldName = e.target?.name;
+
+    if (e.target instanceof HTMLInputElement && e.target?.files) {
+      const files = e.target?.files;
+      if (files && files.length) {
+        const objUrl = URL.createObjectURL(files[0]);
+
+        dispatch(setBestDeals({ [fieldName]: objUrl }));
+        dispatch(setBestDealsFiles({ [fieldName]: files[0] }));
+      }
+    } else {
+      const value = e.target.value;
+      dispatch(setBestDeals({ [fieldName]: value }));
+    }
+  };
+
   const toggleBottomModal = () => {
     setShowBottomModal((prevState) => !prevState);
   };
 
+  // const formatDate = (date: Date): string => {
+  //   const month = String(date.getMonth() + 1).padStart(2, "0");
+  //   const day = String(date.getDate()).padStart(2, "0");
+  //   const year = date.getFullYear();
+  //   return `${month}/${day}/${year}`;
+  // };
+
   // handle submit
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    formData.append("title", title as string);
-    formData.append("description", description as string);
-    formData.append("startDate", startDate as string);
-    formData.append("endDate", endDate as string);
-    formData.append("backgroundColor", backgroundColor as string);
-
     setLoading(true);
 
+    formData.append("title", bestDeals.title);
+    formData.append("description", bestDeals.description);
+    formData.append("endDate", bestDeals.endDate);
+    formData.append("startDate", bestDeals.startDate);
+
+    if (bestDeals?.backgroundColor !== "") {
+      formData.append("backgroundColor", bestDeals.backgroundColor);
+      formData.append("backgroundPhoto", "");
+    } else {
+      formData.append(
+        "backgroundPhoto",
+        bestDeals?.bestDealsFiles?.backgroundPhoto
+      );
+      formData.append("backgroundColor", "");
+    }
+
+    if (bestDeals?.bestDealsFiles?.firstProductPhoto) {
+      formData.append(
+        "firstProductPhoto",
+        bestDeals.bestDealsFiles.firstProductPhoto
+      );
+    }
+    if (bestDeals?.bestDealsFiles?.secondProductPhoto) {
+      formData.append(
+        "secondProductPhoto",
+        bestDeals.bestDealsFiles.secondProductPhoto
+      );
+    }
+
     // Append products individually
-    (products as any[]).forEach((product) => {
+    (bestDeals?.products as any[]).forEach((product) => {
       formData.append("products", JSON.stringify(product));
     });
     try {
       const res = await addBestDeals(formData);
+      console.log(res);
 
       if (res && "data" in res) {
         toast.success(res.data.message);
@@ -77,43 +126,40 @@ const BestDealsSection = () => {
 
   return (
     <div
-      className={
-        loading
-          ? "opacity-90 pointer-events-none"
-          : "bg-white w-full h-[calc(100vh-90px)] mt-1 md:p-7 p-5 overflow-y-auto "
-      }
+      className={`bg-white w-full h-[calc(100vh-90px)] mt-1 md:p-7 p-5 overflow-y-auto  ${
+        loading && "overflow-hidden relative"
+      }`}
     >
+      {loading && <Loader />}
       <h3 className="text-black-opacity-60 text-lg">Add New Best Deal</h3>
 
       <form onSubmit={handleSubmit}>
         {/* slider design start */}
         <div className="flex items-center lg:flex-row flex-col lg:justify-center justify-start lg:gap-28  gap-0  ">
           <div className="lg:w-8/12 w-full">
-            <ChooseColorOrImage />
+            <ChooseColorOrImage handleChange={handleChange} />
           </div>
           <div className="flex gap-5">
-            <FileInput
+            <FileUploader
               name="firstProductPhoto"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                if (e.target?.files?.length) {
-                  formData.append(e.target.name, e.target?.files[0]);
-                  // create image url using file value
-                  const reader = URL.createObjectURL(e.target?.files[0]);
-                }
-              }}
-              imageBottomText="Size :  320px to 280px"
-            />
-            <FileInput
+              className="min-h-48  h-full min-w-48 w-auto relative cursor-pointer border border-dashed border-black-opacity-20 flex items-center justify-center text-black-opacity-60 text-xs "
+              data={bestDeals}
+              multiple={true}
+              onChange={handleChange}
+              accept="image/jpg,image/jpeg,image/png"
+              maxSize={2}
+              bottomText="Add First Photo"
+            ></FileUploader>
+            <FileUploader
               name="secondProductPhoto"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                if (e.target?.files?.length) {
-                  formData.append(e.target.name, e.target?.files[0]);
-                  // create image url using file value
-                  const reader = URL.createObjectURL(e.target?.files[0]);
-                }
-              }}
-              imageBottomText="Size :  320px to 280px"
-            />
+              className="min-h-48  h-full min-w-48 w-auto relative cursor-pointer border border-dashed border-black-opacity-20 flex items-center justify-center text-black-opacity-60 text-xs "
+              data={bestDeals}
+              multiple={true}
+              onChange={handleChange}
+              accept="image/jpg,image/jpeg,image/png"
+              maxSize={2}
+              bottomText="Add Second Photo"
+            ></FileUploader>
           </div>
         </div>
         {/* slider design end */}
@@ -123,17 +169,15 @@ const BestDealsSection = () => {
             label="Title"
             type="text"
             placeholder="Type here"
-            value={title}
+            value={bestDeals?.title}
             name="title"
-            onChange={(e) =>
-              dispatch(setBestDeals({ [e.target.name]: e.target.value }))
-            }
+            onChange={handleChange}
           />
           <CustomGlobalInput
             label="Start Date"
             type="date"
             placeholder="Type here"
-            value={startDate}
+            value={bestDeals?.startDate}
             name="startDate"
             onChange={(e) =>
               dispatch(setBestDeals({ [e.target.name]: e.target.value }))
@@ -143,7 +187,7 @@ const BestDealsSection = () => {
             label="End Date"
             type="date"
             placeholder="Type here"
-            value={endDate}
+            value={bestDeals?.endDate}
             name="endDate"
             onChange={(e) =>
               dispatch(setBestDeals({ [e.target.name]: e.target.value }))
@@ -156,7 +200,7 @@ const BestDealsSection = () => {
             type="textarea"
             placeholder="Type here"
             textareaLength={170}
-            value={description}
+            value={bestDeals?.description}
             name="description"
             onChange={(e) =>
               dispatch(setBestDeals({ [e.target.name]: e.target.value }))
@@ -176,9 +220,9 @@ const BestDealsSection = () => {
               }
             />
           </div>
-          {searchProduct ? (
+          {bestDeals?.searchProduct ? (
             <div className="absolute -top-[380px] w-full">
-              <SearchProductModal data={searchProduct} />
+              <SearchProductModal data={bestDeals?.searchProduct} />
             </div>
           ) : (
             ""
@@ -190,7 +234,7 @@ const BestDealsSection = () => {
         {/* we will use only one card from here */}
 
         <div className="flex items-center justify-start gap-4 mt-2 overflow-x-auto w-full">
-          {products?.map((product: any, index: number) => (
+          {bestDeals?.products?.map((product: any, index: number) => (
             <ProductSmallCard key={index} data={product} />
           ))}
         </div>

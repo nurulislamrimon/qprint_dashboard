@@ -53,7 +53,7 @@ const OrderDrawerInformation = ({ data }: any) => {
           <Link
             className="group"
             onClick={(e) => e.stopPropagation()}
-            href={`/order/${data?.data?._id}`}
+            href={`/order/${data?.data?.id}`}
           >
             <button className="border rounded-full p-2 group-hover:bg-fuchsia-600 group-hover:duration-500">
               <IconEye

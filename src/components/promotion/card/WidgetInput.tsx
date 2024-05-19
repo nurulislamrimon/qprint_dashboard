@@ -1,4 +1,5 @@
 import CustomGlobalInput from "@/components/shared/CustomGlobalInput";
+import Loader from "@/components/shared/loaders/Loader";
 import FileInput from "@/components/ui/FileInput";
 import ButtonPrimary from "@/components/ui/btn/ButtonPrimary.";
 import ButtonSecondary from "@/components/ui/btn/ButtonSecondary";
@@ -18,7 +19,6 @@ const WidgetInput = (data: any) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     formData.append("widget", JSON.stringify(data?.data));
-
     setLoading(true);
     try {
       const res = await addWidget(formData);
@@ -37,8 +37,11 @@ const WidgetInput = (data: any) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white mt-1 md:p-7 p-5 lg:h-[calc(100vh-90px)] h-full lg:overflow-y-auto   "
+      className={`bg-white mt-1 md:p-7 p-5 lg:h-[calc(100vh-90px)] h-full relative  ${
+        loading ? "overflow-hidden" : "lg:overflow-y-auto"
+      }`}
     >
+      {loading && <Loader />}
       <h3 className="text-black-opacity-60 text-lg">Widget</h3>
       {/* input section flex */}
       <div className="flex  justify-center flex-col gap-5 mt-12">

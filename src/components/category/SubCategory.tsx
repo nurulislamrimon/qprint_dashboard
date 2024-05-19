@@ -51,9 +51,7 @@ const SubCategory = ({ data, id }: any) => {
   return (
     <div
       className={
-        loading
-          ? "opacity-50 pointer-events-none"
-          : "hover:bg-main-bg-color-opacity-32 transition-all rounded-custom-5px px-3.5 py-3 flex items-center justify-between group cursor-pointer"
+        "hover:bg-main-bg-color-opacity-32 transition-all rounded-custom-5px px-3.5 py-3 flex items-center justify-between group cursor-pointer"
       }
     >
       <span className="text-base text-black-opacity-80 group-hover:text-fuchsia-800 transition-all">

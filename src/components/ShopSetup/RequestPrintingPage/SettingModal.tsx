@@ -1,5 +1,6 @@
 import CustomGlobalModal from "@/components/shared/CustomGlobalModal";
 import DrawerModalCloseBTN from "@/components/shared/DrawerModalCloseBTN";
+import Loader from "@/components/shared/loaders/Loader";
 import ButtonPrimary from "@/components/ui/btn/ButtonPrimary.";
 import { useCreatePrintingSetupMutation } from "@/store/features/shopSetup/printingSetup/printingSetupApi";
 import { setUnit } from "@/store/features/shopSetup/printingSetup/unitSlice";
@@ -33,13 +34,14 @@ const SettingModal = ({ handleModal }: any) => {
     }
   };
   return (
-    <div className={loading ? "opacity-90 pointer-events-none" : ""}>
+    <div className="">
       <CustomGlobalModal
         mainClassName="w-[500px]"
         setOpenModal={handleModal}
         isVisible={handleModal}
       >
-        <div className="p-5 relative flex flex-col gap-12">
+        <div className="p-5 relative flex flex-col gap-12 overflow-hidden">
+          {loading && <Loader />}
           <span className="text-lg text-black-opacity-10">Settings</span>
           <div className="absolute top-2.5 right-2.5">
             <DrawerModalCloseBTN handleClose={handleModal} />

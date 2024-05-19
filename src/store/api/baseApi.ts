@@ -14,6 +14,7 @@ export const baseApi = createApi({
     "order",
     "customer",
     "printing-setup",
+    "printing-request",
     "shipping-charge",
     "quick-order",
     "business-analytics",

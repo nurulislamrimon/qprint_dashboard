@@ -10,42 +10,51 @@ import ProductCard from "./ProductCard";
 import PosCategoryCard from "./PosCategoryCard";
 import PosCartCard from "./PosCartCard";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
-import { setBestDeals, setSearchProductEmpty } from "@/store/features/bestDeals/bestDealsSlice";
+import {
+  setBestDeals,
+  setSearchProductEmpty,
+} from "@/store/features/bestDeals/bestDealsSlice";
 import CardSkeleton from "../shared/skeleton/CardSkeleton";
 
 import ProductEmptyState from "./ProductEmptyState";
 import { useState } from "react";
 import ButtonPrimary from "../ui/btn/ButtonPrimary.";
 
-
-
-
 const PosHomepage = () => {
-
   const { searchProduct } = useAppSelector((state) => state.bestDealsSlice);
-  const { searchProductByCategory } = useAppSelector((state) => state.searchProductByCategorySlice);
+  const { searchProductByCategory } = useAppSelector(
+    (state) => state.searchProductByCategorySlice
+  );
   const [page, setPage] = useState(10);
-  const { data, isLoading } = useProductsQuery("")
+  const { data, isLoading } = useProductsQuery("");
   const { data: category } = useCategoriesQuery();
   const dispatch = useAppDispatch();
   const { data: products, isLoading: productLoading } = useSearchProductQuery(
-    `searchTerm=${searchProduct ? searchProduct : ' '}&${searchProductByCategory ? `category.categoryName=${searchProductByCategory}` : ''}&limit=${page}`);
-
+    `searchTerm=${searchProduct ? searchProduct : " "}&${
+      searchProductByCategory
+        ? `category.categoryName=${searchProductByCategory}`
+        : ""
+    }&limit=${page}`
+  );
 
   // Load More Product Handler
   const loadMoreProducts = () => {
-    setPage(prevValue => prevValue += 10)
-  }
+    setPage((prevValue) => (prevValue += 10));
+  };
 
   return (
-    <div className="bg-body-main-bg-color grid grid-cols-1 md:grid-cols-4 h-[calc(100vh-90px)] overflow-y-auto w-full gap-1 mt-1">
-      <div className="bg-white md:px-5 md:py-7 p-5 flex flex-col gap-[30px] md:col-span-3">
+    <div className="bg-body-main-bg-color grid grid-cols-1 md:grid-cols-4  gap-1 h-[calc(100vh-90px)] overflow-y-auto w-full overflow-hidden  mt-1">
+      <div className="bg-white md:px-5 md:py-7 p-5 flex flex-col gap-[30px] md:col-span-3 ">
         <div className="flex md:flex-row flex-col md:items-center md:justify-between md:gap-10 gap-5">
           <div className="flex gap-2.5">
             <span className="text-black md:text-lg text-base font-medium whitespace-nowrap">
               Choose Category
             </span>
-            <div className={`${isLoading && "animate-ping"} bg-green-opacity-10 flex items-center justify-center  rounded-full w-7 h-7 p-1 text-green-color  text-[10px]`}>
+            <div
+              className={`${
+                isLoading && "animate-ping"
+              } bg-green-opacity-10 flex items-center justify-center  rounded-full w-7 h-7 p-1 text-green-color  text-[10px]`}
+            >
               {category?.data?.length}
             </div>
           </div>
@@ -68,37 +77,25 @@ const PosHomepage = () => {
                 }
               }}
             />
-
           </div>
           <div className="h-[calc(100vh-300px)] overflow-y-auto">
-            {
-              products?.data?.length === 0 ? (
-
-                <ProductEmptyState message="Sorry this product is not available." />
-              )
-                :
-                (
-                  <div className="pos-product-cards-container-custom-grid">
-                    {
-                      productLoading ? (
-                        Array.from({ length: 15 }).map((_, index) => (
-                          <CardSkeleton key={index} />
-                        ))
-                      )
-                        :
-                        (
-                          products?.data?.map((product: IProduct, i: number) => (
-                            <ProductCard
-                              key={i}
-                              product={product}
-                              isLoading={isLoading}
-                            />
-                          ))
-                        )
-                    }
-                  </div>
-                )
-            }
+            {products?.data?.length === 0 ? (
+              <ProductEmptyState message="Sorry this product is not available." />
+            ) : (
+              <div className="pos-product-cards-container-custom-grid">
+                {productLoading
+                  ? Array.from({ length: 15 }).map((_, index) => (
+                      <CardSkeleton key={index} />
+                    ))
+                  : products?.data?.map((product: IProduct, i: number) => (
+                      <ProductCard
+                        key={i}
+                        product={product}
+                        isLoading={isLoading}
+                      />
+                    ))}
+              </div>
+            )}
             <div className="flex items-center justify-center mt-5">
               <div onClick={() => loadMoreProducts()}>
                 <ButtonPrimary type="submit" buttonText="Load More" />
@@ -108,14 +105,11 @@ const PosHomepage = () => {
         </div>
       </div>
       {/* pos cart  */}
-
-
-      <PosCartCard />
-
+      <div className="shrink-0">
+        <PosCartCard />
+      </div>
     </div>
   );
 };
 
 export default PosHomepage;
-
-

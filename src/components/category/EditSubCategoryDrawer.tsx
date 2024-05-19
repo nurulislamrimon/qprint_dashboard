@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { setSubCategory } from "@/store/features/category/subCategorySlice";
 import { useLayoutEffect, useState } from "react";
 import { toast } from "react-toastify";
+import Loader from "../shared/loaders/Loader";
 
 interface EditSubCategoryDrawerProps {
   data: any;
@@ -52,12 +53,13 @@ const EditSubCategoryDrawer = ({
     }
   };
   return (
-    <div className={loading ? "opacity-50 pointer-events-none" : ""}>
+    <div>
       <CustomGlobalDrawer
         modalWidthControlClassName="w-full md:w-[500px]"
         isVisible={openDrawer}
       >
-        <div className="md:px-5 p-5 md:py-7 ">
+        <div className="md:px-5 p-5 md:py-7 overflow-hidden">
+          {loading && <Loader />}
           <div className="flex items-center justify-between">
             <span className="text-lg text-black-opacity-70">
               Edit Sub Category
@@ -78,7 +80,7 @@ const EditSubCategoryDrawer = ({
             <div className="fixed bottom-5  md:w-[465px] w-[calc(100vw-40px)]">
               <ButtonPrimary
                 type="submit"
-                buttonText={loading ? "Loading..." : "Update Sub Category"}
+                buttonText={loading ? "Updating..." : "Update Sub Category"}
                 className="w-full"
               />
             </div>

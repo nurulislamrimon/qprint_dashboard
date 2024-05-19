@@ -16,27 +16,37 @@ import { getDateFormat } from "@/utils/getDateFormat";
 import AuthorReply from "./AuthorReply";
 import DrawerModalCloseBTN from "../shared/DrawerModalCloseBTN";
 import imgPlaceholder from "@/assets/placeholderImgIcon.svg";
-import personPlaceholder from "@/assets/personPlaceholder.png"
+import personPlaceholder from "@/assets/personPlaceholder.png";
+import { useState } from "react";
+import Loader from "../shared/loaders/Loader";
 
 const ReviewModal = ({ openModal, handleCloseModal, id }: any) => {
   const { data, isLoading } = useReviewQuery(id);
+  const [loading, setLoading] = useState(false);
 
   const [deleteReview] = useDeleteReviewMutation();
 
   // handle delete
   const handleDelete = async (id: string) => {
+    setLoading(true);
     try {
       const res = await deleteReview(id);
-      console.log(res);
     } catch (err: any) {
       console.error(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div>
-      <CustomGlobalDrawer isVisible={openModal} setOpenDrawer={handleCloseModal} modalWidthControlClassName="w-full md:w-[500px]">
-        <div className="p-5">
+      <CustomGlobalDrawer
+        isVisible={openModal}
+        setOpenDrawer={handleCloseModal}
+        modalWidthControlClassName="w-full md:w-[500px]"
+      >
+        <div className="p-5 overflow-hidden">
+          {loading && <Loader />}
           <div className="flex justify-between items-center mb-[30px]">
             <span className="text-black-opacity-50 text-lg">Review</span>
 
@@ -47,7 +57,11 @@ const ReviewModal = ({ openModal, handleCloseModal, id }: any) => {
             <div className="flex items-center gap-5">
               <div className="w-[75px] h-[75px] p-2 border rounded-md shrink-0 relative ">
                 <Image
-                  src={isLoading ? imgPlaceholder : `${mainUrl}${data?.data?.product?.productPhoto}`}
+                  src={
+                    isLoading
+                      ? imgPlaceholder
+                      : `${mainUrl}${data?.data?.product?.productPhoto}`
+                  }
                   alt="profile"
                   objectFit="cover"
                   fill
@@ -69,7 +83,11 @@ const ReviewModal = ({ openModal, handleCloseModal, id }: any) => {
                 <div className="flex items-center gap-5">
                   <div className="w-[45px] h-[45px] relative ">
                     <Image
-                      src={isLoading ? personPlaceholder : `${mainUrl}${data?.data?.reviewer?.profilePhoto}`}
+                      src={
+                        isLoading
+                          ? personPlaceholder
+                          : `${mainUrl}${data?.data?.reviewer?.profilePhoto}`
+                      }
                       alt="profile"
                       objectFit="cover"
                       fill
@@ -91,10 +109,11 @@ const ReviewModal = ({ openModal, handleCloseModal, id }: any) => {
                     <span
                       key={starIndex}
                       className={`
-                  ${starIndex < data?.data?.rating
-                          ? "text-[#EDAB00]"
-                          : "text-[#ccc] bg-transparent"
-                        }
+                  ${
+                    starIndex < data?.data?.rating
+                      ? "text-[#EDAB00]"
+                      : "text-[#ccc] bg-transparent"
+                  }
                 `}
                     >
                       <IconStar

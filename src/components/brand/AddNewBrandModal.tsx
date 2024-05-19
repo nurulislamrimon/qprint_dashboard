@@ -12,8 +12,11 @@ import {
   setBrandlocalUrl,
 } from "@/store/features/brand/createBrandSlice";
 import FileInput from "../ui/FileInput";
+import { useState } from "react";
+import Loader from "../shared/loaders/Loader";
 
 const AddNewBrandModal = ({ open, handleClose }: any) => {
+  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const { brandName, brandPhoto, brandlocalUrl } = useAppSelector(
     (state) => state.createBand
@@ -33,6 +36,7 @@ const AddNewBrandModal = ({ open, handleClose }: any) => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
     const formData = new FormData();
     formData.append("brandName", brandName);
@@ -44,11 +48,14 @@ const AddNewBrandModal = ({ open, handleClose }: any) => {
         handleClose();
         toast.success(res.data.message);
       }
+
       if (res && "error" in res) {
         toast.error((res.error as Error).message);
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,7 +67,8 @@ const AddNewBrandModal = ({ open, handleClose }: any) => {
         drawerControllerClassName="z-50"
         modalWidthControlClassName="w-full md:w-[500px]"
       >
-        <div className="px-5 py-[30px] flex flex-col gap-10">
+        <div className="px-5 py-[30px] flex flex-col gap-10 overflow-hidden">
+          {loading && <Loader />}
           <div className="flex items-center  justify-between">
             <span className="text-black font-medium text-lg">
               Add New Brand
@@ -90,7 +98,7 @@ const AddNewBrandModal = ({ open, handleClose }: any) => {
             <div className="fixed bottom-5 md:w-[450px] w-[calc(100vw-40px)]">
               <ButtonPrimary
                 type="submit"
-                buttonText="Add Brand"
+                buttonText={loading ? "Adding Brand..." : "Add Brand"}
                 className="w-full "
               />
             </div>

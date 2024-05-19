@@ -12,6 +12,7 @@ export type SliderType = {
   discountedPrice: number;
   sliderTitle: string;
   slider: string;
+  sliderLocalPhotoUrl: string;
 };
 
 const initialState: SliderType | Record<string, unknown> = {};

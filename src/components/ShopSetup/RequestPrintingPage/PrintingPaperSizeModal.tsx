@@ -11,16 +11,20 @@ import DrawerModalCloseBTN from "@/components/shared/DrawerModalCloseBTN";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { useCreatePrintingSetupMutation } from "@/store/features/shopSetup/printingSetup/printingSetupApi";
 import { toast } from "react-toastify";
+import { useState } from "react";
+import Loader from "@/components/shared/loaders/Loader";
 
 const PrintingPaperSizeModal = ({ openModal, handleCloseModal }: any) => {
   const dispatch = useAppDispatch();
   const { height, width, printingSetupType } = useAppSelector(
     (state) => state.paperSize
   );
+  const [loading, setLoading] = useState(false);
 
   const [createPrintingSetup] = useCreatePrintingSetupMutation();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
 
     try {
@@ -34,6 +38,8 @@ const PrintingPaperSizeModal = ({ openModal, handleCloseModal }: any) => {
     } catch (error) {
       console.log(error);
       toast.error("Error occurred while adding new Printing Paper Size");
+    } finally {
+      setLoading(false);
     }
     clearPaperSize();
   };
@@ -45,7 +51,8 @@ const PrintingPaperSizeModal = ({ openModal, handleCloseModal }: any) => {
         isVisible={openModal}
         modalWidthControlClassName="w-full md:w-[500px]"
       >
-        <div className="p-5">
+        <div className="p-5  overflow-hidden">
+          {loading && <Loader />}
           <div className="flex items-center justify-between mb-[30px]">
             <p className="text-base md:text-lg text-black-opacity-70">
               Add Printing Paper Size

@@ -10,14 +10,16 @@ import {
   useAddSpecialOfferMutation,
   useGetSpecialOfferQuery,
 } from "@/store/features/shopSetup/specialOffer/specialOfferApi";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import { toast } from "react-toastify";
+import Loader from "../shared/loaders/Loader";
 
 const SpecialOffer = () => {
   const dispatch = useAppDispatch();
   const { maxAmount = 0, discountPercentage = 0 } = useAppSelector(
     (state) => state.specialOfferSlice
   );
+  const [loading, setLoading] = useState(false);
   const { data } = useGetSpecialOfferQuery("");
   const [addSpecialOffer] = useAddSpecialOfferMutation();
 
@@ -27,6 +29,7 @@ const SpecialOffer = () => {
   }, [data, dispatch]);
 
   const hanldleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
     const data = {
       maxAmount: maxAmount || 0,
@@ -43,10 +46,13 @@ const SpecialOffer = () => {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
   return (
-    <form onSubmit={hanldleSubmit} className="p-5 md:p-8">
+    <form onSubmit={hanldleSubmit} className="p-5 md:p-8 relative">
+      {loading && <Loader />}
       <div className="mt-10 flex flex-col gap-7">
         <span className="text-xl">If User Cancel</span>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-[30px]">

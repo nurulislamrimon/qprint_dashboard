@@ -2,6 +2,7 @@
 import LeftToggle from "@/assets/assetsSVG/LeftToggle";
 import RightToggle from "@/assets/assetsSVG/RightToggle";
 import CustomGlobalInput from "@/components/shared/CustomGlobalInput";
+import Loader from "@/components/shared/loaders/Loader";
 import ShopSetupCommonSubmitBTN from "@/components/ShopSetup/ShopSetupCommonSubmitBTN";
 import {
   useAddShippingChargeMutation,
@@ -13,7 +14,7 @@ import {
   setOutsideAmount,
 } from "@/store/features/shopSetup/shippingcharge/shippingChargeSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const DeliveryFee = () => {
@@ -23,7 +24,8 @@ const DeliveryFee = () => {
   );
   const [addShippingCharge] = useAddShippingChargeMutation();
   const { data } = useGetShippinghargeQuery("");
-  // console.log(data);
+
+  const [loading, setLoading] = useState(false);
 
   useLayoutEffect(() => {
     dispatch(setInsideAmount(Number(data?.data?.inside)));
@@ -35,6 +37,7 @@ const DeliveryFee = () => {
 
   // handle submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
     try {
       const res = await addShippingCharge({
@@ -51,13 +54,16 @@ const DeliveryFee = () => {
       }
     } catch (err: any) {
       console.error(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   function handleOnChange(_id: any, arg1: boolean): void {}
 
   return (
-    <form className="p-8" onSubmit={handleSubmit}>
+    <form className="p-8 relative overflow-hidden" onSubmit={handleSubmit}>
+      {loading && <Loader />}
       <div className="flex flex-col items-center md:flex-row gap-[30px]">
         <CustomGlobalInput
           label="Inside Doha"

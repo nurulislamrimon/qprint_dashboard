@@ -102,8 +102,8 @@ const OrderTableRow = ({
         {quickOrder ? quickOrder?.payment?.paymentMethod : ""}
       </td>
       <td className="px-3 md:px-6  [font-size:clamp(13px,3vw,16px)] whitespace-nowrap">
-        {datas ? datas?.totalPrice : ""}
-        {quickOrder ? quickOrder?.totalPrice : ""} QR
+        {datas ? datas?.totalPayable : ""}
+        {quickOrder ? quickOrder?.totalPayable : ""} QR
       </td>
       <td className="mr-5 py-3">
         <div

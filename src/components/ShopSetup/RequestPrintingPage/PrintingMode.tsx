@@ -21,8 +21,6 @@ export type PrintingMode = {
 const PrintingMode = () => {
   const { data, isLoading } = useAllPrintingModeQuery("");
 
-  // console.log(data);
-
   const [openModal, setOpenModal] = useState(false);
 
   const handleCloseModal = () => {

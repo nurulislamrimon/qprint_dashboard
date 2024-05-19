@@ -2,6 +2,7 @@
 import CustomGlobalDrawer from "@/components/shared/CustomGlobalDrawer";
 import CustomGlobalInput from "@/components/shared/CustomGlobalInput";
 import DrawerModalCloseBTN from "@/components/shared/DrawerModalCloseBTN";
+import Loader from "@/components/shared/loaders/Loader";
 import ButtonPrimary from "@/components/ui/btn/ButtonPrimary.";
 import {
   setHeight,
@@ -12,7 +13,7 @@ import {
   useUpdatePrintingSetupMutation,
 } from "@/store/features/shopSetup/printingSetup/printingSetupApi";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const EditPrintingPaperSizeModal = ({
@@ -22,6 +23,7 @@ const EditPrintingPaperSizeModal = ({
 }: any) => {
   const [updatePrintingSetup] = useUpdatePrintingSetupMutation();
   const { data } = usePrintingSetupQuery(id);
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -45,6 +47,7 @@ const EditPrintingPaperSizeModal = ({
   };
 
   const handleSubmit = (e: any) => {
+    setLoading(true);
     e.preventDefault();
     const data = {
       height: height,
@@ -58,6 +61,8 @@ const EditPrintingPaperSizeModal = ({
     } catch (error) {
       console.log(error);
       toast.error("Printing paper size update couldn't update! try again");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,7 +72,8 @@ const EditPrintingPaperSizeModal = ({
         setOpenDrawer={handleCloseModal}
         isVisible={openModal}
       >
-        <div className="p-5">
+        <div className="p-5 overflow-hidden">
+          {loading && <Loader />}
           <div className="flex items-center justify-between mb-[30px]">
             <p className="text-base md:text-lg text-black-opacity-70">
               Edit Printing Paper Size

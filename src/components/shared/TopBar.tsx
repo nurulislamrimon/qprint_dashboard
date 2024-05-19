@@ -97,7 +97,7 @@ const TopBar = ({ title }: TopBarProps) => {
             {isLoading ? (
               <div className="w-full h-full top-0 left-0 object-cover rounded-full animate-pulse absolute bg-gray-200 "></div>
             ) : (
-              <div className="w-full h-full top-0 left-0 object-cover rounded-full absolute">
+              <div className="w-full h-full top-0 border-2 border-fuchsia-700 left-0 object-cover   absolute border-2 border-fuchsia-700 rounded-full ">
                 <Image
                   src={
                     data?.data?.profilePhoto
@@ -105,6 +105,7 @@ const TopBar = ({ title }: TopBarProps) => {
                       : userPlaceholder
                   }
                   alt="profile"
+                  className="rounded-full"
                   fill
                   sizes="200px"
                 />

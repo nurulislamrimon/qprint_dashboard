@@ -7,12 +7,13 @@ import {
   usePrintingSetupQuery,
   useUpdatePrintingSetupMutation,
 } from "@/store/features/shopSetup/printingSetup/printingSetupApi";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import {
   setPrintingMode,
   setPrintingModePrice,
 } from "@/store/features/shopSetup/printingSetup/printingModeSlice";
 import { toast } from "react-toastify";
+import Loader from "@/components/shared/loaders/Loader";
 
 const EditPrintingModeDrawer = ({ openModal, handleCloseModal, id }: any) => {
   const dispatch = useAppDispatch();
@@ -22,6 +23,8 @@ const EditPrintingModeDrawer = ({ openModal, handleCloseModal, id }: any) => {
   const [updatePrintingSetup] = useUpdatePrintingSetupMutation();
   const { data } = usePrintingSetupQuery(id);
 
+  const [loading, setLoading] = useState(false);
+
   useLayoutEffect(() => {
     dispatch(setPrintingModePrice(data?.data?.printingColorMode));
     dispatch(setPrintingModePrice(data?.data?.price));
@@ -29,6 +32,8 @@ const EditPrintingModeDrawer = ({ openModal, handleCloseModal, id }: any) => {
 
   // handle submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
+
     e.preventDefault();
 
     const data = {
@@ -47,12 +52,15 @@ const EditPrintingModeDrawer = ({ openModal, handleCloseModal, id }: any) => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
   return (
     <div>
       <CustomGlobalDrawer isVisible={openModal}>
-        <div className="p-5">
+        <div className="p-5 overflow-hidden">
+          {loading && <Loader />}
           <div className="flex items-center justify-between mb-[30px]">
             <span className="text-base md:text-lg text-black-opacity-70">
               Update Paper Type

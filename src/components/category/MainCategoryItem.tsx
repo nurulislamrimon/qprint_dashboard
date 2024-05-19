@@ -52,7 +52,12 @@ const MainCategoryItem = ({ data, isLoading }: MainCategoryProps) => {
           </div>
         </div>
         <div className="group-hover:flex items-center md:gap-3.5 gap-2.5 hidden transition-all">
-          <button onClick={() => setOpenCategoryEditDrawer(true)}>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDrawer();
+            }}
+          >
             <IconEdit
               stroke={1}
               className="text-fuchsia-800 md:w-5 md:h-5 w-4 h-4"

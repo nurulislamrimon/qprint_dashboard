@@ -1,3 +1,8 @@
+import {
+  useGetLast30DaysTotalSoldAmountQuery,
+  useGetTotalSoldAmountQuery,
+} from "@/store/features/analytics/totalSelsSummarys/totalSelsSummarysApi";
+import { useAppSelector } from "@/store/hook";
 import Image from "next/image";
 import React from "react";
 interface TotalSelsSummaryProps {
@@ -7,7 +12,7 @@ interface TotalSelsSummaryProps {
   totalSelsSummaryTitle?: string;
   totalSelsSummaryPrice?: any;
   tendingIcon?: string | any;
-  percentage?: number | number;
+  percentage?: any;
   TotalSelsSummarySubtitle?: string;
   altName?: string;
   imageClassName?: string;
@@ -54,7 +59,9 @@ const TotalSelsSummary = ({
         >
           {tendingIcon} {percentage} %
         </span>
-        <span className="text-[#ABABAB]">{TotalSelsSummarySubtitle}</span>
+        <span className="text-[#ABABAB]">
+          {TotalSelsSummarySubtitle} in the last 1 month
+        </span>
       </span>
     </div>
   );

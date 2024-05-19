@@ -11,7 +11,7 @@ const ProductSmallCard = ({ data }: any) => {
     <div className="border rounded-lg flex items-center justify-center px-5 gap-2  ">
       <div className="w-12 h-12">
         <Image
-          src={`${mainUrl}${data?.productPhoto}`}
+          src={`${mainUrl + data?.productPhoto}`}
           alt="Product image"
           height={50}
           width={50}

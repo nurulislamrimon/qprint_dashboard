@@ -31,6 +31,8 @@ const UsersCard = ({ data }: UsersCardProps) => {
 
   const { data: userData } = useGetMeQuery("");
 
+  const [loading, setLoading] = useState(false);
+
   const handleClose = () => {
     setOpenModal(false);
   };
@@ -42,12 +44,17 @@ const UsersCard = ({ data }: UsersCardProps) => {
 
   // user delete handler
   const userDeleteHandler = async (id: string) => {
+    setLoading(true);
     try {
       const res = await deleteAdmin(id);
 
       toast.success("User Deleted Successfully");
       handleCloseDeleteModal();
-    } catch (error: any) {}
+    } catch (error: any) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -112,6 +119,7 @@ const UsersCard = ({ data }: UsersCardProps) => {
           handCloseleDeleteModal={handleCloseDeleteModal}
           id={data?._id}
           data={data}
+          loading={loading}
         />
       )}
     </div>

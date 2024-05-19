@@ -12,6 +12,7 @@ import Image from "next/image";
 import { showError } from "@/helpers/showError";
 import React, { useEffect } from "react";
 import TransparentLoader from "@/components/shared/TransparentLoader";
+import Loader from "@/components/shared/loaders/Loader";
 interface ILogin {
   email: string;
   password: string;
@@ -45,8 +46,8 @@ const Login = () => {
   };
 
   return (
-    <React.Fragment>
-      {isLoading && <TransparentLoader />}
+    <div className={`relative  ${isLoading && "pointer-events-none"}`}>
+      {isLoading && <Loader />}
       <div className="h-screen flex justify-center items-center shadow-product-card-shadow login-container-image">
         <div className="bg-white p-5 md:p-12 rounded-cust   om-5px text-center">
           <span className="bg-main-bg-color-opacity-32 p-2 rounded-full text-xs text-fuchsia-800 text-center">
@@ -104,7 +105,7 @@ const Login = () => {
           </a>
         </div>
       </div>
-    </React.Fragment>
+    </div>
   );
 };
 

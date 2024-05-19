@@ -10,6 +10,8 @@ import { useAppDispatch } from "@/store/hook";
 import FileInput from "../ui/FileInput";
 import { resetOffer, setOffer } from "@/store/features/slider/offerSlice";
 import { useState } from "react";
+import Loader from "../shared/loaders/Loader";
+import { mainUrl } from "@/constants/mainUrl";
 const EditOfferSliderDrawer = (data: any) => {
   const [addSlider] = useAddSliderMutation();
   const [loading, setLoading] = useState(false);
@@ -40,13 +42,14 @@ const EditOfferSliderDrawer = (data: any) => {
     }
   };
   return (
-    <div className={loading ? "opacity-90 pointer-events-none" : ""}>
+    <div>
       <CustomGlobalDrawer
         childrenClassName="overflow-y-scroll"
         modalWidthControlClassName="w-full md:w-[500px]"
         isVisible={Object.keys(data).length ? true : false}
       >
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="overflow-hidden">
+          {loading && <Loader />}
           <div className="relative overflow-y-auto p-3.5 flex flex-col gap-3.5">
             <span className="font-medium text-lg">
               {data?.data?.offerTitle}
@@ -68,9 +71,15 @@ const EditOfferSliderDrawer = (data: any) => {
                     );
                     // create image url using file value
                     const reader = URL.createObjectURL(e.target?.files[0]);
+                    dispatch(setOffer({ offerLocalPhotoUrl: reader }));
                   }
                 }}
                 imageBottomText=""
+                localUrl={
+                  data?.data?.offerLocalPhotoUrl === undefined
+                    ? `${mainUrl + data?.data?.productPhoto} `
+                    : data?.data?.offerLocalPhotoUrl
+                }
               />
 
               <div className="grid grid-cols-1 gap-2">

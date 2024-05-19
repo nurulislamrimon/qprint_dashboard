@@ -6,6 +6,7 @@ export interface IUserSetting {
   email: string;
   phoneNumber: string;
   profilePhoto: File | null;
+  localProfilePhotoUrl: string | null;
 }
 
 const initialState: IUserSetting | Record<string, unknown> = {};

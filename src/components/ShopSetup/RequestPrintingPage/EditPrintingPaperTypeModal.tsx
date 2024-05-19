@@ -11,8 +11,9 @@ import {
   usePrintingSetupQuery,
   useUpdatePrintingSetupMutation,
 } from "@/store/features/shopSetup/printingSetup/printingSetupApi";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import { toast } from "react-toastify";
+import Loader from "@/components/shared/loaders/Loader";
 
 const EditPrintingPaperTypeModal = ({
   openModal,
@@ -23,7 +24,7 @@ const EditPrintingPaperTypeModal = ({
   const { price, paperType } = useAppSelector((state) => state.paperType);
   const [updatePrintingSetup] = useUpdatePrintingSetupMutation();
   const { data } = usePrintingSetupQuery(id);
-  console.log(price, paperType);
+  const [loading, setLoading] = useState(false);
 
   useLayoutEffect(() => {
     dispatch(setPaperType(data?.data?.paperType));
@@ -32,6 +33,7 @@ const EditPrintingPaperTypeModal = ({
 
   // handle submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
 
     const data = {
@@ -51,12 +53,15 @@ const EditPrintingPaperTypeModal = ({
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
   return (
     <div>
       <CustomGlobalDrawer isVisible={openModal}>
-        <div className="p-5">
+        <div className="p-5 overflow-hidden">
+          {loading && <Loader />}
           <div className="flex items-center justify-between mb-[30px]">
             <span className="text-base md:text-lg text-black-opacity-70">
               Add Paper Type

@@ -14,9 +14,9 @@ interface customerProps {
 const CustomersTable = ({ data, isLoading, index = 0 }: customerProps) => {
   return (
     <>
-      <td className="md:table-cell hidden">{index + 1}</td>
+      <td className="md:table-cell hidden ">{index + 1}</td>
       <td className="py-5 px-3.5">
-        <div className="flex items-center justify-center gap-1.5 md:gap-3.5">
+        <div className="flex items-center md:justify-center  gap-1.5 md:gap-3.5">
           <div className="w-[28px] h-[28px] md:w-[50px] md:h-[50px] shrink-0 relative ">
             {isLoading ? (
               <Image
@@ -67,7 +67,10 @@ const CustomersTable = ({ data, isLoading, index = 0 }: customerProps) => {
         </div>
       </td>
       <td className="md:table-cell hidden">
-        <Link href={`customers/${data?._id}`}>
+        <Link
+          onClick={(e) => e.stopPropagation()}
+          href={`customers/${data?._id}`}
+        >
           <div className="border hover:border-main-border-color px-4 py-1 transition-all rounded-md w-14 flex items-center justify-center">
             <ViewEye />
           </div>

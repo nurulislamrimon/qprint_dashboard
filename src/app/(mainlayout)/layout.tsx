@@ -14,7 +14,6 @@ const MainLayout = ({
 
   const router = useRouter();
   const isUserLoggedIn = isLoggedIn();
-  console.log("user:::::::", data);
 
   useEffect(() => {
     if (!isUserLoggedIn) {
@@ -23,9 +22,9 @@ const MainLayout = ({
   }, [router, isUserLoggedIn, data]);
 
   return (
-    <div className="flex lg:gap-1 gap-0">
+    <div className="flex lg:gap-1 gap-0 ">
       {/* ==SideBar Nav== */}
-      <div className=" lg:block hidden ">
+      <div className="md:block hidden ">
         <SideNav />
       </div>
       {/* ==Main Content== */}

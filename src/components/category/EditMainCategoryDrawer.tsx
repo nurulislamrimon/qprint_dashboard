@@ -13,6 +13,7 @@ import {
 import { toast } from "react-toastify";
 import FileInput from "../ui/FileInput";
 import { mainUrl } from "@/constants/mainUrl";
+import Loader from "../shared/loaders/Loader";
 
 const EditMainCategoryDrawer = ({ data, handleDrawer }: any) => {
   const [loading, setLoading] = useState(false);
@@ -56,9 +57,14 @@ const EditMainCategoryDrawer = ({ data, handleDrawer }: any) => {
   };
 
   return (
-    <div className={loading ? "opacity-50 pointer-events-none" : ""}>
-      <CustomGlobalDrawer modalWidthControlClassName="w-full md:w-[500px]" isVisible={handleDrawer}>
-        <div className="md:px-5 p-5 md:py-7 ">
+    <div>
+      <CustomGlobalDrawer
+        modalWidthControlClassName="w-full md:w-[500px]"
+        isVisible={handleDrawer}
+      >
+        <div className="md:px-5 p-5 md:py-7 overflow-hidden">
+          {loading && <Loader />}
+
           <div className="flex items-center justify-between">
             <span className="text-lg text-black-opacity-70">Edit Category</span>
             <DrawerModalCloseBTN handleClose={handleDrawer} />

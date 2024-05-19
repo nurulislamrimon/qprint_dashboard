@@ -18,12 +18,21 @@ import {
 import { useCreateAdministratorMutation } from "@/store/features/users/usersApi";
 import FileInput from "../ui/FileInput";
 import { mainUrl } from "@/constants/mainUrl";
+import { useState } from "react";
+import Loader from "../shared/loaders/Loader";
 
 const AddUserModal = ({ handleModal }: any) => {
-
   const dispatch = useAppDispatch();
-  const { fullName, email, password, phoneNumber, role, confirmPassword, profilePhoto: profilePhoto, userLocalUrl } =
-    useAppSelector((state) => state.userAdminSlice);
+  const {
+    fullName,
+    email,
+    password,
+    phoneNumber,
+    role,
+    confirmPassword,
+    profilePhoto: profilePhoto,
+    userLocalUrl,
+  } = useAppSelector((state) => state.userAdminSlice);
   const [createAdministrator] = useCreateAdministratorMutation();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,13 +46,12 @@ const AddUserModal = ({ handleModal }: any) => {
     }
   };
 
-
-
-
+  const [loading, setLoading] = useState(false);
 
   const formData = new FormData();
 
   const handleSubmit = async (e: any) => {
+    setLoading(true);
     e.preventDefault();
 
     // data appended
@@ -64,6 +72,8 @@ const AddUserModal = ({ handleModal }: any) => {
       dispatch(clearUserData());
     } catch (error) {
       console.error("validation error", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -74,12 +84,12 @@ const AddUserModal = ({ handleModal }: any) => {
         setOpenModal={handleModal}
         mainClassName="w-[780px]"
       >
-        <div className="relative md:p-[30px] p-5">
+        <div className="relative md:p-[30px] p-5 overflow-hidden">
+          {loading && <Loader />}
           <div className="absolute right-5 top-5">
             <DrawerModalCloseBTN handleClose={handleModal} />
           </div>
           <form onSubmit={handleSubmit}>
-
             <div className="flex items-center justify-center">
               <div>
                 <FileInput

@@ -14,6 +14,8 @@ const SearchProductModal = ({ data: searchData }: any) => {
     searchData === "" ? null : searchData
   );
 
+  console.log(products);
+
   const dispatch = useAppDispatch();
   return (
     <div className="bg-white rounded-custom-10px shadow-product-card-shadow p-5 h-[400px] overflow-y-auto relative">
@@ -47,7 +49,7 @@ const SearchProductModal = ({ data: searchData }: any) => {
               <Image
                 width={40}
                 height={40}
-                src={`${mainUrl} ${product?.productPhotos[0]}`}
+                src={`${mainUrl + product?.productPhotos[0]}`}
                 alt="product-photo"
               />
             </div>

@@ -5,8 +5,9 @@ import SliderSmallCard from "./card/SliderSmallCard";
 import EditOfferSliderDrawer from "./EditOfferSliderDrawer";
 import { useAppSelector } from "@/store/hook";
 import AddNewSliderDrawer from "./AddNewSliderDrawer";
+import SliderSkeleton from "../shared/skeleton/SliderSkeleton";
 const AddNewSliderSection = () => {
-  const { data } = useGetSliderQuery("");
+  const { data, isLoading } = useGetSliderQuery("");
   const sliderData = useAppSelector((state) => state.slider);
   const offerData = useAppSelector((state) => state.offerSlice);
 
@@ -15,27 +16,37 @@ const AddNewSliderSection = () => {
       <h3 className="text-black-opacity-60 text-lg">Add New Slider</h3>
 
       {/* slider section start  */}
-      <div className="grid md:grid-cols-2 grid-cols-1 gap-5 mt-4">
-        {/* slider 1 */}
-        <AddNewSliderCard
-          data={data?.data?.slider?.firstSlider}
-          sliderTitle="Add Slider 1"
-          slider="firstSlider"
-        />
-        {/* slider 2 */}
-        <AddNewSliderCard
-          data={data?.data?.slider?.secondSlider}
-          sliderTitle="Add Slider 2"
-          slider="secondSlider"
-        />
 
-        {/* slider 3 */}
-        <AddNewSliderCard
-          data={data?.data?.slider?.thirdSlider}
-          sliderTitle="Add Slider 3"
-          slider="thirdSlider"
-        />
-      </div>
+      {isLoading ? (
+        <div className="grid md:grid-cols-2 grid-cols-1 gap-5 mt-4">
+          {[...Array(3)].map((_, index) => {
+            return <SliderSkeleton key={index} />;
+          })}
+        </div>
+      ) : (
+        <div className="grid md:grid-cols-2 grid-cols-1 gap-5 mt-4">
+          {/* slider 1 */}
+          <AddNewSliderCard
+            data={data?.data?.slider?.firstSlider}
+            sliderTitle="Add Slider 1"
+            slider="firstSlider"
+          />
+          {/* slider 2 */}
+          <AddNewSliderCard
+            data={data?.data?.slider?.secondSlider}
+            sliderTitle="Add Slider 2"
+            slider="secondSlider"
+          />
+
+          {/* slider 3 */}
+          <AddNewSliderCard
+            data={data?.data?.slider?.thirdSlider}
+            sliderTitle="Add Slider 3"
+            slider="thirdSlider"
+          />
+        </div>
+      )}
+
       {/* slider section end  */}
 
       {/* top and bottom slider card start */}
@@ -45,25 +56,35 @@ const AddNewSliderSection = () => {
       <div className="grid md:grid-cols-3 grid-cols-1 gap-5 ">
         {/* slider 1 */}
 
-        <SliderSmallCard
-          offerTitle="Top Offer"
-          offer="topOffer"
-          data={data?.data?.topOffer}
-        />
-        <SliderSmallCard
-          offerTitle="Bottom Offer"
-          offer="bottomOffer"
-          data={data?.data?.bottomOffer}
-        />
+        {isLoading ? (
+          [...Array(2)].map((_, index) => {
+            return <SliderSkeleton key={index} />;
+          })
+        ) : (
+          <>
+            <SliderSmallCard
+              offerTitle="Top Offer"
+              offer="topOffer"
+              data={data?.data?.topOffer}
+            />
+            <SliderSmallCard
+              offerTitle="Bottom Offer"
+              offer="bottomOffer"
+              data={data?.data?.bottomOffer}
+            />
+          </>
+        )}
       </div>
 
-      {/* open modal   */}
+      {/* edit slider drawer    */}
 
       {sliderData && Object.keys(sliderData).length ? (
         <AddNewSliderDrawer data={sliderData} />
       ) : (
         ""
       )}
+      {/* Top and bottom slider card drawer  */}
+
       {offerData && Object.keys(offerData).length ? (
         <EditOfferSliderDrawer data={offerData} />
       ) : (

@@ -21,9 +21,9 @@ const SideNav = () => {
   const pathName = usePathname();
 
   return (
-    <div className="bg-white w-[250px] overflow-x-hidden">
+    <div className="bg-white w-[250px]  overflow-x-hidden z-50 md:shadow-none shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px]">
       {/* logo */}
-      <div className="flex items-center justify-center gap-5 py-7  ">
+      <div className="flex items-center justify-center gap-5 py-7   ">
         <Link href="/">
           <div className="[width:clamp(110px,4vw,90px)] ">
             <Image src={logo} alt="logo" priority={true} />
@@ -33,7 +33,7 @@ const SideNav = () => {
           Panel
         </p>
       </div>
-      <ul className="h-[calc(100vh-90px)]  overflow-y-auto  flex flex-col [&>a]:px-3 [&>*]:py-2  [&>*]:mt-2 [&>*]:mb-0 text-black-opacity-60 px-4">
+      <ul className="h-[calc(100vh-98px)]  overflow-y-auto  flex flex-col [&>a]:px-3 [&>*]:py-2  [&>*]:mt-2 [&>*]:mb-0 text-black-opacity-60 px-4">
         {menuItems?.map((menuItem, i) =>
           menuItem.children ? (
             <NavNestedChild menuItem={menuItem} pathName={pathName} key={i} />

@@ -20,16 +20,14 @@
   overflow-y: auto;
   display: grid;
   grid-gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  grid-template-rows: repeat(auto-fill, minmax(205px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 }
 
 .brand-product-cards-container-custom-grid {
   overflow-y: auto;
   display: grid;
   grid-gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(256px, 1fr));
-  grid-template-rows: repeat(auto-fill, minmax(185px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
 }
 
 *::-webkit-scrollbar {
@@ -138,8 +136,7 @@ input::-webkit-inner-spin-button {
   overflow-y: auto;
   display: grid;
   grid-gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(256px, 1fr));
-  grid-template-rows: repeat(auto-fill, minmax(185px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
 }
 
 *input[type="color"] {

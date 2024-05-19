@@ -36,7 +36,7 @@ const CategoryHomePage = () => {
     const handleWheel = (e: WheelEvent) => {
       if (!container) return;
       container.scrollLeft += e.deltaY;
-      e.preventDefault(); // Prevent default behavior (page scrolling)
+      e.preventDefault();
     };
 
     if (container) {

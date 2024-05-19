@@ -7,8 +7,7 @@ interface FileInputProps {
   className?: string;
   imageBottomText: string;
   name: string;
-  localUrl?: string;
-
+  localUrl?: string | any;
 }
 
 const FileInput = ({
@@ -17,13 +16,14 @@ const FileInput = ({
   imageBottomText,
   name,
   localUrl,
-
 }: FileInputProps) => {
   return (
     <div>
       <h5 className="mb-2 text-black-opacity-60">Image</h5>
       <label htmlFor="fileInput">
-        <div className={`${className} md:h-48 md:w-48 w-40 h-40  border border-dashed flex items-center justify-center rounded-lg cursor-pointer`}>
+        <div
+          className={`${className} md:h-48 md:w-48 w-40 h-40  border border-dashed flex items-center justify-center rounded-lg cursor-pointer`}
+        >
           {localUrl ? (
             <Image
               src={localUrl}

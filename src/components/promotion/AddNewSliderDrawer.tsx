@@ -10,6 +10,9 @@ import { useAppDispatch } from "@/store/hook";
 import { useAddSliderMutation } from "@/store/features/slider/sliderApi";
 import { toast } from "react-toastify";
 import { resetSlider, setSlider } from "@/store/features/slider/sliderSlice";
+import Loader from "../shared/loaders/Loader";
+import { Icon123 } from "@tabler/icons-react";
+import { mainUrl } from "@/constants/mainUrl";
 
 const AddNewSliderDrawer = ({ data }: any) => {
   const [addSlider] = useAddSliderMutation();
@@ -42,13 +45,17 @@ const AddNewSliderDrawer = ({ data }: any) => {
   };
 
   return (
-    <div className={loading ? "opacity-90 pointer-events-none" : ""}>
+    <div>
       <CustomGlobalDrawer
         childrenClassName="overflow-y-scroll"
         isVisible={Object.keys(data).length ? true : false}
       >
         {/* main container */}
-        <form onSubmit={handleSubmit} className=" p-5 overflow-y-auto">
+        <form
+          onSubmit={handleSubmit}
+          className=" p-5 overflow-y-auto overflow-hidden"
+        >
+          {loading && <Loader />}
           {/* top section */}
           <div className="flex items-center justify-between">
             <h3 className="text-lg">{data?.sliderTitle} </h3>
@@ -76,9 +83,15 @@ const AddNewSliderDrawer = ({ data }: any) => {
                       );
                       // create image url using file value
                       const reader = URL.createObjectURL(e.target?.files[0]);
+                      dispatch(setSlider({ sliderLocalPhotoUrl: reader }));
                     }
                   }}
                   imageBottomText=""
+                  localUrl={
+                    data?.sliderLocalPhotoUrl === undefined
+                      ? `${mainUrl + data?.productPhoto}`
+                      : data?.sliderLocalPhotoUrl
+                  }
                 />
               </div>
               <div className="flex flex-col gap-4 w-full">
@@ -182,7 +195,7 @@ const AddNewSliderDrawer = ({ data }: any) => {
               <ButtonSecondary buttonText="Reset" type="reset" />
               <ButtonPrimary
                 type="submit"
-                buttonText={loading ? "Submiting..." : "Submit"}
+                buttonText={loading ? "Submitting.." : "Submit"}
               />
             </div>
           </div>

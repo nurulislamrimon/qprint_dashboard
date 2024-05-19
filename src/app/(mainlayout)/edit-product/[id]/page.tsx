@@ -17,6 +17,7 @@ import UpdateProductUi from "./_components/UpdateProductUi";
 import { showError } from "@/helpers/showError";
 import { toast } from "react-toastify";
 import TransparentLoader from "@/components/shared/TransparentLoader";
+import Loader from "@/components/shared/loaders/Loader";
 
 const EditProduct = () => {
   const { id } = useParams();
@@ -285,8 +286,8 @@ const EditProduct = () => {
   }
 
   return (
-    <Fragment>
-      {(productLoading || productUpdating) && <TransparentLoader />}
+    <div className="relative">
+      {(productLoading || productUpdating) && <Loader />}
       <UpdateProductUi
         handleChange={handleChange}
         handleSubmit={handleSubmit}
@@ -297,7 +298,7 @@ const EditProduct = () => {
         handleAddSection={handleAddSection}
         handleAddField={handleAddField}
       />
-    </Fragment>
+    </div>
   );
 };
 

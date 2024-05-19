@@ -7,9 +7,12 @@ import Customer from "@/assets/AnalyticesCustomerIcon.svg";
 import { IconTrendingUp } from "@tabler/icons-react";
 import {
   useGetAllUsersQuery,
+  useGetLast30DaysTotalSoldAmountQuery,
   useGetProductSoldQuery,
   useGetTotalSoldAmountQuery,
 } from "@/store/features/analytics/totalSelsSummarys/totalSelsSummarysApi";
+import { useAppSelector } from "@/store/hook";
+import { calculatePercentageDifference } from "@/utils/parcentageCalculationFn/parcentageCalculationFn";
 
 const TotalSelsSummarys = () => {
   const { data: totalSoldAmount } = useGetTotalSoldAmountQuery("");
@@ -17,6 +20,89 @@ const TotalSelsSummarys = () => {
     "orderStatus.status=Delivered"
   );
   const { data: allUsers } = useGetAllUsersQuery("");
+
+  const { last30Days, last60Days, currentDate } = useAppSelector(
+    (state) => state.allOrderReportDetails
+  );
+  // total Amount start
+
+  const { data: dataLast30Days } = useGetLast30DaysTotalSoldAmountQuery(
+    `orderStatus.status=Delivered${
+      last30Days && currentDate
+        ? `&createdAt[gte]=${last30Days}&createdAt[lte]=${currentDate}`
+        : ""
+    }`
+  );
+
+  // Fetch data for the last 60 days
+  const { data: dataLast60Days } = useGetLast30DaysTotalSoldAmountQuery(
+    `orderStatus.status=Delivered${
+      last60Days && currentDate
+        ? `&createdAt[gte]=${last60Days}&createdAt[lte]=${currentDate}`
+        : ""
+    }`
+  );
+
+  const { percentage: parcentageNumber, icon: trendingIcon } =
+    calculatePercentageDifference(
+      dataLast30Days?.data?.map((data: any) => data.totalAmount),
+      dataLast60Days?.data?.map((data: any) => data.totalAmount)
+    );
+  // total Amount end
+
+  // total Amount sold product
+
+  const { data: dataLast30Day } = useGetProductSoldQuery(
+    `orderStatus.status=Delivered${
+      last30Days && currentDate
+        ? `&createdAt[gte]=${last30Days}&createdAt[lte]=${currentDate}`
+        : ""
+    }`
+  );
+
+  // Fetch data for the last 60 days
+  const { data: dataLast60Day } = useGetProductSoldQuery(
+    `orderStatus.status=Delivered${
+      last60Days && currentDate
+        ? `&createdAt[gte]=${last60Days}&createdAt[lte]=${currentDate}`
+        : ""
+    }`
+  );
+
+  const { percentage: parcentageProductSold, icon: trendingIconsProductSold } =
+    calculatePercentageDifference(
+      dataLast30Day?.data?.map((data: any) => data.totalAmount),
+      dataLast60Day?.data?.map((data: any) => data.totalAmount)
+    );
+  // total sold Product end
+
+  // All User query parcenatage Start
+
+  const { data: Last30Day } = useGetProductSoldQuery(
+    `orderStatus.status=Delivered${
+      last30Days && currentDate
+        ? `&createdAt[gte]=${last30Days}&createdAt[lte]=${currentDate}`
+        : ""
+    }`
+  );
+  // Fetch data for the last 60 days
+  const { data: Last60Day } = useGetProductSoldQuery(
+    `orderStatus.status=Delivered${
+      last60Days && currentDate
+        ? `&createdAt[gte]=${last60Days}&createdAt[lte]=${currentDate}`
+        : ""
+    }`
+  );
+
+  const {
+    percentage: parcentageTotalCustomer,
+    icon: trendingIconsTotalCustomer,
+  } = calculatePercentageDifference(
+    Last30Day?.data?.map((data: any) => data.totalAmount),
+    Last60Day?.data?.map((data: any) => data.totalAmount)
+  );
+
+  // All User  query parcantage end
 
   return (
     <div className="w-full h md:w-[35%] flex justify-between flex-col gap-5">
@@ -30,11 +116,15 @@ const TotalSelsSummarys = () => {
         totalSelsSummaryPrice={totalSoldAmount?.data?.map(
           (data: any) => data?.totalAmount
         )}
-        tendingIcon={<IconTrendingUp />}
-        tendingIconClass=""
-        percentage={10}
+        tendingIcon={trendingIcon}
+        tendingIconClass={
+          parcentageNumber >= 0 ? "text-[#FF0000]" : "text-green-600"
+        }
+        percentage={parcentageNumber.toFixed(0)}
         QR="QR"
-        TotalSelsSummarySubtitle="in the last 1 month"
+        TotalSelsSummarySubtitle={
+          parcentageNumber >= 0 ? "decrease" : " increase"
+        }
       />
       {/* Product Sold */}
       <TotalSelsSummary
@@ -47,10 +137,14 @@ const TotalSelsSummarys = () => {
         totalSelsSummaryPrice={totalProductSold?.data?.map(
           (data: any) => data?.totalAmount
         )}
-        tendingIcon={<IconTrendingUp />}
-        tendingIconClass=""
-        percentage={10}
-        TotalSelsSummarySubtitle="in the last 1 month"
+        tendingIcon={trendingIconsProductSold}
+        tendingIconClass={
+          parcentageProductSold >= 0 ? "text-[#FF0000]" : "text-green-600"
+        }
+        percentage={Math.abs(parcentageProductSold).toFixed(0)}
+        TotalSelsSummarySubtitle={
+          parcentageProductSold >= 0 ? "decrease" : " increase"
+        }
       />
       {/* Customer */}
       <TotalSelsSummary
@@ -61,10 +155,14 @@ const TotalSelsSummarys = () => {
         imageClassName=""
         totalSelsSummaryTitle="Custommer"
         totalSelsSummaryPrice={allUsers?.meta?.total}
-        tendingIcon={<IconTrendingUp />}
-        tendingIconClass="text-[#ff7d7d]"
-        percentage={10}
-        TotalSelsSummarySubtitle="in the last 1 month"
+        tendingIcon={trendingIconsTotalCustomer}
+        tendingIconClass={
+          parcentageTotalCustomer >= 0 ? "text-[#FF0000]" : "text-green-600"
+        }
+        percentage={Math.abs(parcentageTotalCustomer).toFixed(0)}
+        TotalSelsSummarySubtitle={
+          parcentageTotalCustomer >= 0 ? "decrease" : " increase"
+        }
       />
     </div>
   );

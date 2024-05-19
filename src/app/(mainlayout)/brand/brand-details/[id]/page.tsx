@@ -13,14 +13,17 @@ const BrandDetails = ({ params }: { params: { id: string } }) => {
     data?.data?.brandName
   );
 
-  // `${mainUrl}${data?.data?.brandPhoto}`
   return (
     <div className="md:p-[30px] p-5">
       <span className="text-lg text-black-opacity-60">Brand Details</span>
       <div className="flex items-center gap-5 md:mt-[30px] mt-5">
         <div className="border rounded-custom-10px overflow-hidden w-[70px] h-[70px] md:w-20 md:h-20 flex items-center justify-center">
           <Image
-            src={isLoading ? productImgPlaceholder : `${mainUrl}${data?.data?.brandPhoto}`}
+            src={
+              isLoading
+                ? productImgPlaceholder
+                : `${mainUrl}${data?.data?.brandPhoto}`
+            }
             width={70}
             height={70}
             alt="brand-image"

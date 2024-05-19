@@ -1,5 +1,6 @@
 "use client";
 import CustomGlobalInput from "@/components/shared/CustomGlobalInput";
+import Loader from "@/components/shared/loaders/Loader";
 import ShopSetupCommonSubmitBTN from "@/components/ShopSetup/ShopSetupCommonSubmitBTN";
 import {
   useCreateSeoMutation,
@@ -11,11 +12,12 @@ import {
   setMetaTitle,
 } from "@/store/features/shopSetup/seo/seoSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const Seo = () => {
   const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(false);
 
   const { metaPhoto, metaTitle, metaDescription } = useAppSelector(
     (state) => state.seoSlice
@@ -43,6 +45,8 @@ const Seo = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
+
     e.preventDefault();
     const formData = new FormData();
 
@@ -68,10 +72,13 @@ const Seo = () => {
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
   return (
-    <div className="p-8">
+    <div className="p-8 relative">
+      {loading && <Loader />}
       <h6 className="text-black-opacity-50 text-xl mb-[30px]">Home Page</h6>
       {/* ==Seo Form== */}
       <form onSubmit={handleSubmit}>

@@ -18,6 +18,7 @@ export interface IFileUploaderProps {
   disabled?: boolean;
   children?: ReactNode;
   uid?: number;
+  bottomText?: string;
 }
 
 const FileUploader = ({
@@ -31,6 +32,7 @@ const FileUploader = ({
   className,
   disabled,
   children,
+  bottomText,
   uid = 1,
 }: IFileUploaderProps) => {
   const index = Number(uid) - 1;
@@ -61,46 +63,50 @@ const FileUploader = ({
   };
 
   return (
-    <label className={className}>
-      {/* check if data exist or children exist, if so, render the corresponding content */}
-      {url ? (
-        <Image src={url} alt={name} fill className="inset-0 object-contain" />
-      ) : children ? (
-        <span className="flex flex-col items-center justify-center">
-          {children}
-          {maxSize && (
-            <small className="text-gray-500">
-              Max size: <span className="text-orange-700"> {maxSize} MB</span>
-            </small>
-          )}
-        </span>
-      ) : (
-        <>
-          <IconPhotoPlus width={30} height={30} stroke={1} />
-          <span className="flex flex-col">
-            <span>Select Your Image</span>
+    <div className="flex flex-col items-center justify-center">
+      <label className={className}>
+        {/* check if data exist or children exist, if so, render the corresponding content */}
+        {url ? (
+          <Image src={url} alt={name} fill className="inset-0 object-contain" />
+        ) : children ? (
+          <span className="flex flex-col items-center justify-center">
+            {children}
             {maxSize && (
               <small className="text-gray-500">
                 Max size: <span className="text-orange-700"> {maxSize} MB</span>
               </small>
             )}
-            <span className="text-fuchsia-800 underline font-medium">
-              Click to browse
-            </span>
           </span>
-        </>
-      )}
-      <input
-        className="hidden"
-        name={name}
-        id={uid.toString()}
-        type="file"
-        onChange={checkSizeAndHandleChange}
-        accept={accept}
-        multiple={multiple}
-        disabled={disabled}
-      />
-    </label>
+        ) : (
+          <>
+            <IconPhotoPlus width={30} height={30} stroke={1} />
+            <span className="flex flex-col">
+              <span>Select Your Image</span>
+              {maxSize && (
+                <small className="text-gray-500">
+                  Max size:{" "}
+                  <span className="text-orange-700"> {maxSize} MB</span>
+                </small>
+              )}
+              <span className="text-fuchsia-800 underline font-medium">
+                Click to browse
+              </span>
+            </span>
+          </>
+        )}
+        <input
+          className="hidden"
+          name={name}
+          id={uid.toString()}
+          type="file"
+          onChange={checkSizeAndHandleChange}
+          accept={accept}
+          multiple={multiple}
+          disabled={disabled}
+        />
+      </label>
+      <p>{bottomText}</p>
+    </div>
   );
 };
 

@@ -29,6 +29,7 @@ import unitSlice from "./features/shopSetup/printingSetup/unitSlice";
 import searchProductByCategorySlice from "./features/searchProductByCategory/searchProductByCategorySlice";
 import editBrandSlice from "./features/brand/editBrandSlice";
 import updateProductSlice from "./features/product/updateProductSlice";
+import allOrderReportDetails from "./features/topSellingProduct/analytics/allOrderReportDetails";
 
 export const reducer = {
   [baseApi.reducerPath]: baseApi.reducer,
@@ -63,4 +64,5 @@ export const reducer = {
   editBrandSlice: editBrandSlice,
   addProduct: addProductSlice,
   updateProduct: updateProductSlice,
+  allOrderReportDetails: allOrderReportDetails,
 };

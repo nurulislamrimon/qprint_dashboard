@@ -8,20 +8,69 @@ import { IconTrendingDown } from "@tabler/icons-react";
 import { IconTrendingUp } from "@tabler/icons-react";
 import { useOnlineOrdersQuery } from "@/store/features/sales/salesApi";
 import { useGetbusinessAnalyticsQuery } from "@/store/features/businessAnalytics/businessAnalyticsApi";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useGetOnlineOrderQuery } from "@/store/features/order/onlineOrderApi";
+import { useAppSelector } from "@/store/hook";
 
 const AllOrderReportDetails = () => {
-  const [startDate, setStartDate] = useState("03/25/2024"); // Initialize date state
-  const [endDate, setEndDate] = useState("03/31/2024"); // Initialize date state
-  const { data } = useGetOnlineOrderQuery(
-    `orderStatus.status=Delivered${
-      startDate && endDate
-        ? `&createdAt[gte]=${startDate}&createdAt[lte]=${endDate}`
-        : ""
-    }`
-  );
-  console.log(data);
+  // slice
+  // const { status, last30Days, last60Days, currentDate } = useAppSelector(
+  //   (state) => state.allOrderReportDetails
+  // );
+
+  // // Fetch data for the last 30 days
+  // const { data: dataLast30Days } = useGetOnlineOrderQuery(
+  //   `orderStatus.status=${status}${
+  //     last30Days && currentDate
+  //       ? `&createdAt[gte]=${last30Days}&createdAt[lte]=${currentDate}`
+  //       : ""
+  //   }`
+  // );
+
+  // // Fetch data for the last 60 days
+  // const { data: dataLast60Days } = useGetOnlineOrderQuery(
+  //   `orderStatus.status=${status}${
+  //     last60Days && currentDate
+  //       ? `&createdAt[gte]=${last60Days}&createdAt[lte]=${currentDate}`
+  //       : ""
+  //   }`
+  // );
+
+  // // get percentage
+  // const calculatePercentageDifference = (
+  //   last30days: number,
+  //   last60days: number
+  // ) => {
+  //   if (last30days === 0) {
+  //     return last60days > 0 ? 100 : 0;
+  //   }
+
+  //   const firstMonth = last60days - last30days;
+  //   const decreasePercentage = ((firstMonth - last30days) / firstMonth) * 100;
+
+  //   return decreasePercentage;
+  // };
+
+  // // get icon
+  // const getTrendingIcon = (
+  //   last30days: number,
+  //   last60days: number
+  // ): React.ReactNode => {
+  //   const decreasePercentage = calculatePercentageDifference(
+  //     last30days,
+  //     last60days
+  //   );
+
+  //   if (decreasePercentage < 0) {
+  //     return <IconTrendingUp style={{ color: "green" }} />;
+  //   } else if (decreasePercentage > 0) {
+  //     return <IconTrendingDown style={{ color: "red" }} />;
+  //   } else {
+  //     return null;
+  //   }
+  // };
+
+  // Calculate the difference in data between the last 30 and 60 day
 
   const { data: allOrder } = useOnlineOrdersQuery("");
 
@@ -31,7 +80,6 @@ const AllOrderReportDetails = () => {
   const { data: delivered } = useGetbusinessAnalyticsQuery(
     "orderStatus.status=Delivered"
   );
-  console.log(delivered);
 
   const { data: shipping } = useGetbusinessAnalyticsQuery(
     "orderStatus.status=Shipping"
@@ -44,20 +92,19 @@ const AllOrderReportDetails = () => {
     if (total === 0) return 0; // To avoid division by zero
     return (status / total) * 100;
   }
+
   return (
-    <div className="space-y-3.5">
+    <div className=" h-full space-y-[2.5%]">
       {/* Delevered */}
       <OrderReportDetail
-        orderReportCardMainClass="hover:border-[#03A609]"
+        orderReportCardMainClass="hover:border-[#03A609] h-[23%]"
         icon={Delivered}
-        imageClassName="rounded-full bg-green-100 p-3 w-full"
+        imageClassName="rounded-full bg-green-100 p-3 w-full text-red-100"
         orderReportTitle="Delivered"
-        tendingIcon={<IconTrendingUp />}
-        tendingIConClassName="text-green-color"
-        parcentageNumber={20}
         firstCircleClassName="text-green-100"
         secondCircleClassName="text-green-500"
-        percentage={30}
+        status="Delivered"
+        // percentage={30}
         initialProgress={parseFloat(
           calculateStatusPercentage(
             delivered?.data,
@@ -67,13 +114,11 @@ const AllOrderReportDetails = () => {
       />
       {/* Shipping */}
       <OrderReportDetail
-        orderReportCardMainClass="hover:border-fuchsia-600"
+        status="Shipping"
+        orderReportCardMainClass="hover:border-fuchsia-600 h-[23%]"
         icon={Shipping}
         imageClassName="rounded-full bg-main-bg-color-opacity-32 p-3 w-full"
         orderReportTitle="Shipping"
-        tendingIcon={<IconTrendingDown />}
-        tendingIConClassName=" text-fuchsia-600"
-        parcentageNumber={10}
         firstCircleClassName="text-[#d9d9d9]"
         secondCircleClassName="text-fuchsia-800"
         initialProgress={parseFloat(
@@ -86,13 +131,11 @@ const AllOrderReportDetails = () => {
       />
       {/* Returned */}
       <OrderReportDetail
-        orderReportCardMainClass="hover:border-red-500"
+        orderReportCardMainClass="hover:border-red-500 h-[23%]"
         icon={Returned}
         imageClassName="rounded-full bg-[#ff75001a] p-3 w-full"
         orderReportTitle="Returned"
-        tendingIcon={<IconTrendingUp />}
-        tendingIConClassName="text-red-400"
-        parcentageNumber={10}
+        status="Returned"
         firstCircleClassName="text-yellow-100"
         secondCircleClassName="text-red-400"
         initialProgress={parseFloat(
@@ -105,13 +148,11 @@ const AllOrderReportDetails = () => {
       />
       {/* Canceled */}
       <OrderReportDetail
-        orderReportCardMainClass="hover:border-black"
+        status="Canceled"
+        orderReportCardMainClass="hover:border-black h-[23%]"
         icon={Canceled}
         imageClassName="rounded-full bg-[#0000001a] p-3 w-full"
         orderReportTitle="Canceled"
-        tendingIcon={<IconTrendingDown />}
-        tendingIConClassName="text-black-opacity-60"
-        parcentageNumber={10}
         firstCircleClassName="text-[#d9d9d9]"
         secondCircleClassName="text-[#00000080]"
         initialProgress={parseFloat(

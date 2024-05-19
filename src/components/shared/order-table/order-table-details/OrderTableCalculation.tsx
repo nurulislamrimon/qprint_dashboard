@@ -31,7 +31,7 @@ const OrderTableCalculation = ({ allOrder, quickOrder }: any) => {
         <span className="text-lg text-black-opacity-80">Total</span>
         <strong className="text-fuchsia-600 text-lg font-medium">
           {allOrder ? allOrder?.data?.totalPayable : ""}
-          {quickOrder ? quickOrder?.data?.totalPayable : ""}
+          {quickOrder ? quickOrder?.data?.totalPayable : ""} QR
         </strong>
       </div>
     </div>

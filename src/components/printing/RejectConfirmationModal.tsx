@@ -1,10 +1,11 @@
-import React, { FC, FormEvent } from "react";
+import React, { FC, FormEvent, useState } from "react";
 import CustomGlobalModal from "../shared/CustomGlobalModal";
 import DrawerModalCloseBTN from "../shared/DrawerModalCloseBTN";
 import { IconTruck } from "@tabler/icons-react";
 import GlobalActionButton from "../shared/GlobalActionButton";
 import { useUpdateOrderStatusMutation } from "@/store/features/order/ordersApi";
 import { useQuickOrderUpdateOrderStatusMutation } from "@/store/features/quickOrder/quickOrderApi";
+import Loader from "../shared/loaders/Loader";
 
 interface ShippingConfirmModalProps {
   handleRejectConfirmationModal: (value: boolean) => void;
@@ -23,6 +24,8 @@ const RejectConfirmationModal: FC<ShippingConfirmModalProps> = ({
   const [quickOrderUpdateOrderStatus] =
     useQuickOrderUpdateOrderStatusMutation();
 
+  const [loading, setLoading] = useState(false);
+
   //   order status
   const lastOrderStatus =
     data?.data?.orderStatus[data?.data?.orderStatus.length - 1];
@@ -30,6 +33,7 @@ const RejectConfirmationModal: FC<ShippingConfirmModalProps> = ({
   // handle submit
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     const status =
       lastOrderStatus?.status === "Order placed" ||
       lastOrderStatus?.status === "Packaging"
@@ -65,6 +69,8 @@ const RejectConfirmationModal: FC<ShippingConfirmModalProps> = ({
       handleRejectConfirmationModal(false);
     } catch (error) {
       console.error("Error updating status:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -77,8 +83,9 @@ const RejectConfirmationModal: FC<ShippingConfirmModalProps> = ({
       <div className="py-[30px] px-[50px]">
         <form
           onSubmit={handleSubmit}
-          className="flex items-center justify-center flex-col gap-[30px]"
+          className="flex items-center justify-center flex-col gap-[30px] relative overflow-hidden"
         >
+          {loading && <Loader />}
           <div className="border w-[60px] h-[60px] border-dashed rounded-full flex items-center justify-center p-2.5 border-fuchsia-800">
             <IconTruck stroke={1} color="#C83B62" />
           </div>

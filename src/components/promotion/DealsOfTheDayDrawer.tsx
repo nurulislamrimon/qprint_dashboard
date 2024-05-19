@@ -12,6 +12,7 @@ import {
 import { useAddDealsOfTheDayAndWidgetMutation } from "@/store/features/DealsOfTheDayAndWidget/dealsOfTheDayAndWidgetApi";
 import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
+import Loader from "../shared/loaders/Loader";
 const DealsOfTheDayDrawer = ({ data }: any) => {
   const [loading, setLoading] = useState(false);
   const [addDeals] = useAddDealsOfTheDayAndWidgetMutation();
@@ -42,17 +43,15 @@ const DealsOfTheDayDrawer = ({ data }: any) => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className={loading ? "opacity-90 pointer-events-none" : ""}
-    >
+    <form onSubmit={handleSubmit}>
       <CustomGlobalDrawer
         childrenClassName="overflow-y-scroll"
         modalWidthControlClassName="w-full md:w-[500px]"
         isVisible={Object.keys(data).length ? true : false}
       >
         {/* main container */}
-        <div className=" p-5 overflow-y-auto">
+        <div className={`p-5 overflow-y-auto  ${loading && "overflow-hidden"}`}>
+          {loading && <Loader />}
           {/* top section */}
           <div className="flex items-center justify-between mb-5">
             <h3 className="text-lg">Deals Of The Day</h3>

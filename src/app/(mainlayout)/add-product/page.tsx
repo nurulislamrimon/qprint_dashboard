@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Loading from "../loading";
 import TransparentLoader from "@/components/shared/TransparentLoader";
+import Loader from "@/components/shared/loaders/Loader";
 
 const AddProduct = () => {
   const router = useRouter();
@@ -250,8 +251,8 @@ const AddProduct = () => {
   };
 
   return (
-    <Fragment>
-      {productAdding && <TransparentLoader />}
+    <div className="relative">
+      {productAdding && <Loader />}
       <AddProductUi
         handleChange={handleChange}
         handleSubmit={handleSubmit}
@@ -262,7 +263,7 @@ const AddProduct = () => {
         handleAddSection={handleAddSection}
         handleAddField={handleAddField}
       />
-    </Fragment>
+    </div>
   );
 };
 

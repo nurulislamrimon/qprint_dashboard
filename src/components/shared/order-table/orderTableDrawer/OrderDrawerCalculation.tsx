@@ -29,7 +29,7 @@ const OrderDrawerCalculation = ({ onlineOrderData, quickOrderData }: any) => {
       <div className="flex items-center justify-between mt-2.5">
         <span className="text-lg text-black-opacity-80">Total</span>
         <strong className="text-fuchsia-600 text-lg font-medium">
-          {data?.totalPayable}
+          {data?.totalPayable} QR
         </strong>
       </div>
     </div>

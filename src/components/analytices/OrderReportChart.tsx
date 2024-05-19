@@ -43,8 +43,8 @@ const OrderReportChart = () => {
   };
 
   return (
-    <div className="w-full md:w-[65%] md:border rounded-custom-10px md:p-4">
-      <div className="flex items-center justify-between pb-5 px-4 md:px-7">
+    <div className="w-full h-full md:h-[485px] md:w-[65%]   md:border rounded-custom-10px md:p-4">
+      <div className="flex items-center justify-between  px-4 md:px-7 mb-3">
         <span className="[font-size:clamp(14px,4vw,18px)] font-medium whitespace-nowrap">
           Order Report
         </span>
@@ -55,7 +55,7 @@ const OrderReportChart = () => {
           />
         </div>
       </div>
-      <div className="w-full h-[267px] md:h-[400px] mx-auto pr-2.5 md:pr-0">
+      <div className="w-full h-full  md:h-[385px] mx-auto pr-2.5 md:pr-0">
         {isLoading ? (
           <OrderReportChartSkaleton />
         ) : (

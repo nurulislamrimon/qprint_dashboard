@@ -17,6 +17,8 @@ import {
   setNewPassword,
   setOldPassword,
 } from "@/store/features/auth/updatePasswordSlice";
+import FileInput from "@/components/ui/FileInput";
+import { mainUrl } from "@/constants/mainUrl";
 
 const Setting = () => {
   const { data } = useGetMeQuery("");
@@ -27,6 +29,8 @@ const Setting = () => {
   const { oldPassword, newPassword, confirmPassword } = useAppSelector(
     (state) => state.updatePasswordSlice
   );
+
+  console.log(updatedData);
 
   const formData = new FormData();
 
@@ -48,6 +52,7 @@ const Setting = () => {
         }
       });
       const res = await updateMe(formData);
+      console.log(res);
 
       // update password
 
@@ -57,8 +62,10 @@ const Setting = () => {
         confirmPassword: confirmPassword,
       };
 
-      const pasRes = await updatePassword(updatePasswordData);
-      console.log(pasRes);
+      if (oldPassword !== "" && newPassword !== "" && confirmPassword !== "") {
+        const pasRes = await updatePassword(updatePasswordData);
+        console.log(pasRes);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -110,7 +117,7 @@ const Setting = () => {
 
               <div className="md:order-none order-1">
                 <div className=" flex items-center justify-center">
-                  <label className="w-36 h-36 rounded-full flex flex-col gap-2 items-center justify-center bg-white text-blue shadow-boxShadow shadow-product-card-shadow border border-blue cursor-pointer">
+                  {/* <label className="w-36 h-36 rounded-full flex flex-col gap-2 items-center justify-center bg-white text-blue shadow-boxShadow shadow-product-card-shadow border border-blue cursor-pointer">
                     <IconUpload />
                     <span className="text-sm">Upload Image</span>
                     <input
@@ -127,7 +134,28 @@ const Setting = () => {
                       }}
                       className="hidden"
                     />
-                  </label>
+                  </label> */}
+
+                  <FileInput
+                    name="profilePhoto"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      if (e.target?.files?.length) {
+                        dispatch(
+                          setSetting({ [e.target.name]: e.target?.files[0] })
+                        );
+                        // create image url using file value
+                        const reader = URL.createObjectURL(e.target?.files[0]);
+
+                        dispatch(setSetting({ localProfilePhotoUrl: reader }));
+                      }
+                    }}
+                    imageBottomText="Add Profile Photo"
+                    localUrl={
+                      updatedData?.localProfilePhotoUrl === undefined
+                        ? `${mainUrl}${updatedData?.profilePhoto}`
+                        : updatedData?.localProfilePhotoUrl
+                    }
+                  />
                 </div>
               </div>
             </div>

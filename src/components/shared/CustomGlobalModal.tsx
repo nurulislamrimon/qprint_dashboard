@@ -3,7 +3,7 @@ interface CustomGlobalModalProps {
   modalControllerClassName?: string;
   childrenClassName?: string;
   mainClassName?: string;
-  isVisible?: boolean | (() => void) | undefined;
+  isVisible?: boolean | ((value: boolean) => void) | undefined;
   setOpenModal?: (value: boolean) => void;
 }
 

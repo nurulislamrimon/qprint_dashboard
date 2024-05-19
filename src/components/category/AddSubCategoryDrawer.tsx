@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { setSubCategory } from "@/store/features/category/subCategorySlice";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import Loader from "../shared/loaders/Loader";
 
 interface AddSubCategoryDrawerProps {
   handleModal: () => void;
@@ -49,13 +50,17 @@ const AddSubCategoryDrawer = ({
   };
 
   return (
-    <div className={loading ? "opacity-50 pointer-events-none" : ""}>
+    <div>
       <CustomGlobalDrawer
         isVisible={!!handleModal}
         setOpenDrawer={handleModal}
         modalWidthControlClassName="w-full md:w-[500px]"
       >
-        <form onSubmit={handleSubmit} className="md:px-5 p-5 md:py-7 ">
+        <form
+          onSubmit={handleSubmit}
+          className="md:px-5 p-5 md:py-7 overflow-hidden"
+        >
+          {loading && <Loader />}
           <div className="flex items-center justify-between">
             <span className="text-lg text-black-opacity-70">
               Add Sub Category

@@ -8,7 +8,7 @@ import CustomGlobalDrawer from "../shared/CustomGlobalDrawer";
 import DrawerModalCloseBTN from "../shared/DrawerModalCloseBTN";
 import CustomGlobalInput from "../shared/CustomGlobalInput";
 import ButtonPrimary from "../ui/btn/ButtonPrimary.";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import { toast } from "react-toastify";
 import {
   clearBrandData,
@@ -18,8 +18,10 @@ import {
 } from "@/store/features/brand/editBrandSlice";
 import FileInput from "../ui/FileInput";
 import { mainUrl } from "@/constants/mainUrl";
+import Loader from "../shared/loaders/Loader";
 
 const EditBrandModal = ({ open, handleClose, id }: any) => {
+  const [loading, setLoading] = useState(false);
   const { data } = useBrandQuery(id);
   const dispatch = useAppDispatch();
   const [updateBrand] = useUpdateBrandMutation();
@@ -46,6 +48,7 @@ const EditBrandModal = ({ open, handleClose, id }: any) => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
     const formData = new FormData();
     formData.append("brandName", brandName);
@@ -63,23 +66,31 @@ const EditBrandModal = ({ open, handleClose, id }: any) => {
           toast.error(res.error.message as React.ReactNode);
         }
       }
+
       dispatch(clearBrandData());
       handleClose();
     } catch (error) {
       // toast.error(error?.message)
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div>
-      <CustomGlobalDrawer isVisible={open} drawerControllerClassName="z-50" modalWidthControlClassName="w-full md:w-[500px]">
-        <div className="px-5 py-[30px] flex flex-col gap-10">
+      <CustomGlobalDrawer
+        isVisible={open}
+        drawerControllerClassName="z-50"
+        modalWidthControlClassName="w-full md:w-[500px]"
+      >
+        <div className="px-5 py-[30px] flex flex-col gap-10 overflow-hidden">
+          {loading && <Loader />}
           <div className="flex items-center justify-between">
             <span className="text-black font-medium text-lg">Update Brand</span>
             <DrawerModalCloseBTN handleClose={handleClose} />
           </div>
-          <form onSubmit={handleSubmit} >
+          <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-[30px]">
               <div>
                 <FileInput
@@ -105,9 +116,12 @@ const EditBrandModal = ({ open, handleClose, id }: any) => {
             </div>
 
             <div className="fixed bottom-5 md:w-[450px] w-[calc(100vw-40px)]">
-              <ButtonPrimary type="submit" buttonText="Update Brand" className="w-full " />
+              <ButtonPrimary
+                type="submit"
+                buttonText={loading ? "Updating Brand..." : "Update Brand"}
+                className="w-full "
+              />
             </div>
-
           </form>
         </div>
       </CustomGlobalDrawer>

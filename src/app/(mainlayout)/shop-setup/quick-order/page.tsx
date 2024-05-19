@@ -8,6 +8,7 @@ import {
 } from "@/store/features/shopSetup/quickOrder/quickOrderApi";
 import SpecialOffer from "@/components/ShopSetup/SpecialOffer";
 import { toast } from "react-toastify";
+import Loader from "@/components/shared/loaders/Loader";
 
 const QuickOrder = () => {
   const [isQuickOrderActive, setIsQuickOrderActive] = useState(false);
@@ -15,6 +16,7 @@ const QuickOrder = () => {
   const [addQuickOrderCharge] = useAddQuickOrderChargeMutation();
   const { data, isLoading } = useGetQuickOrderChargeQuery("");
   const [deliveryCharge, setDeliveryCharge] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (data && data.data) {
@@ -46,6 +48,7 @@ const QuickOrder = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
 
     try {
@@ -71,11 +74,14 @@ const QuickOrder = () => {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
+    <div className="relative overflow-hidden">
+      {loading && <Loader />}
       <form className="p-5 md:p-8" onSubmit={handleSubmit}>
         <div className="flex items-center md:gap-5 justify-between md:justify-normal mb-7 md:mb-10">
           <h2 className="text-xl font-medium">Quick Order Features</h2>

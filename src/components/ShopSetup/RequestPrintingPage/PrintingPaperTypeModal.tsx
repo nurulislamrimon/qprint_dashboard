@@ -9,8 +9,11 @@ import {
 } from "@/store/features/shopSetup/printingSetup/paperTypeSlice";
 import { useCreatePrintingSetupMutation } from "@/store/features/shopSetup/printingSetup/printingSetupApi";
 import { toast } from "react-toastify";
+import { useState } from "react";
+import Loader from "@/components/shared/loaders/Loader";
 
 const PrintingPaperTypeModal = ({ openModal, handleCloseModal }: any) => {
+  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const { price, printingSetupType, paperType } = useAppSelector(
     (state) => state.paperType
@@ -19,6 +22,7 @@ const PrintingPaperTypeModal = ({ openModal, handleCloseModal }: any) => {
 
   // handle submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
 
     const data = {
@@ -38,6 +42,8 @@ const PrintingPaperTypeModal = ({ openModal, handleCloseModal }: any) => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -47,7 +53,8 @@ const PrintingPaperTypeModal = ({ openModal, handleCloseModal }: any) => {
         isVisible={openModal}
         modalWidthControlClassName="w-full md:w-[500px]"
       >
-        <div className="p-5">
+        <div className="p-5 overflow-hidden">
+          {loading && <Loader />}
           <div className="flex items-center justify-between mb-[30px]">
             <span className="text-base md:text-lg text-black-opacity-70">
               Add Paper Type

@@ -7,7 +7,7 @@ import {
   useGetUserByIdQuery,
   useUpdateAdministratorsMutation,
 } from "@/store/features/users/usersApi";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import {
   clearUserData,
   setAdminPhoneNumber,
@@ -22,6 +22,7 @@ import {
 import { toast } from "react-toastify";
 import FileInput from "../ui/FileInput";
 import { mainUrl } from "@/constants/mainUrl";
+import Loader from "../shared/loaders/Loader";
 
 const UpdateUserModal = ({ openModal, setOpenModal, handleClose, id }: any) => {
   const dispatch = useAppDispatch();
@@ -38,6 +39,10 @@ const UpdateUserModal = ({ openModal, setOpenModal, handleClose, id }: any) => {
 
   const [updateAdministrators] = useUpdateAdministratorsMutation();
   const { data } = useGetUserByIdQuery(id);
+
+  // handle loader
+
+  const [loading, setLoading] = useState(false);
 
   // get existing data
   useLayoutEffect(() => {
@@ -61,6 +66,7 @@ const UpdateUserModal = ({ openModal, setOpenModal, handleClose, id }: any) => {
   };
 
   const handleSubmit = async (e: any) => {
+    setLoading(true);
     e.preventDefault();
     const data = {
       role: role,
@@ -86,6 +92,8 @@ const UpdateUserModal = ({ openModal, setOpenModal, handleClose, id }: any) => {
       dispatch(clearUserData());
     } catch (error) {
       console.error("validation error", error);
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -95,7 +103,8 @@ const UpdateUserModal = ({ openModal, setOpenModal, handleClose, id }: any) => {
         setOpenModal={setOpenModal}
         mainClassName="w-[780px]"
       >
-        <div className="relative md:p-[30px] p-5">
+        <div className="relative md:p-[30px] p-5 overflow-hidden">
+          {loading && <Loader />}
           <div className="absolute right-5 top-5">
             <DrawerModalCloseBTN handleClose={handleClose} />
           </div>

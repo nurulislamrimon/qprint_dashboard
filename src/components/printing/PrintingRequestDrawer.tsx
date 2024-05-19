@@ -3,29 +3,31 @@ import CustomGlobalDrawer from "../shared/CustomGlobalDrawer";
 import DrawerModalCloseBTN from "../shared/DrawerModalCloseBTN";
 import PrintingDeliveryAddress from "../shared/PrintingDeliveryAddress";
 import Attatchment from "../shared/Attatchment";
-import OrderInformation from "../shared/OrderInformation";
 import OrderCalculation from "../shared/order-details/OrderCalculation";
 import OrderStatusStep from "../shared/OrderStatusStep";
 import OrderTable from "../shared/OrderTable";
 import { useState } from "react";
-import ShippingConfirmModal from "./ShippingConfirmModal";
 import GlobalActionButton from "../shared/GlobalActionButton";
 import { usePrintingRequestByIdQuery } from "@/store/features/printingRequest/printingRequestApi";
+import PrintingStatusUpdateModal from "./PrintingStatusUpdateModal";
+import OrderDrawerInformation from "../shared/order-table/orderTableDrawer/OrderDrawerInformation";
+import RejectModal from "./RejectModal";
 
 const PrintingRequestDrawer = ({ openModal, handleCloseModal, id }: any) => {
-  const { data } = usePrintingRequestByIdQuery(id);
-
-  const [openShippingModal, setOpenShippingModal] = useState(false);
-  const handleShippingModalClose = () => {
-    setOpenShippingModal(false);
+  const { data: printingRequestData } = usePrintingRequestByIdQuery(id);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [openRejectModal, setOpenCancelModal] = useState(false);
+  const handleUpdateModal = () => {
+    setOpenUpdateModal((prevState) => !prevState);
+  };
+  const handleRejectModal = () => {
+    setOpenCancelModal((prevState) => !prevState);
   };
 
-  // console.log(data, "Printing request");
-
   const lastOrderStatus =
-    data?.data?.orderStatus[data?.data?.orderStatus.length - 1];
-
- 
+    printingRequestData?.data?.orderStatus[
+      printingRequestData?.data?.orderStatus.length - 1
+    ];
 
   return (
     <div>
@@ -44,38 +46,82 @@ const PrintingRequestDrawer = ({ openModal, handleCloseModal, id }: any) => {
             </div>
 
             <div className="p-5 flex items-center justify-between b">
-              <OrderInformation data={data} />
-              <div className="flex items-center gap-3.5">
-                <button>Cancel</button>
+              {/* <OrderInformation data={printingRequestData} /> */}
+              <OrderDrawerInformation data={printingRequestData} />
 
-                <div onClick={() => setOpenShippingModal(true)}>
-                  <GlobalActionButton
-                    type="submit"
-                    buttonText="To Ship"
-                    buttonStyleClassName="px-[18px] py-2"
-                  />
-                </div>
+              <div className="flex items-center gap-3.5 print:hidden">
+                {lastOrderStatus?.status === "Rejected" ||
+                  (lastOrderStatus?.status === "Returned" ||
+                  lastOrderStatus?.status === "Cancelled" ? (
+                    ""
+                  ) : (
+                    <button onClick={() => handleRejectModal()}>
+                      {lastOrderStatus?.status === "Order placed"
+                        ? "Reject"
+                        : lastOrderStatus?.status === "Printing"
+                        ? "Reject"
+                        : lastOrderStatus?.status === "Shipping"
+                        ? "Return"
+                        : lastOrderStatus?.status === "Delivered"
+                        ? "Return"
+                        : ""}
+                    </button>
+                  ))}
+
+                {lastOrderStatus?.status === "Rejected" ||
+                lastOrderStatus?.status === "Returned" ||
+                lastOrderStatus?.status === "Cancelled" ? (
+                  ""
+                ) : lastOrderStatus?.status === "Delivered" ? (
+                  <p>Completed</p>
+                ) : (
+                  <div onClick={() => handleUpdateModal()}>
+                    <GlobalActionButton
+                      type="submit"
+                      buttonText={
+                        lastOrderStatus?.status === "Order placed"
+                          ? "Printing"
+                          : lastOrderStatus?.status === "Printing"
+                          ? "Shipping"
+                          : lastOrderStatus?.status === "Shipping"
+                          ? "Delivered"
+                          : ""
+                      }
+                      buttonStyleClassName={`px-[18px] py-2`}
+                    />
+                  </div>
+                )}
               </div>
             </div>
-            <div className="p-5 border-b">
-              <OrderStatusStep id={id} data={data} />
+
+            <div className="print:hidden p-5 border-b">
+              <OrderStatusStep
+                id={id}
+                data={printingRequestData ? { ...printingRequestData } : null}
+              />
             </div>
-            <PrintingDeliveryAddress data={data} />
+            <PrintingDeliveryAddress data={printingRequestData} />
             <Attatchment />
-            <OrderTable data={data} />
+            <OrderTable data={printingRequestData} />
             <div className="flex items-center md:justify-end justify-normal p-5">
-              <OrderCalculation data={data} />
+              <OrderCalculation data={printingRequestData} />
             </div>
           </div>
         </CustomGlobalDrawer>
       </div>
       <div>
-        <ShippingConfirmModal
-          data={data}
-          openShippingModal={openShippingModal}
-          setOpenShippingModal={setOpenShippingModal}
-          handleShippingModalClose={handleShippingModalClose}
-        />
+        {openUpdateModal && (
+          <PrintingStatusUpdateModal
+            data={printingRequestData}
+            handleModal={handleUpdateModal}
+          />
+        )}
+        {openRejectModal && (
+          <RejectModal
+            data={printingRequestData}
+            handleModal={handleRejectModal}
+          />
+        )}
       </div>
     </div>
   );
