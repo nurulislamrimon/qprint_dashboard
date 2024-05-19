@@ -12,7 +12,7 @@ import {
 const ChooseColorOrImage = ({
   handleChange,
 }: {
-  handleChange: (
+  handleChange?: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
