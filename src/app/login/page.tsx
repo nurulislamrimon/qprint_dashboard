@@ -13,6 +13,7 @@ import { showError } from "@/helpers/showError";
 import React, { useEffect } from "react";
 import TransparentLoader from "@/components/shared/TransparentLoader";
 import Loader from "@/components/shared/loaders/Loader";
+import { isAuthorizedRole } from "@/utils/isAuthorizedRole";
 interface ILogin {
   email: string;
   password: string;
@@ -36,10 +37,20 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await userLogin({ email, password }).unwrap();
-      if (res?.data?.accessToken) {
-        router.push("/dashboard");
+      if (
+        !res?.data?.accessToken ||
+        !res?.data?.user ||
+        !isAuthorizedRole(res?.data?.user?.role)
+      ) {
+        showError("Invalid credentials");
+      } else {
+        // set cookies
+        document.cookie = `accessToken=${res?.data?.accessToken}`;
+        // redirect to dashboard
+        router.replace("/dashboard");
+        // set local storage
+        storeUserInfo({ accessToken: res?.data?.accessToken });
       }
-      storeUserInfo({ accessToken: res?.data?.accessToken });
     } catch (err: any) {
       showError(err);
     }
