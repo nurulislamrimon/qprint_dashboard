@@ -21,8 +21,8 @@ export const productApi = baseApi.injectEndpoints({
     // search products
 
     searchProduct: build.query({
-      query: (data) => ({
-        url: `/product?${data}`,
+      query: (query) => ({
+        url: `/product?${query}`,
         method: "GET",
       }),
       providesTags: ["product-search"],

@@ -7,7 +7,7 @@ import DealsOfTheDaySkeleton from "../shared/skeleton/DealsOfTheDaySkeleton";
 const DealsOfTheDayMainSection = () => {
   const { data, isLoading } = useGetDealsOfTheDayAndWidgetQuery("");
 
-  const dealsStateData = useAppSelector((state) => state.widget);
+  const dealsStateData = useAppSelector((state) => state.dealsOfTheDaySlice);
 
   return (
     <div className="bg-white w-full h-[calc(100vh-90px)] mt-1 md:p-7 p-5 overflow-y-auto ">

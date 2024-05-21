@@ -1,9 +1,7 @@
 "use client";
-
 import CustomersTable from "@/components/customers/CustomersTable";
 import CustomerTableSkeleton from "@/components/shared/skeleton/CustomerTableSkeleton";
 import { useCustomersQuery } from "@/store/features/customer/customerApi";
-import { useGetAllOnlineOrdersQuery } from "@/store/features/order/ordersApi";
 
 const Customers = () => {
   const { data: customers, isLoading } = useCustomersQuery("");

@@ -30,6 +30,7 @@ const OrderTableRow = ({
   index,
   dashboardTableData,
   quickOrder,
+  loadingMore,
 }: any) => {
   // console.log(quickOrder);
 
@@ -227,6 +228,11 @@ const OrderTableRow = ({
           />
         )}
       </td>
+      {loadingMore && (
+        <div className="flex items-center justify-center  w-full">
+          <span className="loading loading-dots loading-lg bg-main-bg-color "></span>
+        </div>
+      )}
     </>
   );
 };

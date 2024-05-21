@@ -1,8 +1,9 @@
 import React from "react";
 import Image from "next/image";
-import ButtonPrimary from "../ui/btn/ButtonPrimary.";
 import { useAppSelector } from "@/store/hook";
 import { mainUrl } from "@/constants/mainUrl";
+import CountdownTimer from "./CountdownTimer";
+import BestDealProduct from "./BestDealProduct";
 
 const BestDeal = () => {
   const {
@@ -14,120 +15,77 @@ const BestDeal = () => {
     secondProductPhoto,
     products,
     firstProductPhoto,
+    backgroundPhoto,
   } = useAppSelector((state) => state.bestDealsSlice);
-  console.log(products);
+
+  const offerEndDatae = new Date(endDate as string);
 
   return (
-    <section className="bg-[#EDF2EE] py-4 px-2 md:py-7 md:px-8 mt-5  rounded-lg">
-      <div className="flex items-center justify-between gap-6">
-        <div className="w-1/4 ">
-          <Image
-            height={200}
-            width={200}
-            className="pb-36 sm:pb-0 md:pb-0 lg:pb-0"
-            src={`${mainUrl}${firstProductPhoto}`}
-            alt="Test iamge"
-          />
+    <section
+      style={{
+        backgroundColor: `${
+          backgroundColor || (backgroundColor !== null && `${backgroundColor}`)
+        }`,
+        backgroundImage: `url(${mainUrl + backgroundPhoto})`,
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+      }}
+      className="py-4 px-2 md:py-7 md:px-8 mt-5 rounded-lg"
+    >
+      <div className="flex items-center justify-between gap-3 md:gap-x-5 overflow-hidden">
+        <div className="w-1/4 md:w-1/5">
+          <div className="relative w-20 md:w-36 h-20 md:h-36 lg:w-48 lg:h-48 shrink-0 min-w-[5rem] max-w-[12rem]">
+            <Image
+              src={`${mainUrl + firstProductPhoto}`}
+              placeholder="blur"
+              blurDataURL={`${mainUrl + firstProductPhoto}`}
+              alt="Offer Image"
+              fill
+              style={{
+                objectFit: "cover",
+              }}
+              sizes="500px"
+              priority
+              className="w-full h-full top-0 left-0 object-cover"
+            />
+          </div>
         </div>
-        <div className="w-2/4 flex items-center flex-col space-y-6">
-          <div className="text-center space-y-2 md:space-y-3 lg:space-y-3">
+        <div className="w-2/4 md:w-3/5 flex items-center flex-col space-y-6">
+          <div className="text-center space-y-2 md:space-y-3 lg:space-y-3 mb-5">
             <h4 className="[font-size:_clamp(0.6em,4vw,0.9em)] main-text-color ">
               BEST DEALS
             </h4>
-            <h1 className=" line-clamp-2 [font-size:_clamp(0.95em,4vw,1.9em)] main-text-color font-semibold ">
-              {title}
+            <h1 className="md:line-clamp-2 line-clamp-1 text-base md:text-2xl main-text-color font-semibold ">
+              {title as string}
             </h1>
-            <p className=" line-clamp-2 [font-size:_clamp(0.6em,4vw,1.2em)] text-gray-500">
-              {description}
+            <p className="line-clamp-2 text-sm md:text-lg text-gray-500">
+              {description as string}
             </p>
           </div>
-
-          {/* coundown started */}
-
-          <div className="grid grid-flow-col gap-5 text-center auto-cols-max">
-            <div className="flex flex-col border p-3 rounded-lg items-center justify-center bg-white ">
-              <span className="countdown [font-size:_clamp(0.9em,4vw,1.5em)]  ">
-                {/* @ts-ignore */}
-                <span className="" style={{ "--value": 7 }}></span>
-              </span>
-              <p className=" [font-size:_clamp(0.6em,4vw,0.8em)] font-bold bg-gradient-to-r from-[#C83B62]  to-[#7F35CD]  text-transparent bg-clip-text">
-                DAYS
-              </p>
-            </div>
-            <div className="flex flex-col border p-3 rounded-lg items-center justify-center bg-white">
-              <span className="countdown [font-size:_clamp(0.9em,4vw,1.5em)] ">
-                {/* @ts-ignore */}
-                <span style={{ "--value": 15 }}></span>
-              </span>
-              <p className=" [font-size:_clamp(0.6em,4vw,0.8em)] font-bold bg-gradient-to-r from-[#C83B62]  to-[#7F35CD]  text-transparent bg-clip-text">
-                HOURS
-              </p>
-            </div>
-            <div className="flex flex-col border p-3 rounded-lg items-center justify-center bg-white">
-              <span className="countdown [font-size:_clamp(0.9em,4vw,1.5em)] ">
-                {/* @ts-ignore */}
-                <span style={{ "--value": 48 }}></span>
-              </span>
-              <p className=" [font-size:_clamp(0.6em,4vw,0.8em)] font-bold bg-gradient-to-r from-[#C83B62]  to-[#7F35CD]  text-transparent bg-clip-text">
-                MIN
-              </p>
-            </div>
-            <div className="flex flex-col border p-3 rounded-lg items-center justify-center bg-white ">
-              <span className="countdown [font-size:_clamp(0.9em,4vw,1.5em)] ">
-                {/* @ts-ignore */}
-                <span style={{ "--value": 31 }}></span>
-              </span>
-              <p className=" [font-size:_clamp(0.6em,4vw,0.8em)] font-bold bg-gradient-to-r from-[#C83B62]  to-[#7F35CD]  text-transparent bg-clip-text">
-                SEC
-              </p>
-            </div>
-          </div>
-          {/* coundown ended */}
-
           <div>
-            {" "}
-            <ButtonPrimary buttonText="Shop Now" type="submit" />
+            <CountdownTimer endDate={offerEndDatae} />
           </div>
         </div>
-        <div className="w-1/4 ">
-          <Image
-            height={200}
-            width={200}
-            className="pb-36 sm:pb-0 md:pb-0 lg:pb-0"
-            src={`${mainUrl}${secondProductPhoto}`}
-            alt="Test image with monitor"
-          />
+        <div className="w-1/4 md:w-1/5 flex items-end justify-end overflow-hidden">
+          <div className="relative w-20 md:w-36 h-20 md:h-36 lg:w-48 lg:h-48 shrink-0 min-w-[5rem] max-w-[12rem]">
+            <Image
+              src={`${mainUrl + secondProductPhoto}`}
+              placeholder="blur"
+              blurDataURL={`${mainUrl + secondProductPhoto}`}
+              alt="Offer Image"
+              fill
+              style={{
+                objectFit: "cover",
+              }}
+              sizes="500px"
+              priority
+              className="w-full h-full top-0 left-0 object-cover"
+            />
+          </div>
         </div>
       </div>
-      <div className="flex items-center justify-between gap-3 overflow-x-auto scroll-smooth no-scrollbar mt-4 ">
-        {/* <!-------------- event Card 01 -------------> */}
-        {products?.map((product: any, i: number) => (
-          <div
-            key={i}
-            className="flex items-center gap-3 max-w-[300px] pr-20 py-2 pl-2 shrink-0 rounded-xl bg-white border border-white hover:border hover:duration-500 cursor-pointer hover:border-fuchsia-700"
-          >
-            <div className="flex items-center justify-between gap-3">
-              <div className="w-20 h-20 rounded-lg bg-background-color">
-                <Image
-                  height={100}
-                  width={100}
-                  src={`${mainUrl}${product?.productPhoto}`}
-                  alt=""
-                />
-              </div>
-              <div>
-                <h3 className="line-clamp-1">{product?.productName}</h3>
-                <strong className="text-red-regular font-bold">
-                  {product?.discountedPrice} QR
-                  <del className="text-gray-400 pl-2 font-semibold">
-                    {product?.sellingPrice}
-                  </del>
-                </strong>
-              </div>
-            </div>
-            {/* <!-------------- event Card 01 -------------> */}
-          </div>
-        ))}
+      <div className="mt-10 md:mt-20">
+        <BestDealProduct productData={products} />
       </div>
     </section>
   );

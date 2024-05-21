@@ -21,20 +21,6 @@ const PosOrderRow = ({ data, index }: any) => {
           POS
         </span>
       </td>
-      <td className="md:flex items-center justify-center gap-2.5 py-5 hidden ">
-        {/* <button onClick={(e) => e.stopPropagation()}>
-          <IconPrinter
-            stroke={1}
-            className="hover:text-fuchsia-800 transition-all"
-          />
-        </button> */}
-        <Link onClick={(e) => e.stopPropagation()} href={`/order/${data?._id}`}>
-          <IconZoomIn
-            stroke={1}
-            className="hover:text-fuchsia-800 transition-all"
-          />
-        </Link>
-      </td>
     </>
   );
 };

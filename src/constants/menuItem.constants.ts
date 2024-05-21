@@ -48,11 +48,18 @@ export const menuItems: IMenuItem[] = [
         notify: 3,
       },
       {
+        label: "Pending",
+        key: "pending",
+        link: "/pending",
+        notify: 50,
+      },
+      {
         label: "Quick Order",
         key: "quickOrder",
         link: "/quick-order",
         notify: 45,
       },
+
       {
         label: "Order Placed",
         key: "orderPlaced",

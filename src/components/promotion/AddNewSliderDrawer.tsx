@@ -1,33 +1,89 @@
-import React, { useState } from "react";
 import CustomGlobalDrawer from "../shared/CustomGlobalDrawer";
-import ChooseColorOrImage from "./card/ChooseColorOrImage";
+import ColorAndImageSwitcher from "./card/ColorAndImageSwitcher";
 import CustomGlobalInput from "../shared/CustomGlobalInput";
 import ButtonSecondary from "../ui/btn/ButtonSecondary";
 import ButtonPrimary from "../ui/btn/ButtonPrimary.";
-import FileInput from "../ui/FileInput";
 import DrawerModalCloseBTN from "../shared/DrawerModalCloseBTN";
 import { useAppDispatch } from "@/store/hook";
 import { useAddSliderMutation } from "@/store/features/slider/sliderApi";
 import { toast } from "react-toastify";
-import { resetSlider, setSlider } from "@/store/features/slider/sliderSlice";
+import {
+  resetSlider,
+  setSlider,
+  setSliderFiles,
+} from "@/store/features/slider/sliderSlice";
 import Loader from "../shared/loaders/Loader";
-import { Icon123 } from "@tabler/icons-react";
-import { mainUrl } from "@/constants/mainUrl";
+import FileUploader from "../shared/FileUploader/FileUploader";
+import { showError } from "@/helpers/showError";
 
 const AddNewSliderDrawer = ({ data }: any) => {
-  const [addSlider] = useAddSliderMutation();
-  const [loading, setLoading] = useState(false);
+  const [addSlider, { isLoading: loading }] = useAddSliderMutation();
 
   const formData = new FormData();
   const dispatch = useAppDispatch();
 
+  // ---------------------
+  // handle change
+  // ---------------------
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const fieldName = e.target?.name;
+
+    // set file
+    if (e.target instanceof HTMLInputElement && e.target?.files) {
+      const files = e.target?.files;
+      if (files && files.length) {
+        const objUrl = URL.createObjectURL(files[0]);
+        dispatch(setSlider({ [fieldName]: objUrl }));
+        dispatch(setSliderFiles({ [fieldName]: files[0] }));
+      }
+    } else {
+      const value =
+        fieldName === "isBgColorSelected"
+          ? !data?.isBgColorSelected
+          : e.target?.value;
+
+      dispatch(setSlider({ [fieldName]: value }));
+    }
+  };
+
+  // ---------------------
+  // submit form
+  // ---------------------
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-
-    formData.append(`slider.${data?.slider}`, JSON.stringify(data));
 
     try {
+      const { sliderFiles, sliderTitle, isBgColorSelected, ...rest } = data;
+      const restFiles = { ...sliderFiles };
+
+      if (
+        !isBgColorSelected &&
+        rest?.backgroundPhoto &&
+        rest?.backgroundColor
+      ) {
+        rest?.backgroundColor && delete rest.backgroundColor;
+      } else if (
+        isBgColorSelected &&
+        rest?.backgroundColor &&
+        rest?.backgroundPhoto
+      ) {
+        rest?.backgroundPhoto && delete rest.backgroundPhoto;
+        restFiles?.backgroundPhoto && delete restFiles.backgroundPhoto;
+      }
+
+      formData.append(`slider.${sliderTitle}`, JSON.stringify(rest));
+
+      // handle file uploads
+      if (restFiles && Object.keys(restFiles)?.length) {
+        Object.entries(restFiles).forEach(([key, value]) => {
+          formData.append(`slider.${sliderTitle}.${key}`, value as string);
+        });
+      }
+
       const res = await addSlider(formData);
 
       if ("data" in res) {
@@ -35,12 +91,10 @@ const AddNewSliderDrawer = ({ data }: any) => {
         dispatch(resetSlider());
       }
       if ("error" in res) {
-        toast.error((res as { error: any }).error.message);
+        showError((res as { error: any }).error.message);
       }
     } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+      showError(error);
     }
   };
 
@@ -67,32 +121,21 @@ const AddNewSliderDrawer = ({ data }: any) => {
 
           {/* Image and color picker */}
 
-          <ChooseColorOrImage />
+          <ColorAndImageSwitcher handleChange={handleChange} data={data} />
 
           {/* input section */}
           <div className="flex flex-col gap-6 mt-6">
             <div className="flex gap-4 items-center justify-center w-full md:flex-row  flex-col">
               <div className="">
-                <FileInput
+                <FileUploader
                   name="productPhoto"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    if (e.target?.files?.length) {
-                      formData.append(
-                        `slider.${data?.slider}.productPhoto`,
-                        e.target?.files[0]
-                      );
-                      // create image url using file value
-                      const reader = URL.createObjectURL(e.target?.files[0]);
-                      dispatch(setSlider({ sliderLocalPhotoUrl: reader }));
-                    }
-                  }}
-                  imageBottomText=""
-                  localUrl={
-                    data?.sliderLocalPhotoUrl === undefined
-                      ? `${mainUrl + data?.productPhoto}`
-                      : data?.sliderLocalPhotoUrl
-                  }
-                />
+                  className="min-h-48 flex items-center justify-center flex-col h-full min-w-full relative cursor-pointer text-black-opacity-60 text-xs"
+                  data={data?.productPhoto}
+                  multiple={true}
+                  onChange={handleChange}
+                  accept="image/jpg,image/jpeg,image/png"
+                  maxSize={2}
+                ></FileUploader>
               </div>
               <div className="flex flex-col gap-4 w-full">
                 <CustomGlobalInput

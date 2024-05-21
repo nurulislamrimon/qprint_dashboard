@@ -23,76 +23,80 @@ interface IBestDealsSlice {
   description: string;
   products: IBestDealsProduct[];
   searchProduct: string;
-  bestDealsFiles: Record<string, File>;
-  backgroundPhoto: File | null;
   backgroundColor: string;
+  bestDealsFiles: {
+    backgroundPhoto: File | null;
+    firstProductPhoto: File | null;
+    secondProductPhoto: File | null;
+  };
+
+  isBgColorSelected: boolean;
 }
 
-const initialState: any | Record<string, unknown> = {};
+const initialState: IBestDealsSlice | Record<string, unknown> = {};
 
 const bestDealsSlice = createSlice({
   name: "bestDeals",
   initialState,
   reducers: {
-    setBestDeals: (
-      state,
-      action: PayloadAction<Partial<IBestDealsSlice> | false>
+    setBestDeals: (state, action: PayloadAction<Partial<IBestDealsSlice>>) => {
+      return {
+        ...state,
+        ...action.payload,
+      };
+    },
+
+    setBestDealsFiles: (state: { bestDealsFiles?: File | null }, action) => {
+      if ("bestDealsFiles" in state) {
+        state.bestDealsFiles = {
+          ...state.bestDealsFiles,
+          ...action.payload,
+        };
+      } else {
+        state.bestDealsFiles = action.payload;
+      }
+    },
+    addProductToBestDeals: (
+      state: { products?: IBestDealsProduct[] },
+      action: PayloadAction<IProduct>
     ) => {
-      if (action.payload === false) {
-        return initialState;
+      const newProduct = action.payload;
+      if (state?.products) {
+        return {
+          ...state,
+          products: [...state?.products, newProduct],
+        };
       } else {
         return {
           ...state,
-          ...action.payload,
+          products: [newProduct],
         };
       }
     },
 
-    setBestDealsFiles: (state, action) => {
-      state.bestDealsFiles = { ...state.bestDealsFiles, ...action.payload };
-    },
-    clearBackgroundPhoto: (state) => {
-      if (state.bestDealsFiles?.backgroundPhoto?.name) {
-        state.bestDealsFiles.backgroundPhoto = null;
-      }
-      state.backgroundPhoto = null;
-    },
-    setBackgroundColor: (state) => {
-      state.backgroundColor = "";
-    },
-
-    addToBestDeals: (state, action: PayloadAction<IProduct>) => {
-      const newProduct = action.payload;
-      return {
-        ...state,
-        products: [...(state.products || []), newProduct],
-      };
-    },
-
-    removeFromBestDeals: (state, action: PayloadAction<string>) => {
-      console.log(action);
+    removeProductFromBestDeals: (
+      state: { products?: IBestDealsProduct[] },
+      action: PayloadAction<{ _id: string }>
+    ) => {
       return {
         ...state,
         products: (state.products || []).filter(
-          //@ts-ignore
           (product: any) => product._id !== action.payload._id
         ),
       };
     },
-    setSearchProductEmpty: (state) => {
-      state.searchProduct = "";
+    handleModalOfBestDealsProduct: (state) => {
+      return { ...state, searchProduct: "" };
     },
   },
 });
 
 export const {
   setBestDeals,
-  addToBestDeals,
-  removeFromBestDeals,
+  addProductToBestDeals,
+  removeProductFromBestDeals,
   setBestDealsFiles,
-  setSearchProductEmpty,
-  clearBackgroundPhoto,
-  setBackgroundColor,
+  handleModalOfBestDealsProduct,
 } = bestDealsSlice.actions;
 
 export default bestDealsSlice.reducer;

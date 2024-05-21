@@ -1,37 +1,53 @@
 import { mainUrl } from "@/constants/mainUrl";
-import { setSearchProductByCategory, setSearchProductByCategoryEmpty } from "@/store/features/searchProductByCategory/searchProductByCategorySlice";
+import {
+  resetFilterProductByCategory,
+  setSearchProductByCategory,
+} from "@/store/features/searchProductByCategory/searchProductByCategorySlice";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import Image from "next/image";
-import productImgPlaceholder from "@/assets/productPlaceholder.svg";
 
-
-const ProductCategory = ({ categoryData, isLoading }: any) => {
+const ProductCategory = ({ categoryData }: any) => {
   const dispatch = useAppDispatch();
-  const { searchProductByCategory } = useAppSelector((state) => state.searchProductByCategorySlice);
+  const { searchProductByCategory } = useAppSelector(
+    (state) => state.searchProductByCategorySlice
+  );
 
-
-  const handleClick = (categoryName: string) => {
-    dispatch(setSearchProductByCategory(categoryName));
+  const handleClick = (event: React.MouseEvent, categoryName: string) => {
+    event.stopPropagation();
+    if (searchProductByCategory === categoryName) {
+      dispatch(resetFilterProductByCategory());
+    } else {
+      dispatch(setSearchProductByCategory(categoryName));
+    }
   };
 
-
-
   return (
-    <div
+    <section>
+      <div
+        onClick={(event) => handleClick(event, categoryData?.categoryName)}
+        className={`${
+          searchProductByCategory === categoryData?.categoryName
+            ? "bg-main-bg-color text-white"
+            : "bg-white text-black"
+        }  flex items-center gap-3 border justify-center px-4 py-2 rounded-full cursor-pointer w-auto transition-all shrink-0 whitespace-nowrap`}
+      >
+        <div className="w-[30px] h-[30px] relative shrink-0">
+          <Image
+            src={`${mainUrl + categoryData?.categoryPhoto}`}
+            alt="Category Pic"
+            placeholder="blur"
+            blurDataURL={`${mainUrl}${categoryData?.categoryPhoto}`}
+            fill
+            style={{
+              objectFit: "cover",
+            }}
+            className="w-full h-full top-0 left-0 object-cover rounded-full"
+          />
+        </div>
 
-      onClick={() => handleClick(categoryData?.categoryName)}
-      className={`${searchProductByCategory === categoryData?.categoryName ? "bg-main-bg-color text-white" : ''} text-black flex items-center gap-3 border justify-center px-4 py-2 rounded-full cursor-pointer  hover:bg-main-bg-color hover:text-white w-auto transition-all shrink-0 whitespace-nowrap `}
-    >
-      <div className="w-[30px] h-[30px]  rounded-full flex items-center justify-center overflow-hidden bg-white">
-        <Image
-          alt="Category Pic"
-          height={30}
-          width={30}
-          src={isLoading ? productImgPlaceholder : `${mainUrl}${categoryData?.categoryPhoto}`}
-        />
+        <span className="text-sm">{categoryData?.categoryName}</span>
       </div>
-      <span className="text-sm">{categoryData?.categoryName}</span>
-    </div>
+    </section>
   );
 };
 

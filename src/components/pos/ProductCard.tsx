@@ -10,7 +10,6 @@ import { IVariant } from "@/types";
 import placeholderImg from "@/assets/productPlaceholder.svg";
 
 const ProductCard = ({ product, isLoading }: any) => {
-
   const [openModal, setOpenModal] = useState(false);
   const dispatch = useAppDispatch();
 
@@ -39,7 +38,6 @@ const ProductCard = ({ product, isLoading }: any) => {
     }
   };
 
-
   return (
     <div
       onClick={(event: React.MouseEvent) => handleAddToCart(event, product)}
@@ -47,14 +45,17 @@ const ProductCard = ({ product, isLoading }: any) => {
     >
       <div className="flex items-center  justify-center py-3.5 relative">
         {
-          <div className="w-[80px] h-[80px] overflow-hidden rounded-md">
+          <div className="w-[80px] h-[80px] shrink-0 relative">
             <Image
-              objectFit="contain"
-              src={product?.productPhotos ? (isLoading ? placeholderImg : `${mainUrl}${product?.productPhotos[0]}`) : placeholderImg}
-              className="w-[80px] h-[80px] object-contain rounded-md"
+              src={`${mainUrl}${product?.productPhotos[0]}`}
               alt="product-photo"
-              width={500}
-              height={500}
+              placeholder="blur"
+              blurDataURL={`${mainUrl}${product?.productPhotos[0]}`}
+              fill
+              style={{
+                objectFit: "cover",
+              }}
+              className="w-full h-full top-0 left-0 object-cover rounded-md"
             />
           </div>
         }
@@ -82,11 +83,11 @@ const ProductCard = ({ product, isLoading }: any) => {
             (variant: IVariant) => variant.isDefault === true
           ).discountedPrice
             ? product?.variants?.find(
-              (variant: IVariant) => variant.isDefault === true
-            ).discountedPrice
+                (variant: IVariant) => variant.isDefault === true
+              ).discountedPrice
             : product?.variants?.find(
-              (variant: IVariant) => variant.isDefault === true
-            ).sellingPrice}
+                (variant: IVariant) => variant.isDefault === true
+              ).sellingPrice}
           QR
         </strong>
       </div>

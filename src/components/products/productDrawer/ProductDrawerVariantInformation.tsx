@@ -1,32 +1,64 @@
 "use client";
 import ProductColorSelector from "@/components/pos/ProductColorSelector";
 import CustomGlobalInput from "@/components/shared/CustomGlobalInput";
+import Loader from "@/components/shared/loaders/Loader";
+import { useUpdateProductMutation } from "@/store/features/product/productApi";
+import { setStock } from "@/store/features/product/updateProductStockSlice.ts";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { IVariant } from "@/types";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 interface StockValues {
   [key: string]: number; // Define the keys as strings and the values as numbers
 }
-const ProductDrawerVariantInformation = ({ data }: any) => {
+const ProductDrawerVariantInformation = ({ data, id }: any) => {
   const [selectedVariant, setSelectedVariant] = useState<IVariant | null>();
-  //   const [stockValues, setStockValues] = useState<StockValues>({});
+  const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const { inStock } = useAppSelector((state) => state.updateProductStockSlice);
+
+  const [updateProduct] = useUpdateProductMutation();
 
   const handleColorSelect = (variant: IVariant) => {
     setSelectedVariant(variant);
   };
 
-  //   const handleStockChange = (variantId: string, value: string) => {
-  //     setStockValues((prevState) => ({
-  //       ...prevState,
-  //       [variantId]: parseInt(value),
-  //     }));
-  //   };
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+
+    // Assuming id and inStock are defined elsewhere in your component/state
+    if (typeof id === "undefined" || id === null) {
+      console.error("Product ID is not defined");
+      setLoading(false);
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("id", id.toString());
+    formData.append("inStock", inStock.toString());
+
+    try {
+      const res = await updateProduct({ id, data: formData });
+      console.log(res);
+      if ("data" in res) {
+        toast.success(res?.data?.message);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="space-y-8 pb-9">
         {data?.data?.variants?.map((variant: IVariant, i: number) => (
-          <div key={i} className="space-y-3 border-b pb-5">
+          <div key={i} className="space-y-3 border-b pb-5  overflow-hidden">
+            {loading && <Loader />}
             <div className="flex items-center gap-7">
               <div className="space-y-3">
                 <label className="text-black-opacity-60 hidden md:block">
@@ -47,10 +79,7 @@ const ProductDrawerVariantInformation = ({ data }: any) => {
                 label={"Add new in stock"}
                 type={"number"}
                 placeholder="Add new in stock"
-                // value={stockValues[`stock_${i}`] || variant.inStock}
-                // onChange={(e) =>
-                //   handleStockChange(`stock_${i}`, e.target.value)
-                // }
+                onChange={(e) => dispatch(setStock(e.target.value))}
               />
             </div>
             <span className="text-black-opacity-60 text-sm ">

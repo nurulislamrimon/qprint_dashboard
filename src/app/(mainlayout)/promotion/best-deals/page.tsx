@@ -4,7 +4,7 @@ import TopBar from "@/components/shared/TopBar";
 const BestDeals = () => {
   return (
     <section>
-      <TopBar title="Slider" />
+      <TopBar title="Best Deals" />
 
       {/* main content */}
 

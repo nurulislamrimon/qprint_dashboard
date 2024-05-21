@@ -9,7 +9,7 @@ import {
   useUpdateMeMutation,
   useUpdatePasswordMutation,
 } from "@/store/features/auth/authApi";
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { setSetting } from "@/store/features/auth/settingSlice";
 import {
@@ -19,8 +19,13 @@ import {
 } from "@/store/features/auth/updatePasswordSlice";
 import FileInput from "@/components/ui/FileInput";
 import { mainUrl } from "@/constants/mainUrl";
+import Loader from "@/components/shared/loaders/Loader";
+import { toast } from "react-toastify";
 
 const Setting = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  console.log(error);
   const { data } = useGetMeQuery("");
   const [updateMe] = useUpdateMeMutation();
   const [updatePassword] = useUpdatePasswordMutation();
@@ -30,7 +35,7 @@ const Setting = () => {
     (state) => state.updatePasswordSlice
   );
 
-  console.log(updatedData);
+  // console.log(updatedData);
 
   const formData = new FormData();
 
@@ -40,6 +45,7 @@ const Setting = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       Object.entries(updatedData).forEach(([key, value]) => {
@@ -52,7 +58,8 @@ const Setting = () => {
         }
       });
       const res = await updateMe(formData);
-      console.log(res);
+      // @ts-ignore
+      toast.success(res?.data?.message);
 
       // update password
 
@@ -64,10 +71,21 @@ const Setting = () => {
 
       if (oldPassword !== "" && newPassword !== "" && confirmPassword !== "") {
         const pasRes = await updatePassword(updatePasswordData);
+        // @ts-ignore
+        toast.success(pasRes?.data?.message);
         console.log(pasRes);
+        // @ts-ignore
+        if (pasRes?.error?.data?.message) {
+          // @ts-ignore
+          setError(pasRes?.error?.data?.message);
+          // @ts-ignore
+          toast.error(pasRes?.error?.data?.message);
+        }
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -77,6 +95,7 @@ const Setting = () => {
         <TopBar title={"Setting"} />
       </div>
       <div className="p-5 md:p-8 bg-white  h-[calc(100vh-90px)] overflow-y-auto">
+        {loading && <Loader />}
         <h1 className="text-xl font-medium mb-7">Basic Information</h1>
         {/* ==Profile Setting Form== */}
         <div className="">
@@ -117,26 +136,9 @@ const Setting = () => {
 
               <div className="md:order-none order-1">
                 <div className=" flex items-center justify-center">
-                  {/* <label className="w-36 h-36 rounded-full flex flex-col gap-2 items-center justify-center bg-white text-blue shadow-boxShadow shadow-product-card-shadow border border-blue cursor-pointer">
-                    <IconUpload />
-                    <span className="text-sm">Upload Image</span>
-                    <input
-                      type="file"
-                      name="profilePhoto"
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        if (e.target?.files?.length) {
-                          formData.append("profilePhoto", e.target?.files[0]);
-                          // create image url using file value
-                          const reader = URL.createObjectURL(
-                            e.target?.files[0]
-                          );
-                        }
-                      }}
-                      className="hidden"
-                    />
-                  </label> */}
-
                   <FileInput
+                    imageType="Profile"
+                    className="!rounded-full !border-solid"
                     name="profilePhoto"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       if (e.target?.files?.length) {
@@ -149,7 +151,7 @@ const Setting = () => {
                         dispatch(setSetting({ localProfilePhotoUrl: reader }));
                       }
                     }}
-                    imageBottomText="Add Profile Photo"
+                    imageBottomText=""
                     localUrl={
                       updatedData?.localProfilePhotoUrl === undefined
                         ? `${mainUrl}${updatedData?.profilePhoto}`
@@ -160,10 +162,8 @@ const Setting = () => {
               </div>
             </div>
             {/* ===Password=== */}
-            <div>
-              <h1 className="text-xl font-medium my-[30px] md:my-10">
-                Change Password
-              </h1>
+            <div className="flex flex-col md:gap-10 gap-7">
+              <h1 className="text-xl font-medium  ">Change Password</h1>
 
               <div className="flex flex-col md:flex-row gap-7">
                 <PasswordInput
@@ -182,6 +182,7 @@ const Setting = () => {
                   placeholder="Confirm Password"
                 />
               </div>
+              {error && <span className="text-red-color ">{error}</span>}
             </div>
             <div className="flex items-center justify-center  mt-5 md:fixed bottom-5 inset-x-0 mx-auto">
               <ShopSetupCommonSubmitBTN

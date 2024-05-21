@@ -10,6 +10,7 @@ interface SubCategoryProps {
 }
 
 const SubCategory = ({ data, id }: any) => {
+  // console.log(data);
   const [loading, setLoading] = useState(false);
   const [openEditDrawer, setOpenEditDrawer] = useState(false);
   const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
@@ -27,13 +28,16 @@ const SubCategory = ({ data, id }: any) => {
 
   // handle delete
   const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    // e.preventDefault();
+    e.preventDefault();
     setLoading(true);
 
     formData.append("deleteSubcategories", data?.subcategoryId);
 
     try {
-      const res = await updateSubCategory({ data: formData, id: id });
+      const res = await updateSubCategory({
+        data: formData,
+        id: data?.subcategoryId,
+      });
       if (res?.data) {
         toast.success(res?.data?.message);
         handleCloseConfirmationModal();
@@ -41,6 +45,7 @@ const SubCategory = ({ data, id }: any) => {
       if (res?.error) {
         toast.error(res?.error.message);
       }
+      console.log(res);
     } catch (error) {
       console.error(error);
     } finally {
@@ -71,12 +76,15 @@ const SubCategory = ({ data, id }: any) => {
         <EditSubCategoryDrawer
           data={data}
           openDrawer={openEditDrawer}
+          // @ts-ignore
+          setOpenEditDrawer={setOpenEditDrawer}
           handleCloseDrawer={handleCloseEditDrawer}
         />
       )}
 
       {openConfirmationModal && (
         <SubCategoryDeleteModal
+          loading={loading}
           data={data}
           handleDelete={handleDelete}
           handleModal={handleCloseConfirmationModal}

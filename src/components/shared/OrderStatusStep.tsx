@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Stepper from "./Stepper";
-import { getDateFormat } from "@/utils/getDateFormat";
+import { getDateFormat, getDateTimeFormat } from "@/utils/getDateFormat";
+
+// lastOrderStatus?.status === "Rejected" ||
 
 const OrderStatusStep = ({ data }: any) => {
   //Status Data
@@ -13,16 +15,18 @@ const OrderStatusStep = ({ data }: any) => {
     lastOrderStatus?.status === "Returned" ||
     lastOrderStatus?.status === "Cancelled" ? (
     <p className="text-center text-red-500">
-      2
-      {lastOrderStatus?.status === "Rejected" ||
-      lastOrderStatus?.status === "Returned"
+      {lastOrderStatus?.status === "Returned"
         ? `This order is ${
             lastOrderStatus?.status
-          } by your self at ${getDateFormat(lastOrderStatus?.time)}`
+          } by customer at ${getDateTimeFormat(lastOrderStatus?.time)}`
         : lastOrderStatus?.status === "Cancelled"
         ? `This order is ${
             lastOrderStatus?.status
-          } Cancelled by customer at ${getDateFormat(lastOrderStatus?.time)}`
+          } by customer at ${getDateTimeFormat(lastOrderStatus?.time)}`
+        : lastOrderStatus?.status === "Rejected"
+        ? `This order is ${
+            lastOrderStatus?.status
+          } by your self at ${getDateTimeFormat(lastOrderStatus?.time)}`
         : null}
     </p>
   ) : (

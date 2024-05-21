@@ -3,44 +3,99 @@ import DrawerModalCloseBTN from "../shared/DrawerModalCloseBTN";
 import CustomGlobalInput from "../shared/CustomGlobalInput";
 import GlobalActionButton from "../shared/GlobalActionButton";
 import ButtonPrimary from "../ui/btn/ButtonPrimary.";
-import ChooseColorOrImage from "./card/ChooseColorOrImage";
+import ColorAndImageSwitcher from "./card/ColorAndImageSwitcher";
 import { useAddSliderMutation } from "@/store/features/slider/sliderApi";
 import { toast } from "react-toastify";
 import { useAppDispatch } from "@/store/hook";
 import FileInput from "../ui/FileInput";
-import { resetOffer, setOffer } from "@/store/features/slider/offerSlice";
-import { useState } from "react";
+import {
+  IOffer,
+  resetOffer,
+  setOffer,
+  setOfferFiles,
+} from "@/store/features/slider/offerSlice";
 import Loader from "../shared/loaders/Loader";
-import { mainUrl } from "@/constants/mainUrl";
-const EditOfferSliderDrawer = (data: any) => {
-  const [addSlider] = useAddSliderMutation();
-  const [loading, setLoading] = useState(false);
+import { showError } from "@/helpers/showError";
+import FileUploader from "../shared/FileUploader/FileUploader";
+
+const EditOfferSliderDrawer = ({ data }: { data: IOffer | any }) => {
+  const [addSlider, { isLoading: loading }] = useAddSliderMutation();
   const formData = new FormData();
   const dispatch = useAppDispatch();
 
+  // ---------------------
+  // handle change
+  // ---------------------
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const fieldName = e.target?.name;
+    // set file
+    if (e.target instanceof HTMLInputElement && e.target?.files) {
+      const files = e.target?.files;
+      if (files && files.length) {
+        const objUrl = URL.createObjectURL(files[0]);
+        dispatch(setOffer({ [fieldName]: objUrl }));
+        dispatch(setOfferFiles({ [fieldName]: files[0] }));
+      }
+    } else {
+      const value =
+        fieldName === "isBgColorSelected"
+          ? !data?.isBgColorSelected
+          : e.target?.value;
+
+      dispatch(setOffer({ [fieldName]: value }));
+    }
+  };
+
+  // ---------------------
+  // submit form
+  // ---------------------
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-
-    formData.append(`${data?.data?.offer}`, JSON.stringify(data?.data));
-
     try {
+      const { offerFiles, offerTitle, isBgColorSelected, ...rest } = data;
+      const restFiles = { ...offerFiles };
+
+      if (
+        !isBgColorSelected &&
+        rest?.backgroundPhoto &&
+        rest?.backgroundColor
+      ) {
+        rest?.backgroundColor && delete rest.backgroundColor;
+      } else if (
+        isBgColorSelected &&
+        rest?.backgroundColor &&
+        rest?.backgroundPhoto
+      ) {
+        rest?.backgroundPhoto && delete rest.backgroundPhoto;
+        restFiles?.backgroundPhoto && delete restFiles.backgroundPhoto;
+      }
+
+      formData.append(offerTitle, JSON.stringify(rest));
+
+      // handle file uploads
+      if (restFiles && Object.keys(restFiles)?.length) {
+        Object.entries(restFiles).forEach(([key, value]) => {
+          formData.append(`${offerTitle}.${key}`, value as string);
+        });
+      }
       const res = await addSlider(formData);
-      console.log("slieder got updated", res);
 
       if ("data" in res) {
         toast.success((res as { data: any }).data.message);
         dispatch(resetOffer());
       }
       if ("error" in res) {
-        toast.error((res as { error: any }).error.message);
+        showError((res as { error: any }).error);
       }
     } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+      showError(error);
     }
   };
+
   return (
     <div>
       <CustomGlobalDrawer
@@ -51,40 +106,27 @@ const EditOfferSliderDrawer = (data: any) => {
         <form onSubmit={handleSubmit} className="overflow-hidden">
           {loading && <Loader />}
           <div className="relative overflow-y-auto p-3.5 flex flex-col gap-3.5">
-            <span className="font-medium text-lg">
-              {data?.data?.offerTitle}
-            </span>
+            <span className="font-medium text-lg">{data?.offerTitle}</span>
             <div className="absolute right-2.5 top-2.5">
               <DrawerModalCloseBTN handleClose={() => dispatch(resetOffer())} />
             </div>
 
-            <ChooseColorOrImage />
+            <ColorAndImageSwitcher handleChange={handleChange} data={data} />
 
             <div className="grid  grid-cols-1 md:grid-cols-2 gap-5">
-              <FileInput
+              <FileUploader
                 name="productPhoto"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  if (e.target?.files?.length) {
-                    formData.append(
-                      `${data?.data?.offer}.productPhoto`,
-                      e.target?.files[0]
-                    );
-                    // create image url using file value
-                    const reader = URL.createObjectURL(e.target?.files[0]);
-                    dispatch(setOffer({ offerLocalPhotoUrl: reader }));
-                  }
-                }}
-                imageBottomText=""
-                localUrl={
-                  data?.data?.offerLocalPhotoUrl === undefined
-                    ? `${mainUrl + data?.data?.productPhoto} `
-                    : data?.data?.offerLocalPhotoUrl
-                }
-              />
+                className="min-h-48  h-full min-w-48 w-full relative cursor-pointer  flex items-center justify-center text-black-opacity-60 text-xs "
+                data={data?.productPhoto}
+                multiple={true}
+                onChange={handleChange}
+                accept="image/jpg,image/jpeg,image/png"
+                maxSize={2}
+              ></FileUploader>
 
               <div className="grid grid-cols-1 gap-2">
                 <CustomGlobalInput
-                  value={data?.data?.title}
+                  value={data?.title}
                   label="Title"
                   name="title"
                   placeholder="Type here"
@@ -96,7 +138,7 @@ const EditOfferSliderDrawer = (data: any) => {
                 <CustomGlobalInput
                   label="Price"
                   type="number"
-                  value={data?.data?.price}
+                  value={data?.price}
                   onChange={(e) =>
                     dispatch(setOffer({ [e.target.name]: e.target.value }))
                   }
@@ -110,7 +152,7 @@ const EditOfferSliderDrawer = (data: any) => {
                 label="Button Text"
                 placeholder="Shop Now"
                 name="buttonText"
-                value={data?.data?.buttonText}
+                value={data?.buttonText}
                 onChange={(e) =>
                   dispatch(setOffer({ [e.target.name]: e.target.value }))
                 }
@@ -120,7 +162,7 @@ const EditOfferSliderDrawer = (data: any) => {
                 label="Link"
                 placeholder="https://www.link.com"
                 name="link"
-                value={data?.data?.link}
+                value={data?.link}
                 onChange={(e) =>
                   dispatch(setOffer({ [e.target.name]: e.target.value }))
                 }

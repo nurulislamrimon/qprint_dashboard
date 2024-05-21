@@ -4,7 +4,7 @@ import { useState } from "react";
 import { PrintingMode } from "./PrintingMode";
 import { useDeletePrintingSetupMutation } from "@/store/features/shopSetup/printingSetup/printingSetupApi";
 import EditPrintingModeDrawer from "./EditPrintingModeDrawer";
-import { toast } from 'react-toastify';
+
 import DeleteRequesetPrintingModal from "./DeleteRequesetPrintingModal";
 
 type PrintingModeData = {
@@ -12,10 +12,6 @@ type PrintingModeData = {
 };
 
 const PrintingModeLayout = ({ data }: PrintingModeData) => {
-  const [deletePrintingSetup] = useDeletePrintingSetupMutation();
-
-
-
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const handleDeleteModal = () => {
@@ -26,18 +22,6 @@ const PrintingModeLayout = ({ data }: PrintingModeData) => {
 
   const handleCloseModal = () => {
     setOpenModal(false);
-  };
-
-  const handleDelete = async (id: string) => {
-    const res = await deletePrintingSetup(id);
-    if (res?.data) {
-      toast.success(res?.data?.message);
-      handleCloseModal();
-    }
-    if (res?.error) {
-      toast.error(res?.error?.message)
-    }
-    console.log(res);
   };
 
   return (
@@ -61,19 +45,20 @@ const PrintingModeLayout = ({ data }: PrintingModeData) => {
           {data?.printingColorMode}
         </p>
       </div>
-      {
-        openModal &&
+      {openModal && (
         <EditPrintingModeDrawer
           id={data?._id}
           handleCloseModal={handleCloseModal}
-          openModal={openModal} />
-      }
+          openModal={openModal}
+        />
+      )}
 
-      {
-        openDeleteModal && (
-          <DeleteRequesetPrintingModal handleModal={handleDeleteModal} id={data?._id} handleDelete={handleDelete} />
-        )
-      }
+      {openDeleteModal && (
+        <DeleteRequesetPrintingModal
+          handleModal={handleDeleteModal}
+          id={data?._id}
+        />
+      )}
     </div>
   );
 };

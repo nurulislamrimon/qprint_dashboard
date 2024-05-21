@@ -7,7 +7,7 @@ import { ReactNode } from "react";
 
 export interface IFileUploaderProps {
   name: string;
-  data: Record<string, any>;
+  data: Record<string, any> | string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   accept?: string;
@@ -35,18 +35,23 @@ const FileUploader = ({
   bottomText,
   uid = 1,
 }: IFileUploaderProps) => {
-  const index = Number(uid) - 1;
-  const fieldName =
-    name === "seo.metaPhoto" ? data?.seo?.metaPhoto : data?.[name];
-  // check if fieldName is an array, if so, get the item at the index, otherwise use the uid if it's not 1, or the fieldName as a string
-  const path = Array.isArray(fieldName)
-    ? (fieldName[index] as string)
-    : uid !== 1
-    ? ""
-    : (fieldName as string);
+  let url;
+  if (typeof data === "string") {
+    url = data && !data?.includes("blob:http") ? `${mainUrl}${data}` : data;
+  } else {
+    const index = Number(uid) - 1;
+    const fieldName =
+      name === "seo.metaPhoto" ? data?.seo?.metaPhoto : data?.[name];
+    // check if fieldName is an array, if so, get the item at the index, otherwise use the uid if it's not 1, or the fieldName as a string
+    const path = Array.isArray(fieldName)
+      ? (fieldName[index] as string)
+      : uid !== 1
+      ? ""
+      : (fieldName as string);
 
-  // check if the file path is a valid URL, if not, use the default path
-  const url = path && !path?.includes("blob:http") ? `${mainUrl}${path}` : path;
+    // check if the file path is a valid URL, if not, use the default path
+    url = path && !path?.includes("blob:http") ? `${mainUrl}${path}` : path;
+  }
 
   const checkSizeAndHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (
@@ -63,11 +68,11 @@ const FileUploader = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="w-full h-full flex flex-col items-center justify-center">
       <label className={className}>
         {/* check if data exist or children exist, if so, render the corresponding content */}
         {url ? (
-          <Image src={url} alt={name} fill className="inset-0 object-contain" />
+          <Image src={url} alt={name} fill className="inset-0 object-cover" />
         ) : children ? (
           <span className="flex flex-col items-center justify-center">
             {children}
@@ -80,7 +85,7 @@ const FileUploader = ({
         ) : (
           <>
             <IconPhotoPlus width={30} height={30} stroke={1} />
-            <span className="flex flex-col">
+            <span className="flex flex-col text-center">
               <span>Select Your Image</span>
               {maxSize && (
                 <small className="text-gray-500">
@@ -105,7 +110,7 @@ const FileUploader = ({
           disabled={disabled}
         />
       </label>
-      <p>{bottomText}</p>
+      <p className="mt-2 text-gray-500 ">{bottomText}</p>
     </div>
   );
 };

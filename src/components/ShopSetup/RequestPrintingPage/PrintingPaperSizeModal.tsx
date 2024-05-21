@@ -66,14 +66,14 @@ const PrintingPaperSizeModal = ({ openModal, handleCloseModal }: any) => {
                 type="number"
                 placeholder="10"
                 name="width"
-                onChange={(e) => dispatch(setHeight(Number(e.target.value)))}
+                onChange={(e) => dispatch(setWidth(Number(e.target.value)))}
               />
               <CustomGlobalInput
                 label="Height"
                 type="number"
                 placeholder="20"
                 name="height"
-                onChange={(e) => dispatch(setWidth(Number(e.target.value)))}
+                onChange={(e) => dispatch(setHeight(Number(e.target.value)))}
               />
             </div>
             <div className="flex items-center justify-center w-[calc(100vw-40px)] md:w-[460px] fixed bottom-5">

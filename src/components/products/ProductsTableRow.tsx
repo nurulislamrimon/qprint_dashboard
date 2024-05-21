@@ -14,8 +14,11 @@ import { IconEdit, IconTrash } from "@tabler/icons-react";
 import ProductsDeleteModal from "./ProductsDeleteModal";
 import { toast } from "react-toastify";
 import productImgPlaceholder from "@/assets/placeholderImgIcon.svg";
+import Loader from "../shared/loaders/Loader";
+import { showError } from "@/helpers/showError";
 
 const ProductsTableRow = ({ data, index, isLoading }: any) => {
+  const [loading, setLoading] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [deleteProduct] = useDeleteProductMutation();
   const [updateProduct] = useUpdateProductMutation();
@@ -33,22 +36,26 @@ const ProductsTableRow = ({ data, index, isLoading }: any) => {
   };
 
   const productDeleteHandler = async (id: string) => {
+    setLoading(true);
     try {
       const res = await deleteProduct(id);
-      console.log("product deleted", res);
+      handleClose();
+      console.log(res);
       if ("data" in res) {
         toast.success(res.data.message);
-        handleClose();
       }
-      if ("error" in res && res.error instanceof Error) {
-        toast.error(res.error.message);
+      if ("error" in res) {
+        showError(res?.error);
       }
     } catch (error: any) {
       console.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleOnchange = async (id: string, status: boolean) => {
+    setLoading(true);
     try {
       const res = await updateProduct({ id, data: { activityStatus: status } });
 
@@ -56,10 +63,12 @@ const ProductsTableRow = ({ data, index, isLoading }: any) => {
         toast.success(res.data.message);
       }
       if (res && "error" in res && res.error instanceof Error) {
-        toast.error(res.error.message);
+        showError(res?.error);
       }
     } catch (error: any) {
       console.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -118,7 +127,8 @@ const ProductsTableRow = ({ data, index, isLoading }: any) => {
           className="flex items-center justify-start"
         >
           {/* <CustomToggle dynamicId={data?.data?._id} /> */}
-          <div className="flex items-center justify-center gap-2">
+          <div className="flex items-center justify-center gap-2 relative">
+            {loading && <Loader />}
             <button
               onClick={() => handleOnchange(data?._id, !data?.activityStatus)}
             >
@@ -175,6 +185,7 @@ const ProductsTableRow = ({ data, index, isLoading }: any) => {
       </td>
       {openDeleteModal && (
         <ProductsDeleteModal
+          loading={loading}
           handleClose={handleClose}
           data={data}
           productDeleteHandler={productDeleteHandler}

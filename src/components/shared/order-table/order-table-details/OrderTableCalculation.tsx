@@ -14,7 +14,7 @@ const OrderTableCalculation = ({ allOrder, quickOrder }: any) => {
         <div className="flex items-center justify-between text-base text-[#5F6C72]">
           <span>Discount</span>
           <strong className="text-right text-black-opacity-70 font-medium">
-            -{allOrder ? allOrder?.data?.totalDiscount : ""}
+            -{allOrder ? allOrder?.data?.totalDiscount.toFixed(2) : ""}
             {quickOrder ? quickOrder?.data?.totalDiscount : ""} QAR
           </strong>
         </div>

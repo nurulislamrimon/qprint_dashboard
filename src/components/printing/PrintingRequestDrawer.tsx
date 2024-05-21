@@ -46,7 +46,6 @@ const PrintingRequestDrawer = ({ openModal, handleCloseModal, id }: any) => {
             </div>
 
             <div className="p-5 flex items-center justify-between b">
-              {/* <OrderInformation data={printingRequestData} /> */}
               <OrderDrawerInformation data={printingRequestData} />
 
               <div className="flex items-center gap-3.5 print:hidden">
@@ -55,7 +54,10 @@ const PrintingRequestDrawer = ({ openModal, handleCloseModal, id }: any) => {
                   lastOrderStatus?.status === "Cancelled" ? (
                     ""
                   ) : (
-                    <button onClick={() => handleRejectModal()}>
+                    <button
+                      className="px-8 py-2.5 hover:bg-red-opacity-10 text-fuchsia-800 rounded-md transition-all"
+                      onClick={() => handleRejectModal()}
+                    >
                       {lastOrderStatus?.status === "Order placed"
                         ? "Reject"
                         : lastOrderStatus?.status === "Printing"
@@ -73,7 +75,9 @@ const PrintingRequestDrawer = ({ openModal, handleCloseModal, id }: any) => {
                 lastOrderStatus?.status === "Cancelled" ? (
                   ""
                 ) : lastOrderStatus?.status === "Delivered" ? (
-                  <p>Completed</p>
+                  <span className="text-black opacity-50 cursor-not-allowed select-none">
+                    Completed
+                  </span>
                 ) : (
                   <div onClick={() => handleUpdateModal()}>
                     <GlobalActionButton

@@ -5,7 +5,6 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
-  Legend,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -20,42 +19,35 @@ const OrderReportChart = () => {
   const { data, isLoading } = useGetOrderReportQuery(
     `createdAt[gte]=${startDate}&createdAt[lt]=${endDate}`
   );
-
+  // Utility function to format date to 'YYYY-MM-DD'
+  const formatDate = (date: Date) => date.toISOString().split("T")[0];
   useEffect(() => {
     const today = new Date();
-    const lastSevenDays = new Date(today);
-    lastSevenDays.setDate(today.getDate() - 6); // Subtract 6 to include today
+    const lastSevenDays = new Date();
+    lastSevenDays.setDate(today.getDate() - 7);
 
-    // Format dates to match the format of your data's 'createdAt' field (YYYY-MM-DD)
-    const formattedStartDate = lastSevenDays.toISOString().split("T")[0];
-    const formattedEndDate = today.toISOString().split("T")[0];
+    setStartDate(formatDate(lastSevenDays));
+    setEndDate(formatDate(today));
+  }, []);
 
-    setStartDate(formattedStartDate);
-    setEndDate(formattedEndDate);
-  }, [data]);
-
-  const handleDateRangeChange = (range: {
-    startDate: string;
-    endDate: string;
-  }) => {
-    setStartDate(range.startDate);
-    setEndDate(range.endDate);
+  const handleDateRangeChange = (range: any) => {
+    const { startDate, endDate } = range;
+    setStartDate(formatDate(new Date(startDate)));
+    setEndDate(formatDate(new Date(endDate)));
   };
 
   return (
-    <div className="w-full h-full md:h-[485px] md:w-[65%]   md:border rounded-custom-10px md:p-4">
-      <div className="flex items-center justify-between  px-4 md:px-7 mb-3">
+    <div className="w-full h-full md:h-[485px] md:w-[65%] md:border rounded-custom-10px md:p-4">
+      <div className="flex items-center justify-between px-4 md:px-7 mb-3">
         <span className="[font-size:clamp(14px,4vw,18px)] font-medium whitespace-nowrap">
           Order Report
         </span>
-        <div>
-          <DateRangePicker
-            // selectedDateRange={selectedDateRange}
-            onChange={handleDateRangeChange}
-          />
-        </div>
+        <DateRangePicker
+          selectedDateRange={{ startDate, endDate }}
+          onChange={handleDateRangeChange}
+        />
       </div>
-      <div className="w-full h-full  md:h-[385px] mx-auto pr-2.5 md:pr-0">
+      <div className="w-full h-full md:h-[385px] mx-auto pr-2.5 md:pr-0">
         {isLoading ? (
           <OrderReportChartSkaleton />
         ) : (
@@ -64,7 +56,6 @@ const OrderReportChart = () => {
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis
                 dataKey="date"
-                // scale="point"
                 className="[font-size:clamp(13.5px,2vw,16px)]"
               />
               <YAxis className="[font-size:clamp(13.5px,2vw,16px)]" />
@@ -77,16 +68,15 @@ const OrderReportChart = () => {
               />
               <Bar
                 dataKey="Returned"
-                //   radius={20}
                 radius={[20, 20, 0, 0]}
                 barSize={15}
                 fill="#FF7500"
               />
               <Bar
-                radius={[20, 20, 0, 0]}
                 dataKey="Shipping"
-                fill="#7758B5"
+                radius={[20, 20, 0, 0]}
                 barSize={15}
+                fill="#7758B5"
               />
               <Bar
                 dataKey="Cancelled"

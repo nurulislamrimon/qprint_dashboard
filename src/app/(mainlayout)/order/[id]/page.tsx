@@ -12,8 +12,8 @@ import OrderCancelReason from "@/components/shared/order-table/order-table-detai
 
 const OrderDetails = ({ params }: { params: { id: string } }) => {
   const { data: allOrder } = useOnlineSalesQuery(params.id);
+  console.log(allOrder, "Helo from order details");
   const { data: quickOrder } = useQuickOrderQuery(params.id);
-  console.log(quickOrder);
 
   const combinedData = allOrder?.data
     ? allOrder
@@ -52,7 +52,8 @@ const OrderDetails = ({ params }: { params: { id: string } }) => {
         )}
         {allOrder?.data?.orderStatus.map(
           (orderStatus: any, index: number) =>
-            orderStatus.status === "Cancelled" && (
+            (orderStatus.status === "Cancelled" ||
+              orderStatus.status === "Rejected") && (
               <div
                 key={index}
                 className="bg-white md:px-5 md:py-5 px-5 py-custom-15px print:absolute print:top-36"
@@ -66,7 +67,8 @@ const OrderDetails = ({ params }: { params: { id: string } }) => {
         )}
         {quickOrder?.data?.orderStatus.map(
           (orderStatus: any, index: number) =>
-            orderStatus.status === "Cancelled" && (
+            (orderStatus.status === "Cancelled" ||
+              orderStatus.status === "Rejected") && (
               <div
                 key={index}
                 className="bg-white md:px-5 md:py-5 px-5 py-custom-15px print:absolute print:top-36"

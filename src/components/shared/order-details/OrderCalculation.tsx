@@ -12,7 +12,7 @@ const OrderCalculation = ({ data }: any) => {
           <div className="flex items-center justify-between text-base text-[#5F6C72]">
             <span>Discount</span>
             <strong className="text-right text-black-opacity-70 font-medium">
-              -{data?.data?.totalDiscount} QAR
+              -{(data?.data?.totalDiscount ?? 0).toFixed(2)} QAR
             </strong>
           </div>
         )}

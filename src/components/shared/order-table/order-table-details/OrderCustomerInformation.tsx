@@ -7,8 +7,7 @@ import React from "react";
 import userImagePlaceholder from "@/assets/personPlaceholder.png";
 
 const OrderCustomerInformation = ({ allOrder, quickOrder }: any) => {
-  const { data: user } = useGetUserByIdQuery("");
-
+  console.log(allOrder, "for photo");
   return (
     <div className="flex flex-col gap-7">
       <div className="flex items-center gap-2.5">
@@ -20,17 +19,21 @@ const OrderCustomerInformation = ({ allOrder, quickOrder }: any) => {
         </span>
       </div>
       <div className="flex items-center gap-5">
-        <div className="w-20 h-20 rounded-full overflow-hidden print:hidden">
+        <div className="w-20 h-20 rounded-full relative shrink-0 print:hidden">
           <Image
             src={
-              user?.data?.profilePhoto
-                ? `${mainUrl}${user?.data?.profilePhoto}`
+              allOrder?.data?.buyer?.profilePhoto
+                ? `${mainUrl}${allOrder?.data?.buyer?.profilePhoto}`
                 : userImagePlaceholder
             }
-            width={200}
-            height={200}
+            fill
+            style={{
+              objectFit: "cover",
+            }}
+            placeholder="blur"
+            blurDataURL={`${mainUrl}${allOrder?.data?.buyer?.profilePhoto}`}
             alt="user profile"
-            className="w-full h-full"
+            className="w-full h-full top-0 left-0 object-cover rounded-full"
           />
         </div>
         <div className="flex flex-col gap-2 text-sm">

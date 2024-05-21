@@ -16,7 +16,7 @@ const BottomModal = ({ toggleBottomModal }: any) => {
 
   return (
     <div className="bottom-0 left-0 w-full text-black bg-black bg-opacity-75 fixed z-50 h-screen overflow-auto">
-      <div className="h-[500px] fixed w-full bg-white bottom-0">
+      <div className="h-[400px] md:h-[530px] fixed w-full bg-white bottom-0">
         <div className="">
           <p className="text-center text-lg text-black ">Preview</p>
           <button

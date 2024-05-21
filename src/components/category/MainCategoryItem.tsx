@@ -17,18 +17,19 @@ const MainCategoryItem = ({ data, isLoading }: MainCategoryProps) => {
   const dispatch = useAppDispatch();
   const { _id } = useAppSelector((state) => state.subCategoryPropsSlice);
 
-  const [openCategoryEditDrawer, setOpenCategoryEditDrawer] = useState(false);
-  const handleDrawer = () => {
-    setOpenCategoryEditDrawer((prevState) => !prevState);
+  const [updateCategoryDrawer, setUpdateCategoryDrawer] = useState(false);
+
+  const handleModal = () => {
+    setUpdateCategoryDrawer((prevState) => !prevState);
   };
 
   return (
-    <>
+    <div>
       <div
         onClick={(e) => dispatch(setSubCategoryProps(data))}
         className={`${
           _id === data?._id && "bg-main-bg-color-opacity-32"
-        } group border rounded-full px-2.5 py-1.5 flex items-center gap-5 cursor-pointer justify-between hover:bg-main-bg-color-opacity-32 transition-all md:border-none md:rounded-custom-5px md:px-5 md:py-1.5 shrink-0`}
+        } group border rounded-full px-2.5 py-1.5 flex items-center gap-8 cursor-pointer justify-between hover:bg-main-bg-color-opacity-32 transition-all md:border-none md:rounded-custom-5px md:px-5  md:py-1.5 shrink-0 overflow-hidden`}
       >
         <div className="flex items-center gap-2.5">
           <div className="bg-white border rounded-full overflow-hidden  flex items-center justify-center shrink-0">
@@ -51,11 +52,11 @@ const MainCategoryItem = ({ data, isLoading }: MainCategoryProps) => {
             </span>
           </div>
         </div>
-        <div className="group-hover:flex items-center md:gap-3.5 gap-2.5 hidden transition-all">
+        <div className="group-hover:flex items-center hidden  transition-all">
           <button
             onClick={(e) => {
               e.stopPropagation();
-              handleDrawer();
+              setUpdateCategoryDrawer(true);
             }}
           >
             <IconEdit
@@ -65,14 +66,15 @@ const MainCategoryItem = ({ data, isLoading }: MainCategoryProps) => {
           </button>
         </div>
       </div>
-      {openCategoryEditDrawer && (
+      {updateCategoryDrawer && (
         <EditMainCategoryDrawer
-          id={data?._id}
           data={data}
-          handleDrawer={handleDrawer}
+          isVisible={updateCategoryDrawer}
+          setOpenDrawer={setUpdateCategoryDrawer}
+          handleModal={handleModal}
         />
       )}
-    </>
+    </div>
   );
 };
 

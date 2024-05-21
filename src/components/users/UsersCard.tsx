@@ -3,7 +3,6 @@ import { IconTrashX, IconUserEdit } from "@tabler/icons-react";
 import Image from "next/image";
 import userCheckIcon from "@/assets/user-check.svg";
 import { mainUrl } from "@/constants/mainUrl";
-import { getUserInfo } from "@/services/auth.service";
 import { useState } from "react";
 import UpdateUserModal from "./UpdateUserModal";
 import { useDeleteAdminMutation } from "@/store/features/users/usersApi";
@@ -24,7 +23,6 @@ interface UsersCardProps {
 }
 
 const UsersCard = ({ data }: UsersCardProps) => {
-  const { _id }: any = getUserInfo();
   const [deleteAdmin] = useDeleteAdminMutation();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -74,23 +72,27 @@ const UsersCard = ({ data }: UsersCardProps) => {
           </div>
         )}
         <div className="flex flex-col gap-3 md:gap-5 items-center justify-center">
-          <div className="w-[70px] h-[70px] rounded-full relative">
+          <div className="w-[70px] h-[70px] relative shrink-0">
             <Image
               src={
                 data?.profilePhoto
                   ? `${mainUrl}${data?.profilePhoto}`
                   : imgPlaceholder
               }
+              placeholder="blur"
+              blurDataURL={`${mainUrl}${data?.profilePhoto}`}
               alt="admin profile"
-              className="h-[70px] w-[70px] rounded-full object-cover border-dashed border"
-              width={100}
-              height={100}
+              className="rounded-full object-cover border-dashed border"
+              fill
+              style={{
+                objectFit: "cover",
+              }}
               sizes="(max-width: 80px) 5vw, 10vw"
-              priority={true}
+              priority
             />
             <span
               className={`flex items-center justify-center absolute -bottom-4 right-2 ${
-                data?._id === _id ? "block" : "hidden"
+                data?._id === userData?.data?._id ? "block" : "hidden"
               }`}
             >
               <Image src={userCheckIcon} alt="check image" />

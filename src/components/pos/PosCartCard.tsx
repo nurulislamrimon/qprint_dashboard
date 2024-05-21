@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { resetCart, setDiscount } from "@/store/features/pos/posCartSlice";
 import { useCreatePosCartMutation } from "@/store/features/pos/posCartApi";
@@ -9,14 +10,18 @@ import CustomSpinner from "../shared/CustomSpinner";
 import CartItem from "./CartItem";
 
 const PosCartCard = () => {
+  const [spin, setSpin] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const { products, subTotal, discount } = useAppSelector(
     (state) => state.posCart
   );
 
-  const [spin, setSpin] = useState(false);
-
   const dispatch = useAppDispatch();
   const [createPosCart] = useCreatePosCartMutation();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // handle submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -42,6 +47,10 @@ const PosCartCard = () => {
       setSpin(false);
     }
   };
+
+  if (!isMounted) {
+    return null; // Prevents rendering on the server
+  }
 
   return (
     <div>
@@ -104,7 +113,7 @@ const PosCartCard = () => {
             </div>
             <form
               onSubmit={handleSubmit}
-              className="flex items-center  md:gap-[30px] gap-5 w-full"
+              className="flex items-center md:gap-[30px] gap-5 w-full"
             >
               <button
                 type="reset"

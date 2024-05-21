@@ -59,7 +59,10 @@ const EditPrintingPaperTypeModal = ({
   };
   return (
     <div>
-      <CustomGlobalDrawer isVisible={openModal}>
+      <CustomGlobalDrawer
+        modalWidthControlClassName="md:w-[500px] w-full"
+        isVisible={openModal}
+      >
         <div className="p-5 overflow-hidden">
           {loading && <Loader />}
           <div className="flex items-center justify-between mb-[30px]">

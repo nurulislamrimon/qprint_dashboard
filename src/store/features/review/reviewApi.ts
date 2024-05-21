@@ -8,7 +8,7 @@ export const reviewApi: any = baseApi.injectEndpoints({
         url: "/review?" + query,
         method: "GET",
       }),
-      providesTags: ["brand"],
+      providesTags: ["review"],
     }),
 
     // review with reply
@@ -17,7 +17,7 @@ export const reviewApi: any = baseApi.injectEndpoints({
         url: "/review?reply=true&" + query,
         method: "GET",
       }),
-      providesTags: ["brand"],
+      providesTags: ["review"],
     }),
 
     // review with no reply
@@ -26,7 +26,7 @@ export const reviewApi: any = baseApi.injectEndpoints({
         url: "/review?reply=false&" + query,
         method: "GET",
       }),
-      providesTags: ["brand"],
+      providesTags: ["review"],
     }),
     // create review
     createReview: build.mutation({
@@ -35,7 +35,7 @@ export const reviewApi: any = baseApi.injectEndpoints({
         method: "POST",
         data,
       }),
-      invalidatesTags: ["brand"],
+      invalidatesTags: ["review"],
     }),
 
     // get a single review
@@ -45,7 +45,7 @@ export const reviewApi: any = baseApi.injectEndpoints({
         url: `/review/${id}`,
         method: "GET",
       }),
-      providesTags: ["brand"],
+      providesTags: ["review"],
     }),
 
     // update  review with reply
@@ -55,7 +55,7 @@ export const reviewApi: any = baseApi.injectEndpoints({
         method: "PUT",
         data: { reply: data.reply },
       }),
-      invalidatesTags: ["brand"],
+      invalidatesTags: ["review"],
     }),
 
     //delete review
@@ -65,7 +65,7 @@ export const reviewApi: any = baseApi.injectEndpoints({
         url: `/review/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["brand"],
+      invalidatesTags: ["review"],
     }),
   }),
 });

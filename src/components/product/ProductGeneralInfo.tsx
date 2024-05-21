@@ -221,7 +221,7 @@ const ProductGeneralInfo = ({
             <FileUploader
               key={index}
               name="productPhotos"
-              className="relative cursor-pointer border flex flex-col gap-2.5 items-center justify-center  text-center text-black-opacity-60 text-xs"
+              className="w-full h-full relative cursor-pointer border flex flex-col gap-2.5 items-center justify-center  text-center text-black-opacity-60 text-xs"
               multiple={true}
               data={product}
               uid={index}

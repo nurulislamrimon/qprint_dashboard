@@ -9,7 +9,7 @@ const OrderDrawerItem = ({ onlineOrderData, quickOrderData }: any) => {
     num3: number,
     num4: number
   ) => {
-    return num1 * num2 || num3 * num4;
+    return (num1 * num2 || num3 * num4).toFixed(2);
   };
 
   const data = onlineOrderData?.data || quickOrderData?.data;

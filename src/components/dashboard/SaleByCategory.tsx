@@ -62,6 +62,10 @@ const SaleByCategory = () => {
     setEndDate(currentDate);
   };
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+  // <== Sale by category total selling price ==>
+  const totalSellingPrice = mainData?.data
+    .reduce((total: number, item: any) => total + item.totalSellingPrice, 0)
+    .toFixed(2);
   return (
     <div className="w-full md:w-2/5 border rounded-custom-10px p-4 h-[350px] md:h-[450px]">
       <h6 className="text-black-rgba-80 [font-size:clamp(12px,3vw,18px)] font-medium pb-4">
@@ -71,11 +75,7 @@ const SaleByCategory = () => {
         <div className="flex flex-col gap-y-1.5">
           <span className="flex items-center gap-1.5">
             <strong className="font-bold [font-size:_clamp(10px,3vw,18px)] ">
-              Total :{" "}
-              {mainData?.data.reduce(
-                (total: any, item: any) => total + item.totalSellingPrice,
-                0
-              )}{" "}
+              Total : {totalSellingPrice}
               QR
             </strong>
           </span>

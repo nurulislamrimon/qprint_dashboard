@@ -14,16 +14,18 @@ import OrderTableSkeleton from "../shared/skeleton/OrderTableSkeleton";
 
 type Order = {};
 const QuickOrderTable = () => {
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("All Orders");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const { data, isLoading } = useGetAllQuickOrderQuery(
-    `orderStatus.status=${status}${
-      startDate && endDate
-        ? `&createdAt[gte]=${startDate}&createdAt[lte]=${endDate}`
-        : ""
-    }`
-  );
+  const queryParam = `${
+    status !== "All Orders" ? `orderStatus.status=${status}&` : ""
+  }${
+    startDate && endDate
+      ? `createdAt[gte]=${startDate}&createdAt[lte]=${endDate}`
+      : ""
+  }`.replace(/&$/, "");
+
+  const { data, isLoading } = useGetAllQuickOrderQuery(queryParam);
 
   const [openDrawerId, setOpenDrawerId] = useState<string | false>(false);
   // Check if selected status exists in orderStatus array
@@ -99,7 +101,7 @@ const QuickOrderTable = () => {
                     <tr
                       onClick={() => setOpenDrawerId(data?._id)}
                       key={data?._id}
-                      className="text-center text-[#000000b3] hover:bg-table-row-hover transition-all border-b"
+                      className="text-center text-[#000000b3] hover:bg-table-row-hover transition-all border-b cursor-pointer"
                     >
                       <OrderTableRow
                         quickOrder={data}

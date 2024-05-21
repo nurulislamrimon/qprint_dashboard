@@ -22,7 +22,7 @@ const AnalyticesSellingChart = () => {
   useEffect(() => {
     const today = new Date();
     const lastSevenDays = new Date(today);
-    lastSevenDays.setDate(today.getDate() - 6); // Subtract 6 to include today
+    lastSevenDays.setDate(today.getDate() - 7); // Subtract 6 to include today
 
     // Format dates to match the format of your data's 'createdAt' field (YYYY-MM-DD)
     const formattedStartDate = lastSevenDays.toISOString().split("T")[0];
@@ -64,7 +64,7 @@ const AnalyticesSellingChart = () => {
             margin={{
               top: 22,
               right: 0,
-              left: 7,
+              left: 30,
               bottom: 0,
             }}
           >
@@ -86,7 +86,7 @@ const AnalyticesSellingChart = () => {
 
             <YAxis
               tickFormatter={formatYAxisTick}
-              domain={[0, "dataMax"]}
+              // domain={[0, "dataMax"]}
               className="[font-size:clamp(12px,2vw,15px)]"
               tickMargin={10}
             />

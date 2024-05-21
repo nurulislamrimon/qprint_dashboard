@@ -3,7 +3,7 @@ export const reviewNavigation = [
   {
     label: "All Review",
     key: "allReview",
-    href: "/",
+    href: "/all-review",
   },
   {
     label: "New Review",

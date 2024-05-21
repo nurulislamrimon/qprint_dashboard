@@ -5,7 +5,7 @@ const Loader = () => {
   return (
     <div
       onClick={(e) => e.stopPropagation()}
-      className="fixed inset-0 bg-black  bg-opacity-40 z-10 h-full w-full flex items-center justify-center"
+      className="fixed inset-0 bg-black  bg-opacity-30 z-10 h-full w-full flex items-center justify-center"
     >
       <svg
         className="text-gray-300 animate-spin w-14 h-14"
@@ -28,7 +28,7 @@ const Loader = () => {
           stroke-width="5"
           stroke-linecap="round"
           stroke-linejoin="round"
-          className="text-purple-500"
+          className="text-fuchsia-700"
         ></path>
       </svg>
     </div>

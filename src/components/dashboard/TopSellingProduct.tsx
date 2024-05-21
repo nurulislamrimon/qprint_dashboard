@@ -1,11 +1,13 @@
 "use client";
 import React from "react";
 import TopSellingProductTableRow from "./topSellingProductTable/TopSellingProductTableRow";
-import { useGetTopSellingProductQuery } from "@/store/features/topSellingProduct/topSellingProductApi";
 import TopSellingTableSkeleton from "../shared/skeleton/TopSellingTableSkeleton";
+import { useSearchProductQuery } from "@/store/features/product/productApi";
 
 const TopSellingProduct = () => {
-  const { data, isLoading } = useGetTopSellingProductQuery("");
+  const { data, isLoading } = useSearchProductQuery(
+    `sortBy=totalSoldQuantity&sortOrder=desc`
+  );
   return (
     <div className="space-y-2 w-full md:w-3/5 border rounded-custom-10px px-4 pb-4 h-[350px] md:h-[450px] overflow-y-auto relative ">
       <div className="mt-3 border-b sticky top-0 pb-4 z-20 bg-white">

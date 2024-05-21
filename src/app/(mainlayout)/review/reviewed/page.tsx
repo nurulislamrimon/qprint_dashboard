@@ -17,7 +17,7 @@ const Reviewed = () => {
       <div>
         <ReviewTableHeader />
       </div>
-      <div className="h-[calc(100vh-170px)] overflow-y-auto bg-white">
+      <div className="h-[calc(100vh-180px)] overflow-y-auto bg-white">
         {isLoading
           ? [...Array(10)].map((_, index) => {
               return <ReviewTableSkeleton key={index} />;

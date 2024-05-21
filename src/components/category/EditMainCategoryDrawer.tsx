@@ -15,7 +15,12 @@ import FileInput from "../ui/FileInput";
 import { mainUrl } from "@/constants/mainUrl";
 import Loader from "../shared/loaders/Loader";
 
-const EditMainCategoryDrawer = ({ data, handleDrawer }: any) => {
+const EditMainCategoryDrawer = ({
+  data,
+  isVisible,
+  setOpenDrawer,
+  handleModal,
+}: any) => {
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const [updateCategory] = useUpdateCategoryMutation();
@@ -44,7 +49,7 @@ const EditMainCategoryDrawer = ({ data, handleDrawer }: any) => {
 
       if (res?.data) {
         toast.success(res?.data?.message);
-        handleDrawer();
+        setOpenDrawer(false);
       }
       if (res?.error) {
         toast.error(res?.error.message);
@@ -60,14 +65,15 @@ const EditMainCategoryDrawer = ({ data, handleDrawer }: any) => {
     <div>
       <CustomGlobalDrawer
         modalWidthControlClassName="w-full md:w-[500px]"
-        isVisible={handleDrawer}
+        isVisible={isVisible}
+        setOpenDrawer={setOpenDrawer}
       >
         <div className="md:px-5 p-5 md:py-7 overflow-hidden">
           {loading && <Loader />}
 
           <div className="flex items-center justify-between">
             <span className="text-lg text-black-opacity-70">Edit Category</span>
-            <DrawerModalCloseBTN handleClose={handleDrawer} />
+            <DrawerModalCloseBTN handleClose={handleModal} />
           </div>
 
           <form onSubmit={handleSubmit}>

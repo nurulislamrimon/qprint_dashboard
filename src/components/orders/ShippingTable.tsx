@@ -67,7 +67,7 @@ const ShippingTable = () => {
                   <tr
                     onClick={() => setOpenDrawerId(order?._id)}
                     key={index}
-                    className="text-center text-[#000000b3] hover:bg-table-row-hover transition-all border-b"
+                    className="text-center text-[#000000b3] hover:bg-table-row-hover transition-all border-b cursor-pointer"
                   >
                     <OrderTableRow data={order} index={index} />
                   </tr>

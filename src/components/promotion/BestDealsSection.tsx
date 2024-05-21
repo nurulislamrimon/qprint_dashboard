@@ -1,6 +1,6 @@
 "use client";
 import React, { useLayoutEffect, useState } from "react";
-import ChooseColorOrImage from "./card/ChooseColorOrImage";
+import ColorAndImageSwitcher from "./card/ColorAndImageSwitcher";
 import CustomGlobalInput from "../shared/CustomGlobalInput";
 import ButtonSecondary from "../ui/btn/ButtonSecondary";
 import ButtonPrimary from "../ui/btn/ButtonPrimary.";
@@ -19,22 +19,29 @@ import SearchProductModal from "./SearchProductModal";
 import ProductSmallCard from "./card/ProductSmallCard";
 import Loader from "../shared/loaders/Loader";
 import FileUploader from "../shared/FileUploader/FileUploader";
+import { showError } from "@/helpers/showError";
 
 const BestDealsSection = () => {
-  const [loading, setLoading] = useState(false);
   const { data } = useGetBestDealsQuery("");
-  const [addBestDeals] = useAddBestDealsMutation();
+  const [addBestDeals, { isLoading: loading }] = useAddBestDealsMutation();
   const [showBottomModal, setShowBottomModal] = useState(false);
   // get search data
   const dispatch = useAppDispatch();
   const bestDeals = useAppSelector((state) => state.bestDealsSlice);
-  console.log(bestDeals);
   const formData = new FormData();
+
+  // handle preview modal
+  const togglePreviewModal = () => {
+    setShowBottomModal((prevState) => !prevState);
+  };
 
   useLayoutEffect(() => {
     dispatch(setBestDeals(data?.data));
   }, [data, dispatch]);
 
+  // ---------------------
+  // handle change
+  // ---------------------
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -42,22 +49,22 @@ const BestDealsSection = () => {
   ) => {
     const fieldName = e.target?.name;
 
+    // set file
     if (e.target instanceof HTMLInputElement && e.target?.files) {
       const files = e.target?.files;
       if (files && files.length) {
         const objUrl = URL.createObjectURL(files[0]);
-
         dispatch(setBestDeals({ [fieldName]: objUrl }));
         dispatch(setBestDealsFiles({ [fieldName]: files[0] }));
       }
     } else {
-      const value = e.target.value;
+      const value =
+        fieldName === "isBgColorSelected"
+          ? !bestDeals?.isBgColorSelected
+          : e.target?.value;
+
       dispatch(setBestDeals({ [fieldName]: value }));
     }
-  };
-
-  const toggleBottomModal = () => {
-    setShowBottomModal((prevState) => !prevState);
   };
 
   // const formatDate = (date: Date): string => {
@@ -71,56 +78,58 @@ const BestDealsSection = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
 
-    formData.append("title", bestDeals.title);
-    formData.append("description", bestDeals.description);
-    formData.append("endDate", bestDeals.endDate);
-    formData.append("startDate", bestDeals.startDate);
+    const { bestDealsFiles, products, isBgColorSelected, ...rest } = bestDeals;
+    const restFiles = { ...(bestDealsFiles || {}) };
 
-    if (bestDeals?.backgroundColor !== "") {
-      formData.append("backgroundColor", bestDeals.backgroundColor);
-      formData.append("backgroundPhoto", "");
-    } else {
-      formData.append(
-        "backgroundPhoto",
-        bestDeals?.bestDealsFiles?.backgroundPhoto
-      );
-      formData.append("backgroundColor", "");
+    if (!isBgColorSelected && rest?.backgroundPhoto && rest?.backgroundColor) {
+      rest?.backgroundColor && delete rest.backgroundColor;
+    } else if (
+      isBgColorSelected &&
+      rest?.backgroundColor &&
+      rest?.backgroundPhoto &&
+      "backgroundPhoto" in restFiles
+    ) {
+      rest?.backgroundPhoto && delete rest.backgroundPhoto;
+      delete restFiles.backgroundPhoto;
     }
 
-    if (bestDeals?.bestDealsFiles?.firstProductPhoto) {
-      formData.append(
-        "firstProductPhoto",
-        bestDeals.bestDealsFiles.firstProductPhoto
-      );
-    }
-    if (bestDeals?.bestDealsFiles?.secondProductPhoto) {
-      formData.append(
-        "secondProductPhoto",
-        bestDeals.bestDealsFiles.secondProductPhoto
-      );
+    if (Object.keys(rest).length) {
+      Object.entries(rest).forEach(([key, value]) => {
+        if (typeof value === "string") {
+          formData.append(key, value);
+        } else {
+          formData.append(key, JSON.stringify(value));
+        }
+      });
     }
 
     // Append products individually
-    (bestDeals?.products as any[]).forEach((product) => {
-      formData.append("products", JSON.stringify(product));
+    Array.isArray(products) &&
+      products.forEach((product) => {
+        formData.append("products", JSON.stringify(product));
+      });
+
+    // Append files individually
+    Object.keys(restFiles).forEach((key) => {
+      const file = (restFiles as any)[key];
+      if (file instanceof File) {
+        formData.append(key, file);
+      }
     });
     try {
-      const res = await addBestDeals(formData);
-      console.log(res);
-
-      if (res && "data" in res) {
-        toast.success(res.data.message);
-        toggleBottomModal();
-      }
-      if (res && "error" in res) {
-        toast.error(res.error as unknown as string);
-      }
+      console.log(restFiles, rest);
+      // // const res = await addBestDeals(formData);
+      // console.log(res);
+      // if (res && "data" in res) {
+      //   toast.success(res.data.message);
+      //   // togglePreviewModal();
+      // }
+      // if (res && "error" in res) {
+      //   toast.error(res.error as unknown as string);
+      // }
     } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+      showError(error);
     }
   };
 
@@ -137,12 +146,15 @@ const BestDealsSection = () => {
         {/* slider design start */}
         <div className="flex items-center lg:flex-row flex-col lg:justify-center justify-start lg:gap-28  gap-0  ">
           <div className="lg:w-8/12 w-full">
-            <ChooseColorOrImage handleChange={handleChange} />
+            <ColorAndImageSwitcher
+              handleChange={handleChange}
+              data={bestDeals as any}
+            />
           </div>
           <div className="flex gap-5">
             <FileUploader
               name="firstProductPhoto"
-              className="min-h-48  h-full min-w-48 w-auto relative cursor-pointer border border-dashed border-black-opacity-20 flex items-center justify-center text-black-opacity-60 text-xs "
+              className="min-h-48  h-full min-w-48 w-full relative cursor-pointer border border-dashed border-black-opacity-20 flex items-center justify-center text-black-opacity-60 text-xs "
               data={bestDeals}
               multiple={true}
               onChange={handleChange}
@@ -152,7 +164,7 @@ const BestDealsSection = () => {
             ></FileUploader>
             <FileUploader
               name="secondProductPhoto"
-              className="min-h-48  h-full min-w-48 w-auto relative cursor-pointer border border-dashed border-black-opacity-20 flex items-center justify-center text-black-opacity-60 text-xs "
+              className="min-h-48  h-full min-w-48 w-full relative cursor-pointer border border-dashed border-black-opacity-20 flex items-center justify-center text-black-opacity-60 text-xs "
               data={bestDeals}
               multiple={true}
               onChange={handleChange}
@@ -179,9 +191,7 @@ const BestDealsSection = () => {
             placeholder="Type here"
             value={bestDeals?.startDate}
             name="startDate"
-            onChange={(e) =>
-              dispatch(setBestDeals({ [e.target.name]: e.target.value }))
-            }
+            onChange={handleChange}
           />
           <CustomGlobalInput
             label="End Date"
@@ -189,9 +199,7 @@ const BestDealsSection = () => {
             placeholder="Type here"
             value={bestDeals?.endDate}
             name="endDate"
-            onChange={(e) =>
-              dispatch(setBestDeals({ [e.target.name]: e.target.value }))
-            }
+            onChange={handleChange}
           />
         </div>
         <div className="flex items-center justify-center  gap-5 md:flex-row flex-col mt-10 ">
@@ -202,9 +210,7 @@ const BestDealsSection = () => {
             textareaLength={170}
             value={bestDeals?.description}
             name="description"
-            onChange={(e) =>
-              dispatch(setBestDeals({ [e.target.name]: e.target.value }))
-            }
+            onChange={handleChange}
           />
         </div>
         <div className="relative">
@@ -215,9 +221,7 @@ const BestDealsSection = () => {
               type="text"
               placeholder="Search Product"
               textareaLength={170}
-              onChange={(e) =>
-                dispatch(setBestDeals({ searchProduct: e.target.value }))
-              }
+              onChange={handleChange}
             />
           </div>
           {bestDeals?.searchProduct ? (
@@ -234,16 +238,17 @@ const BestDealsSection = () => {
         {/* we will use only one card from here */}
 
         <div className="flex items-center justify-start gap-4 mt-2 overflow-x-auto w-full">
-          {bestDeals?.products?.map((product: any, index: number) => (
-            <ProductSmallCard key={index} data={product} />
-          ))}
+          {Array.isArray(bestDeals?.products) &&
+            bestDeals?.products?.map((product: any, index: number) => (
+              <ProductSmallCard key={index} data={product} />
+            ))}
         </div>
 
         <div className="w-full flex  items-center justify-center gap-5 my-16 ">
           <ButtonSecondary
             buttonText="Preview"
             type="reset"
-            onClick={toggleBottomModal}
+            onClick={togglePreviewModal}
           />
           <ButtonPrimary
             type="submit"
@@ -253,7 +258,9 @@ const BestDealsSection = () => {
       </form>
 
       {/* show modal from here */}
-      {showBottomModal && <BottomModal toggleBottomModal={toggleBottomModal} />}
+      {showBottomModal && (
+        <BottomModal toggleBottomModal={togglePreviewModal} />
+      )}
     </div>
   );
 };

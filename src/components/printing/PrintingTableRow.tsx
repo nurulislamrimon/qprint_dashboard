@@ -3,7 +3,6 @@ import { getDateFormat } from "@/utils/getDateFormat";
 import Image from "next/image";
 
 const PrintingTableRow = ({ data }: any) => {
-  // console.log(data);
   return (
     <>
       <td className="py-3 px-3.5 text-left">
@@ -52,7 +51,7 @@ const PrintingTableRow = ({ data }: any) => {
           </div>
           {data?.printingRequestFile?.length >= 10 ? (
             <span className="md:text-base text-xs">
-              {data?.printingRequestFile?.slice(0, 10)}...
+              {data?.printingRequestFile?.slice(0, 10)}
             </span>
           ) : (
             <span> {data?.printingRequestFile}</span>

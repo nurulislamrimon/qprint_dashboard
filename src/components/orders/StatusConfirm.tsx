@@ -11,7 +11,7 @@ const StatusConfirm = ({
   data,
   updateStatus,
 }: any) => {
-  console.log(data);
+  const [reasonError, setReasonError] = useState("");
 
   useEffect(() => {
     if (!isVisible) {
@@ -20,21 +20,42 @@ const StatusConfirm = ({
   }, [isVisible, handleModal]);
 
   const handleAction = async () => {
-    const value = {
-      id: data?._id,
-      data: {
-        status: option,
-      },
-    };
+    let value: { id: any; data: { status: any; reasonOfRejection?: string } } =
+      {
+        id: data?._id,
+        data: {
+          status: option.trim(), // Trim the status value
+        },
+      };
+
+    if (option === "Rejected") {
+      const reasonOfRejectionInput = document.getElementById(
+        "reasonOfRejection"
+      ) as HTMLInputElement | null;
+      const reasonOfRejection = reasonOfRejectionInput?.value.trim() || ""; // Trim the reason of rejection
+
+      if (!reasonOfRejection) {
+        setReasonError("Reason of rejection is required");
+        return;
+      } else {
+        setReasonError("");
+        value.data.reasonOfRejection = reasonOfRejection;
+      }
+    }
+
     try {
       const res = await updateStatus(value);
       if (res?.data) {
         toast.success(res?.data?.message);
       }
+
       if (res?.error) {
         toast.error(res?.error.message);
+        // console.log(res?.error.message);
       }
-    } catch (error) {}
+    } catch (error) {
+      // console.error("Error updating status:", error); // Debugging line
+    }
     handleModal();
   };
 
@@ -42,16 +63,42 @@ const StatusConfirm = ({
     <CustomGlobalModal
       isVisible={isVisible}
       setOpenModal={handleModal}
-      mainClassName="md:w-[365px] w-[300px] h-[220px]  md:h-[250px]"
+      mainClassName={`w-[300px] ${
+        option === "Rejected"
+          ? "md:w-[365px] h-[220px] md:h-[300px]"
+          : "md:w-[365px] h-[220px] md:h-[250px]"
+      }`}
     >
       <div className="md:py-[30px] px-5 py-5 md:gap-[30px] gap-5 flex flex-col items-center">
         <div>
           <IconAlertCircle className="text-fuchsia-500 w-11 h-11" />
         </div>
-        <span>
-          Are you sure you want to change the status to{" "}
-          <span className="font-bold">{option}?</span>
-        </span>
+        {option === "Rejected" ? (
+          <div className="flex items-center justify-center">
+            <div className="text-start space-y-2 [&>:nth-child(1)]:text-gray-400">
+              <label htmlFor="reasonOfRejection">Reason of Rejection</label>
+              <input
+                type="text"
+                id="reasonOfRejection"
+                name=""
+                className="w-[300px] resize-none border py-2.5 pl-5 outline-none rounded-custom-5px active:border-main-border-color focus:border-main-border-color"
+                placeholder="Reason"
+              />
+              <p
+                className={`mt-1 text-xs ${
+                  reasonError ? "text-red-500" : "text-gray-500"
+                }`}
+              >
+                {reasonError || "*This field is required"}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <span>
+            Are you sure you want to change the status to{" "}
+            <span className="font-bold">{option}?</span>
+          </span>
+        )}
         <div className="flex items-center gap-5">
           <button
             className="border py-1.5 px-6 rounded-custom-5px hover:bg-light-white-color"

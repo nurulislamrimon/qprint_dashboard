@@ -49,7 +49,7 @@ const ProductSeo = ({
         </div>
         <FileUploader
           name="seo.metaPhoto"
-          className="min-h-44 h-full w-auto relative cursor-pointer border border-black-opacity-20 flex items-center justify-center text-black-opacity-60 text-xs"
+          className="min-h-44 h-full w-full relative cursor-pointer border border-black-opacity-20 flex items-center justify-center text-black-opacity-60 text-xs"
           data={product}
           multiple={true}
           onChange={handleChange}

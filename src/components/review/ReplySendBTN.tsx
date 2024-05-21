@@ -1,14 +1,21 @@
 import { clearReplyData, setReply } from "@/store/features/review/replySlice";
-import { useUpdateReviewMutation } from "@/store/features/review/reviewApi";
+import {
+  useReviewQuery,
+  useUpdateReviewMutation,
+} from "@/store/features/review/reviewApi";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { IconSend } from "@tabler/icons-react";
-import { useState } from "react";
-import Loader from "../shared/loaders/Loader";
+import { useLayoutEffect, useState } from "react";
 
 const ReplySendBTN = (id: { id: string }) => {
   const dispatch = useAppDispatch();
   const { reply } = useAppSelector((state) => state.reply);
   const [loading, setLoading] = useState(false);
+  const { data } = useReviewQuery(id.id);
+
+  useLayoutEffect(() => {
+    dispatch(setReply(data?.data?.reply));
+  }, [dispatch, data]);
 
   const [updateReview] = useUpdateReviewMutation();
 
@@ -33,6 +40,7 @@ const ReplySendBTN = (id: { id: string }) => {
     >
       <input
         type="text"
+        value={reply}
         placeholder="type Reply"
         className="w-full outline-none border-none"
         onChange={(e) => dispatch(setReply(e.target.value))}

@@ -29,5 +29,6 @@ export const baseApi = createApi({
     "product-search",
     "best-deals",
     "social-media",
+    "review",
   ],
 });

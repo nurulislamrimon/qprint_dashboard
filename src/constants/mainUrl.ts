@@ -1,2 +1,1 @@
-// export const mainUrl = "http://localhost:5000/";
-export const mainUrl = "https://api.theqprint.com/";
+export const mainUrl = process.env.NEXT_PUBLIC_API_BASE_URL!;

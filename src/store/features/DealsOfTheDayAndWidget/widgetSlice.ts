@@ -10,6 +10,7 @@ export interface IWidgetState {
   productPhoto: File | null;
   discount: number;
   fieldName?: string;
+  widgetFile: Record<string, File>;
 }
 
 const initialState: IWidgetState | Record<string, unknown> = {};
@@ -28,12 +29,22 @@ const widgetSlice = createSlice({
         };
       }
     },
+    setWidgetFiles: (state, action) => {
+      if (state.widgetFile) {
+        state.widgetFile = {
+          ...state.widgetFile,
+          ...action.payload,
+        };
+      } else {
+        state.widgetFile = action.payload;
+      }
+    },
     resetDeals: (state) => {
       return initialState;
     },
   },
 });
 
-export const { setDeals, resetDeals } = widgetSlice.actions;
+export const { setDeals, resetDeals, setWidgetFiles } = widgetSlice.actions;
 
 export default widgetSlice.reducer;

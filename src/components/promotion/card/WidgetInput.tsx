@@ -1,10 +1,14 @@
 import CustomGlobalInput from "@/components/shared/CustomGlobalInput";
+import FileUploader from "@/components/shared/FileUploader/FileUploader";
 import Loader from "@/components/shared/loaders/Loader";
 import FileInput from "@/components/ui/FileInput";
 import ButtonPrimary from "@/components/ui/btn/ButtonPrimary.";
 import ButtonSecondary from "@/components/ui/btn/ButtonSecondary";
 import { useAddDealsOfTheDayAndWidgetMutation } from "@/store/features/DealsOfTheDayAndWidget/dealsOfTheDayAndWidgetApi";
-import { setDeals } from "@/store/features/DealsOfTheDayAndWidget/widgetSlice";
+import {
+  setDeals,
+  setWidgetFiles,
+} from "@/store/features/DealsOfTheDayAndWidget/widgetSlice";
 import { useAppDispatch } from "@/store/hook";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -15,10 +19,39 @@ const WidgetInput = (data: any) => {
   const formData = new FormData();
   const [loading, setLoading] = useState(false);
 
+  // File and input handler
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const fieldName = e.target?.name;
+
+    if (e.target instanceof HTMLInputElement && e.target?.files) {
+      const files = e.target?.files;
+      if (files && files.length) {
+        const objUrl = URL.createObjectURL(files[0]);
+
+        dispatch(setDeals({ [fieldName]: objUrl }));
+        dispatch(setWidgetFiles({ [fieldName]: files[0] }));
+      }
+    } else {
+      const value = e.target.value;
+      dispatch(setDeals({ [fieldName]: value }));
+    }
+  };
+
   // handle submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     formData.append("widget", JSON.stringify(data?.data));
+    if (data?.data?.widgetFile) {
+      formData.append(
+        "widget.productPhoto",
+        data?.data?.widgetFile.productPhoto
+      );
+    }
+
     setLoading(true);
     try {
       const res = await addWidget(formData);
@@ -51,9 +84,7 @@ const WidgetInput = (data: any) => {
           placeholder="32% Discount"
           name="title"
           value={data?.data?.title || ""}
-          onChange={(e) =>
-            dispatch(setDeals({ [e.target.name]: e.target.value }))
-          }
+          onChange={handleChange}
         />
         <CustomGlobalInput
           label="Tag"
@@ -61,9 +92,7 @@ const WidgetInput = (data: any) => {
           placeholder="Brother Ink"
           name="tag"
           value={data?.data?.tag || ""}
-          onChange={(e) =>
-            dispatch(setDeals({ [e.target.name]: e.target.value }))
-          }
+          onChange={handleChange}
         />
         <CustomGlobalInput
           label="Description"
@@ -71,9 +100,7 @@ const WidgetInput = (data: any) => {
           placeholder="For all electronics products"
           name="description"
           value={data?.data?.description || ""}
-          onChange={(e) =>
-            dispatch(setDeals({ [e.target.name]: e.target.value }))
-          }
+          onChange={handleChange}
         />
         <div className="flex w-full gap-5   overflow-hidden ">
           <div className="md:w-3/12 w-4/12">
@@ -83,9 +110,7 @@ const WidgetInput = (data: any) => {
               placeholder="Shop Now"
               name="buttonText"
               value={data?.data?.buttonText || ""}
-              onChange={(e) =>
-                dispatch(setDeals({ [e.target.name]: e.target.value }))
-              }
+              onChange={handleChange}
             />
           </div>
           <div className="w-full ">
@@ -95,26 +120,24 @@ const WidgetInput = (data: any) => {
               placeholder="https://"
               name="link"
               value={data?.data?.link || ""}
-              onChange={(e) =>
-                dispatch(setDeals({ [e.target.name]: e.target.value }))
-              }
+              onChange={handleChange}
             />
           </div>
-          <FileInput
+        </div>
+        <div className="flex justify-start">
+          <FileUploader
             name="productPhoto"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              if (e.target?.files?.length) {
-                formData.append(`widget.productPhoto`, e.target?.files[0]);
-                // create image url using file value
-                const reader = URL.createObjectURL(e.target?.files[0]);
-              }
-            }}
-            imageBottomText=""
-          />
+            className="border border-dashed   min-h-48 h-full min-w-48 w-auto relative cursor-pointer flex items-center justify-center text-black-opacity-60 text-xs "
+            data={data.data}
+            multiple={true}
+            onChange={handleChange}
+            accept="image/jpg,image/jpeg,image/png"
+            maxSize={2}
+            bottomText="Upload Size 340px to 500px"
+          ></FileUploader>
         </div>
       </div>
       <div className="w-full flex  items-center lg:justify-end justify-center gap-5 my-10 ">
-        <ButtonSecondary buttonText="Reset" type="submit" />
         <ButtonPrimary
           type="submit"
           buttonText={loading ? "Submiting" : "Submit"}

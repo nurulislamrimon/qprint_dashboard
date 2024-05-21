@@ -1,10 +1,5 @@
 import CustomGlobalDrawer from "../shared/CustomGlobalDrawer";
-import {
-  IconStar,
-  IconTrash,
-  IconX,
-  IconEditCircle,
-} from "@tabler/icons-react";
+import { IconStar, IconTrash, IconAlertTriangle } from "@tabler/icons-react";
 import ReplySendBTN from "./ReplySendBTN";
 import Image from "next/image";
 import {
@@ -19,18 +14,42 @@ import imgPlaceholder from "@/assets/placeholderImgIcon.svg";
 import personPlaceholder from "@/assets/personPlaceholder.png";
 import { useState } from "react";
 import Loader from "../shared/loaders/Loader";
+import CustomGlobalModal from "../shared/CustomGlobalModal";
+import GlobalActionButton from "../shared/GlobalActionButton";
+import { toast } from "react-toastify";
+import { useGetUserByIdQuery } from "@/store/features/users/usersApi";
+import { useAppSelector } from "@/store/hook";
 
-const ReviewModal = ({ openModal, handleCloseModal, id }: any) => {
+const ReviewModal = ({ openModal, handleCloseModal, id, customerId }: any) => {
   const { data, isLoading } = useReviewQuery(id);
+  const { reply, isEdited } = useAppSelector((state) => state.reply);
+  console.log(reply, isEdited);
+
+  const { data: customerInfo } = useGetUserByIdQuery(customerId);
+
   const [loading, setLoading] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+
+  const handleDeleteModal = () => {
+    setDeleteModal((prevState) => !prevState);
+  };
 
   const [deleteReview] = useDeleteReviewMutation();
 
   // handle delete
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (e: any) => {
+    e.preventDefault();
     setLoading(true);
     try {
-      const res = await deleteReview(id);
+      const res = await deleteReview(data?.data?._id);
+      if (res?.data) {
+        toast.success(res?.data?.message);
+        setDeleteModal(false);
+      }
+      if (res?.error) {
+        toast.error(res?.error?.message);
+      }
+      handleDeleteModal();
     } catch (err: any) {
       console.error(err.message);
     } finally {
@@ -46,7 +65,6 @@ const ReviewModal = ({ openModal, handleCloseModal, id }: any) => {
         modalWidthControlClassName="w-full md:w-[500px]"
       >
         <div className="p-5 overflow-hidden">
-          {loading && <Loader />}
           <div className="flex justify-between items-center mb-[30px]">
             <span className="text-black-opacity-50 text-lg">Review</span>
 
@@ -55,7 +73,7 @@ const ReviewModal = ({ openModal, handleCloseModal, id }: any) => {
           {/* ==Order Informaion== */}
           <div className="flex flex-col gap-5">
             <div className="flex items-center gap-5">
-              <div className="w-[75px] h-[75px] p-2 border rounded-md shrink-0 relative ">
+              <div className="w-[75px] h-[75px] p-2 border rounded-md shrink-0 relative overflow-hidden ">
                 <Image
                   src={
                     isLoading
@@ -81,14 +99,16 @@ const ReviewModal = ({ openModal, handleCloseModal, id }: any) => {
             <div className="flex items-center justify-between mb-[30px]">
               <div className="shrink-0">
                 <div className="flex items-center gap-5">
-                  <div className="w-[45px] h-[45px] relative ">
+                  <div className="w-[45px] h-[45px] relative border rounded-full">
                     <Image
                       src={
                         isLoading
                           ? personPlaceholder
-                          : `${mainUrl}${data?.data?.reviewer?.profilePhoto}`
+                          : customerInfo?.data?.profilePhoto
+                          ? `${mainUrl}${customerInfo?.data?.profilePhoto}`
+                          : personPlaceholder
                       }
-                      alt="profile"
+                      alt="customer-photo"
                       objectFit="cover"
                       fill
                       className="w-full h-full rounded-full top-0 left-0 object-cover "
@@ -135,7 +155,7 @@ const ReviewModal = ({ openModal, handleCloseModal, id }: any) => {
                   <IconTrash stroke={1} width={16} height={16} />
                 </span>
                 <button
-                  onClick={() => handleDelete(data?.data?._id)}
+                  onClick={() => handleDeleteModal()}
                   className="text-sm text-black-opacity-70"
                 >
                   Delete Review
@@ -148,21 +168,64 @@ const ReviewModal = ({ openModal, handleCloseModal, id }: any) => {
 
             {/* ==Author Reply== */}
 
-            {data?.data?.reply ? <AuthorReply data={data} /> : ""}
+            <div className="mt-7 ml-5">
+              {data?.data?.reply ? <AuthorReply data={data} /> : ""}
+            </div>
           </div>
           {/* ==Author Reply Button== */}
-          {!data?.data?.reply ? (
-            <div className="fixed bottom-2 mx-auto md:w-[460px] w-[calc(100vw-40px)]">
-              <ReplySendBTN id={id} />
-              <span className="text-black-opacity-50 italic text-sm">
-                This reply will be on product view page
-              </span>
-            </div>
-          ) : (
-            ""
-          )}
+
+          <div
+            className={`fixed bottom-2 mx-auto md:w-[460px] w-[calc(100vw-40px)]
+      }`}
+          >
+            <ReplySendBTN id={id} />
+            <span className="text-black-opacity-50 italic text-sm">
+              This reply will be on product view page
+            </span>
+          </div>
         </div>
       </CustomGlobalDrawer>
+      {deleteModal && (
+        <CustomGlobalModal
+          isVisible={handleDeleteModal}
+          setOpenModal={handleDeleteModal}
+          mainClassName="w-[450px]"
+        >
+          <form onSubmit={handleDelete}>
+            <div className="flex flex-col gap-10 items-center px-10 py-8 relative overflow-hidden">
+              {loading && <Loader />}
+              <div className="bg-red-opacity-10 rounded-full p-2.5">
+                <IconAlertTriangle
+                  className="text-red-color"
+                  width={24}
+                  height={24}
+                />
+              </div>
+              <div className="flex flex-col gap-5">
+                <span className="text-lg">
+                  Are you sure, delete this review?
+                </span>
+                <div className="flex items-center justify-center gap-10">
+                  <button
+                    onClick={() => handleDeleteModal()}
+                    type="reset"
+                    className="flex border items-center justify-center px-10 py-3.5 rounded-md"
+                  >
+                    No
+                  </button>
+                  <div>
+                    <GlobalActionButton
+                      type="submit"
+                      buttonText="Yes"
+                      buttonStyleClassName="px-10 py-3.5"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </CustomGlobalModal>
+      )}
     </div>
   );
 };

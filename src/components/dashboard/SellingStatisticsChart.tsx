@@ -1,29 +1,28 @@
 "use client";
 import { useGetEarningChartAllAmountQuery } from "@/store/features/dashboard/earningStatisticsChart/earningStatisticsChartApi";
 import React, { useEffect, useState } from "react";
-import DateRangePicker from "../shared/DateRangePicker";
 import {
-  Area,
   AreaChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
+  Area,
   XAxis,
   YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
 } from "recharts";
-import EarningStatisticsChartSkeleton from "../shared/skeleton/EarningStatisticsChartSkaleton";
+import DateRangePicker from "../shared/DateRangePicker";
 
 const SellingStatisticsChart = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const { data, isLoading } = useGetEarningChartAllAmountQuery(
+  const { data } = useGetEarningChartAllAmountQuery(
     `createdAt[lte]=${endDate}&createdAt[gte]=${startDate}`
   );
 
   useEffect(() => {
     const today = new Date();
     const lastSevenDays = new Date(today);
-    lastSevenDays.setDate(today.getDate() - 6); // Subtract 6 to include today
+    lastSevenDays.setDate(today.getDate() - 7); // Subtract 7 to include today
 
     // Format dates to match the format of your data's 'createdAt' field (YYYY-MM-DD)
     const formattedStartDate = lastSevenDays.toISOString().split("T")[0];
@@ -31,8 +30,9 @@ const SellingStatisticsChart = () => {
 
     setStartDate(formattedStartDate);
     setEndDate(formattedEndDate);
-  }, [data, endDate, startDate]);
+  }, []);
 
+  // const { data: fi, isError, isLoading } = useGetEarningChartAllAmountQuery("");
   const handleDateRangeChange = (range: {
     startDate: string;
     endDate: string;
@@ -49,72 +49,58 @@ const SellingStatisticsChart = () => {
   };
 
   return (
-    <div className="  border rounded-[10px] p-4">
-      <div className="flex items-center justify-between pb-5">
-        <span className="text-black-rgba-80 text-base md:text-custom18px font-medium">
+    <div className=" md:border rounded-custom-10px md:p-4">
+      <div className="flex items-center justify-between pb-5  px-4 md:px-0">
+        <span className="[font-size:clamp(14px,3vw,18px)] font-medium whitespace-nowrap">
           Earning Statistics
         </span>
-        {/* Input fields for start and end dates */}
         <div>
-          {/* Input fields for start and end dates */}
           <DateRangePicker onChange={handleDateRangeChange} />
         </div>
       </div>
-      <div className="w-full [height:clamp(200px,50vw,400px)]">
-        {isLoading ? (
-          <EarningStatisticsChartSkeleton />
-        ) : (
-          <ResponsiveContainer className={"[height:clamp(200px,50vw,400px)] "}>
-            <AreaChart
-              data={data?.data}
-              margin={{
-                top: 22,
-                right: 0,
-                left: 7,
-                bottom: 0,
-              }}
-            >
-              {/* Add rest of your chart configuration here */}
-              <defs>
-                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="55%" stopColor="#7f35cd80" stopOpacity={1} />
-                  <stop offset="95%" stopColor="#fff" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid
-                horizontal={false}
-                // vertical={false}
-                strokeDasharray="3 3"
-              />
-              <XAxis
-                dataKey="createdAt"
-                className="[font-size:clamp(12px,2vw,15px)]"
-              />
+      <div className="w-full [height:clamp(300px,50vw,400px)] mx-auto pr-2.5 sm:pl-3.5 lg:pl-0">
+        <ResponsiveContainer className={"[height:clamp(300px,50vw,400px)]"}>
+          <AreaChart
+            data={data?.data}
+            margin={{
+              top: 22,
+              right: 0,
+              left: 30,
+              bottom: 0,
+            }}
+          >
+            <defs>
+              <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="55%" stopColor="#7f35cd80" stopOpacity={1} />
+                <stop offset="96%" stopColor="#fff" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid
+              horizontal={false}
+              // vertical={false}
+              strokeDasharray="3 3"
+            />
+            <XAxis
+              dataKey="createdAt"
+              className="[font-size:clamp(12px,2vw,14px)]"
+            />
 
-              {/* <RechartsYAxis
+            <YAxis
               tickFormatter={formatYAxisTick}
-              domain={[0, "dataMax"]}
+              // domain={[0, "dataMax"]}
               className="[font-size:clamp(12px,2vw,15px)]"
               tickMargin={10}
-            /> */}
-              <YAxis
-                tickFormatter={formatYAxisTick}
-                // domain={[0, "dataMax"]}
-                className="[font-size:clamp(12px,2vw,15px)]"
-                tickMargin={10}
-              />
-
-              <Tooltip />
-              <Area
-                type="monotone"
-                dataKey="totalAmount"
-                stroke="#7f35cdcc"
-                fill="url(#colorUv)"
-                fillOpacity={0.3}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        )}
+            />
+            <Tooltip />
+            <Area
+              type="monotone"
+              dataKey="totalAmount"
+              stroke="#7f35cdcc"
+              fill="url(#colorUv)"
+              fillOpacity={0.3}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );

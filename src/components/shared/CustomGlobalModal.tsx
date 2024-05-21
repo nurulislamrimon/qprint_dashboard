@@ -15,20 +15,22 @@ const CustomGlobalModal = ({
   isVisible,
   setOpenModal,
 }: CustomGlobalModalProps) => {
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    if (setOpenModal) {
+      setOpenModal(false);
+    }
+  };
   if (!isVisible) return null;
 
   return (
     <div
-      onClick={() => {
-        if (setOpenModal) {
-          setOpenModal(false);
-        }
-      }}
+      onClick={handleClick}
       className={`${modalControllerClassName} cursor-pointer w-dvw h-dvh fixed inset-0 bg-black z-50 bg-opacity-40 flex items-center justify-center`}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`${mainClassName} rounded-custom-10px bg-white`}
+        className={`${mainClassName} rounded-custom-10px bg-white cursor-auto`}
       >
         <div className={`${childrenClassName}`}>{children}</div>
       </div>

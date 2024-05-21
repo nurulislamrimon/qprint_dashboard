@@ -82,9 +82,9 @@ const AddUserModal = ({ handleModal }: any) => {
       <CustomGlobalModal
         isVisible={handleModal}
         setOpenModal={handleModal}
-        mainClassName="w-[780px]"
+        mainClassName="md:w-[780px] md:h-auto w-full h-full overflow-y-auto"
       >
-        <div className="relative md:p-[30px] p-5 overflow-hidden">
+        <div className="relative md:p-[30px] p-5 overflow-hidden ">
           {loading && <Loader />}
           <div className="absolute right-5 top-5">
             <DrawerModalCloseBTN handleClose={handleModal} />
@@ -143,7 +143,7 @@ const AddUserModal = ({ handleModal }: any) => {
                 </select>
               </div>
 
-              <div className="md:col-span-2">
+              <div className="md:col-span-2 ">
                 <UsersCommonSubmitBTN type="submit" buttonText="Add New User" />
               </div>
             </div>

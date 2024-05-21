@@ -14,7 +14,7 @@ export const printingSetupApi: any = baseApi.injectEndpoints({
     // get all paper size
     allPaperSize: build.query({
       query: (query: string) => ({
-        url: "/printing-setup?printingSetupType=Paper Size?" + query,
+        url: "/printing-setup?printingSetupType=Paper Size" + query,
         method: "GET",
       }),
       providesTags: ["printing-setup"],
@@ -23,7 +23,7 @@ export const printingSetupApi: any = baseApi.injectEndpoints({
     // get all paper types
     allPaperType: build.query({
       query: (query: string) => ({
-        url: "/printing-setup?printingSetupType=Paper Type?" + query,
+        url: "/printing-setup?printingSetupType=Paper Type" + query,
         method: "GET",
       }),
       providesTags: ["printing-setup"],
@@ -32,7 +32,7 @@ export const printingSetupApi: any = baseApi.injectEndpoints({
     // get paper size unit
     paperUnit: build.query({
       query: (query: string) => ({
-        url: "/printing-setup?printingSetupType=Paper Size Unit?" + query,
+        url: "/printing-setup?printingSetupType=Paper Size Unit" + query,
         method: "GET",
       }),
       providesTags: ["printing-setup"],
@@ -41,7 +41,7 @@ export const printingSetupApi: any = baseApi.injectEndpoints({
     // get all printing mode
     allPrintingMode: build.query({
       query: (query: string) => ({
-        url: "/printing-setup?printingSetupType=Printing Color Mode?" + query,
+        url: "/printing-setup?printingSetupType=Printing Color Mode" + query,
         method: "GET",
       }),
       providesTags: ["printing-setup"],

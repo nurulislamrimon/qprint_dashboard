@@ -57,7 +57,7 @@ const OrderTableSkeleton = () => {
         </div>
       </td>
       {/* view */}
-      <td className="md:table-cell hidden animate-spin">
+      <td className="md:table-cell hidden animate-pulse">
         <div className="mx-auto  w-10 h-8  bg-slate-200 rounded-md text-inherit">
           &nbsp;
         </div>

@@ -23,7 +23,8 @@ export type PaperSize = {
 const PrintingPaperSize = () => {
   const [openModal, setOpenModal] = useState(false);
   const [openSettingModal, setOpenSettingModal] = useState(false);
-  const { data, isLoading } = useAllPaperSizeQuery("");
+  const { data: allPaperSize, isLoading } = useAllPaperSizeQuery("");
+  console.log(allPaperSize);
   const { data: paperUnit } = usePaperUnitQuery("");
 
   const handleCloseSettingModal = () => {
@@ -70,7 +71,7 @@ const PrintingPaperSize = () => {
             ? [...Array(14)].map((_, index) => (
                 <PrintingRequestCardSkeleton key={index} />
               ))
-            : data?.data?.map((data: PaperSize, index: number) => (
+            : allPaperSize?.data?.map((data: PaperSize, index: number) => (
                 <PrintingPaperSizeLayout key={index} data={data} />
               ))}
         </div>

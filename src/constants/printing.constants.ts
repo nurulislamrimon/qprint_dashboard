@@ -1,9 +1,14 @@
 // printing request navigation menu added by Shariful Islam
 export const printingRequestNavMenu = [
   {
-    label: "Order Placed",
-    key: "orderPlaced",
-    href: "/",
+    label: "All Printing Requst",
+    key: "allPrintingKey",
+    href: "/all-printing-request",
+  },
+  {
+    label: "Placed Orders",
+    key: "placedOrders",
+    href: "/placed-orders",
     isActive: true,
   },
   {

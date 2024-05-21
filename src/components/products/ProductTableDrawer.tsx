@@ -26,7 +26,7 @@ const ProductTableDrawer = ({ handleCloseDrawer, openDrawer, id }: any) => {
           <ProductCartInformation data={data} />
         </div>
         <div className="py-5 ">
-          <ProductDrawerVariantInformation data={data} />
+          <ProductDrawerVariantInformation id={data?.data?._id} data={data} />
         </div>
       </div>
     </CustomGlobalDrawer>

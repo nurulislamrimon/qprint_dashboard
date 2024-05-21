@@ -8,9 +8,11 @@ interface FileInputProps {
   imageBottomText: string;
   name: string;
   localUrl?: string | any;
+  imageType?: string;
 }
 
 const FileInput = ({
+  imageType,
   onChange,
   className,
   imageBottomText,
@@ -19,16 +21,19 @@ const FileInput = ({
 }: FileInputProps) => {
   return (
     <div>
-      <h5 className="mb-2 text-black-opacity-60">Image</h5>
+      <h5 className="mb-2 text-black-opacity-60 text-center">
+        {imageType} Image
+      </h5>
       <label htmlFor="fileInput">
         <div
-          className={`${className} md:h-48 md:w-48 w-40 h-40  border border-dashed flex items-center justify-center rounded-lg cursor-pointer`}
+          className={`${className} md:h-48 md:w-48 w-40 h-40 overflow-hidden  border border-dashed flex items-center justify-center rounded-lg cursor-pointer`}
         >
           {localUrl ? (
             <Image
+              objectFit="cover "
               src={localUrl}
-              width={100}
-              height={100}
+              width={192}
+              height={192}
               alt="uploaded Image"
             />
           ) : (

@@ -21,10 +21,6 @@ const BrandCard = ({ data, isLoading }: any) => {
 
   const { data: brandData } = useBrandQuery(data?._id);
 
-  const { data: productByBrandNme } = useSearchProductQuery(
-    brandData?.data?.brandName
-  );
-
   const router = useRouter();
 
   const [deleteBrand] = useDeleteBrandMutation();
@@ -121,9 +117,7 @@ const BrandCard = ({ data, isLoading }: any) => {
       <hr className="w-[90%] mx-auto" />
       <div className="flex items-center justify-center py-3.5">
         <span className="text-black-opacity-60 text-sm ">
-          {productByBrandNme?.data?.length === 0
-            ? "No Product"
-            : productByBrandNme?.data?.length + " " + "Products"}
+          {data?.productCount} products available
         </span>
       </div>
 

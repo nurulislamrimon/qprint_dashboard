@@ -30,6 +30,8 @@ import searchProductByCategorySlice from "./features/searchProductByCategory/sea
 import editBrandSlice from "./features/brand/editBrandSlice";
 import updateProductSlice from "./features/product/updateProductSlice";
 import allOrderReportDetails from "./features/topSellingProduct/analytics/allOrderReportDetails";
+import dealsOfTheDaySlice from "./features/DealsOfTheDayAndWidget/dealsOfTheDaySlice";
+import updateProductStockSlice from "./features/product/updateProductStockSlice.ts";
 
 export const reducer = {
   [baseApi.reducerPath]: baseApi.reducer,
@@ -65,4 +67,6 @@ export const reducer = {
   addProduct: addProductSlice,
   updateProduct: updateProductSlice,
   allOrderReportDetails: allOrderReportDetails,
+  dealsOfTheDaySlice: dealsOfTheDaySlice,
+  updateProductStockSlice: updateProductStockSlice,
 };

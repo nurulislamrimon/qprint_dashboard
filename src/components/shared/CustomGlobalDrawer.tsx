@@ -46,7 +46,7 @@ const CustomGlobalDrawer = ({
           showModal
             ? "transform translate-x-0 transition-all duration-700"
             : "transform translate-x-full transition-all duration-700"
-        } fixed top-0 right-0 bg-white`}
+        } fixed top-0 right-0 bg-white cursor-auto`}
       >
         <div className={`${childrenClassName} h-screen`}>{children}</div>
       </div>

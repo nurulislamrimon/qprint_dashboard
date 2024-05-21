@@ -3,7 +3,7 @@ import { PaperType } from "./PrintingPaperType";
 import { useDeletePrintingSetupMutation } from "@/store/features/shopSetup/printingSetup/printingSetupApi";
 import { useState } from "react";
 import EditPrintingPaperTypeModal from "./EditPrintingPaperTypeModal";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import DeleteRequesetPrintingModal from "./DeleteRequesetPrintingModal";
 
 type PaperTypeData = {
@@ -22,17 +22,6 @@ const PrintingPaperTypeLayout = ({ data }: PaperTypeData) => {
     setOpenModal(false);
   };
 
-  const handleDelete = async (id: string) => {
-    const res = await deletePrintingSetup(id);
-    console.log(res?.data?.message);
-    if (res?.data) {
-      toast.success(res?.data?.message);
-    }
-    if (res?.error) {
-      toast.error(res?.error?.message)
-      console.error(res?.error)
-    }
-  };
   return (
     <div className="bg-main-bg-color-opacity-32 bg-opacity-20 shadow-sm hover:shadow-product-card-shadow rounded-t-md">
       <span className="py-4 text-base flex items-center justify-center font-semibold main-text-color">
@@ -61,11 +50,12 @@ const PrintingPaperTypeLayout = ({ data }: PaperTypeData) => {
           openModal={openModal}
         />
       )}
-      {
-        openDeleteModal && (
-          <DeleteRequesetPrintingModal handleModal={handleDeleteModal} id={data?._id} handleDelete={handleDelete} />
-        )
-      }
+      {openDeleteModal && (
+        <DeleteRequesetPrintingModal
+          handleModal={handleDeleteModal}
+          id={data?._id}
+        />
+      )}
     </div>
   );
 };

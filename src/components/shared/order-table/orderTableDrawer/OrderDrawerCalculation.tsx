@@ -2,7 +2,7 @@ import React from "react";
 
 const OrderDrawerCalculation = ({ onlineOrderData, quickOrderData }: any) => {
   const data = onlineOrderData?.data || quickOrderData?.data;
-
+  const formatNumber = (num: number) => (num ? num.toFixed(2) : "0.00");
   return (
     <div className="md:w-1/2 w-full">
       <div className="flex flex-col gap-5">
@@ -15,7 +15,7 @@ const OrderDrawerCalculation = ({ onlineOrderData, quickOrderData }: any) => {
         <div className="flex items-center justify-between text-base text-[#5F6C72]">
           <span>Discount</span>
           <strong className="text-right text-black-opacity-70 font-medium">
-            - {data?.totalDiscount} QAR
+            - {formatNumber(data?.totalDiscount)} QAR
           </strong>
         </div>
         <div className="flex items-center justify-between  text-base text-[#5F6C72]">

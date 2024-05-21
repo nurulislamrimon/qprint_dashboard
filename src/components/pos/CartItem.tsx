@@ -1,5 +1,5 @@
 "use client";
-import { IconMinus, IconPlus, IconTrashX, IconX } from "@tabler/icons-react";
+import { IconX } from "@tabler/icons-react";
 import Image from "next/image";
 import Minus from "@/assets/assetsSVG/Minus";
 import Plus from "@/assets/assetsSVG/Plus";
@@ -9,34 +9,29 @@ import {
   removeFromCart,
   removeOneFromCart,
 } from "@/store/features/pos/posCartSlice";
-import { IVariant } from "@/types";
 import doubleHug from "@/assets/doublehug.svg";
 import { mainUrl } from "@/constants/mainUrl";
-import { useState } from "react";
-import CustomGlobalModal from "../shared/CustomGlobalModal";
 
 const CartItem = ({ product }: any) => {
   const dispatch = useAppDispatch();
-
-  const [openModal, setOpenModal] = useState(false);
-
-  const handleModal = () => {
-    setOpenModal((prevState) => !prevState);
-  };
 
   return (
     <>
       <div className="flex gap-1 justify-between items-center">
         <div className="flex items-center gap-2.5 ">
-          <div className="border rounded-custom-10px md:w-[60px] w-[50px]  md:h-[60px] h-[50px] flex items-center justify-center overflow-hidden md:p-2  shrink-0">
+          <div className="md:w-[60px] w-[50px] md:h-[60px] h-[50px] shrink-0 relative">
             <Image
-              className="rounded-md md:w-[40px] w-[30px]  md:h-[40px] h-[30px]"
               src={`${mainUrl}${product?.productPhotos[0]}`}
-              quality={100}
-              alt="cart item image"
-              width={500}
-              height={500}
+              placeholder="blur"
+              blurDataURL={`${mainUrl}${product?.productPhotos[0]}`}
+              fill
+              style={{
+                objectFit: "cover",
+              }}
+              priority
+              alt="Product Image"
               sizes="(max-width:768px) 100vw, 20vw, (max-width: 1200px) 50vw, 33vw"
+              className="w-full h-full top-0 left-0 object-cover border rounded-custom-10px p-1.5"
             />
           </div>
           <div className="flex flex-col md:gap-1.5">
@@ -93,51 +88,12 @@ const CartItem = ({ product }: any) => {
             </button>
           </div>
           <div className="flex items-center justify-center">
-            <button onClick={() => handleModal()}>
+            <button onClick={() => dispatch(removeFromCart(product))}>
               <IconX stroke={1} width={20} height={20} />
             </button>
           </div>
         </div>
       </div>
-      {openModal && (
-        <div>
-          <CustomGlobalModal
-            mainClassName={"w-[400px]"}
-            isVisible={handleModal}
-            setOpenModal={handleModal}
-          >
-            <div className="px-10 py-5">
-              <div className="flex flex-col items-center gap-7">
-                <IconTrashX
-                  stroke={2}
-                  width={50}
-                  height={50}
-                  className="text-red-color"
-                />
-                <span className="font-medium text-center md:text-lg text-sm md:font-bold">
-                  Are You Sure?
-                  <br /> Remove this item from cart?
-                </span>
-
-                <div className="flex items-center justify-center gap-[30px]">
-                  <button
-                    onClick={handleModal}
-                    className="flex items-center justify-center border py-3 px-10 rounded-[5px]"
-                  >
-                    No
-                  </button>
-                  <button
-                    className="flex bg-main-bg-color-opacity-32 items-center text-fuchsia-800 justify-center border py-3 px-10 rounded-[5px]"
-                    onClick={() => dispatch(removeFromCart(product))}
-                  >
-                    Yes
-                  </button>
-                </div>
-              </div>
-            </div>
-          </CustomGlobalModal>
-        </div>
-      )}
     </>
   );
 };

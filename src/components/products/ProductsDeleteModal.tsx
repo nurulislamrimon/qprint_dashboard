@@ -1,13 +1,16 @@
 import { IconTrash } from "@tabler/icons-react";
 import CustomGlobalModal from "../shared/CustomGlobalModal";
 import GlobalActionButton from "../shared/GlobalActionButton";
+import Loader from "../shared/loaders/Loader";
 
 const ProductsDeleteModal = ({
   handleClose,
   openDeleteModal,
   productDeleteHandler,
   data,
+  loading,
 }: any) => {
+  console.log(data?._id);
   return (
     <div>
       <CustomGlobalModal
@@ -15,7 +18,8 @@ const ProductsDeleteModal = ({
         isVisible={openDeleteModal}
         mainClassName="md:w-[365px] w-[300px] h-[220px]  md:h-[250px]"
       >
-        <div className="md:py-[30px] px-5 py-5 md:gap-[30px] gap-5 flex flex-col items-center">
+        <div className="md:py-[30px] px-5 py-5 md:gap-[30px] gap-5 flex flex-col items-center relative overflow-hidden">
+          {loading && <Loader />}
           <div>
             <IconTrash width={50} height={50} color="red" stroke={1.5} />
           </div>
@@ -29,7 +33,7 @@ const ProductsDeleteModal = ({
             >
               No
             </button>
-            <div onClick={() => productDeleteHandler(data?.data?._id)}>
+            <div onClick={() => productDeleteHandler(data?._id)}>
               <GlobalActionButton
                 type="submit"
                 buttonText="Yes"

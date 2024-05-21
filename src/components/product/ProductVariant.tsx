@@ -54,7 +54,7 @@ const ProductVariant = ({
             <div className="col-span-2">
               <FileUploader
                 name={"variantPhotos"}
-                className="h-full w-auto relative cursor-pointer border border-black-opacity-20 flex items-center justify-center text-black-opacity-60 text-xs"
+                className="h-full w-full relative cursor-pointer border border-black-opacity-20 flex items-center justify-center text-black-opacity-60 text-xs"
                 data={existVariant}
                 multiple={true}
                 accept="image/jpg,image/jpeg,image/png"

@@ -71,6 +71,8 @@ const UpdateUserModal = ({ openModal, setOpenModal, handleClose, id }: any) => {
     const data = {
       role: role,
       profilePhoto: profilePhoto,
+      fullName: fullName,
+      phoneNumber: phoneNumber,
     };
 
     try {
@@ -101,7 +103,7 @@ const UpdateUserModal = ({ openModal, setOpenModal, handleClose, id }: any) => {
       <CustomGlobalModal
         isVisible={openModal}
         setOpenModal={setOpenModal}
-        mainClassName="w-[780px]"
+        mainClassName="md:w-[780px] w-full md:h-auto h-full overflow-y-auto"
       >
         <div className="relative md:p-[30px] p-5 overflow-hidden">
           {loading && <Loader />}
@@ -126,8 +128,6 @@ const UpdateUserModal = ({ openModal, setOpenModal, handleClose, id }: any) => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <CustomGlobalInput
-                containerStyle="opacity-60"
-                disabled
                 value={fullName}
                 label="Full name"
                 type="text"
@@ -142,28 +142,10 @@ const UpdateUserModal = ({ openModal, setOpenModal, handleClose, id }: any) => {
                 name="email"
               />
               <CustomGlobalInput
-                containerStyle="opacity-60"
-                disabled
                 value={phoneNumber}
                 label="Phone Number"
                 type="number"
                 name="phoneNumber"
-              />
-              <CustomGlobalInput
-                containerStyle="opacity-60"
-                disabled
-                value={password}
-                label="Password"
-                type="password"
-                name="password"
-              />
-              <CustomGlobalInput
-                containerStyle="opacity-60"
-                disabled
-                value={confirmPassword}
-                label="Confirm Password"
-                type="password"
-                name="confirmPassword"
               />
 
               <div className="md:col-span-2 border px-5 py-3 rounded-custom-5px">

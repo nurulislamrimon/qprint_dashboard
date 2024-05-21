@@ -10,7 +10,7 @@ const BrandDetails = ({ params }: { params: { id: string } }) => {
   const { data, isLoading } = useBrandQuery(params.id);
 
   const { data: productByBrandNme } = useSearchProductQuery(
-    data?.data?.brandName
+    `brand.brandName=${data?.data?.brandName}`
   );
 
   return (
@@ -35,7 +35,7 @@ const BrandDetails = ({ params }: { params: { id: string } }) => {
             {data?.data?.brandName}
           </span>
           <span className="text-black-opacity-60 text-sm">
-            {productByBrandNme?.data?.length} Product Available
+            {productByBrandNme?.meta?.total} Product Available
           </span>
         </div>
       </div>

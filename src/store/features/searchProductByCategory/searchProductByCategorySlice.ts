@@ -4,7 +4,7 @@ type searchProductByCategoryType = {
   searchProductByCategory: string;
 };
 
-const initialState = {
+const initialState: searchProductByCategoryType = {
   searchProductByCategory: "",
 };
 const searchProductByCategorySlice = createSlice({
@@ -17,9 +17,15 @@ const searchProductByCategorySlice = createSlice({
     setSearchProductByCategoryEmpty: (state) => {
       state.searchProductByCategory = "";
     },
+    resetFilterProductByCategory: () => {
+      return initialState;
+    },
   },
 });
 
-export const { setSearchProductByCategory, setSearchProductByCategoryEmpty } =
-  searchProductByCategorySlice.actions;
+export const {
+  setSearchProductByCategory,
+  setSearchProductByCategoryEmpty,
+  resetFilterProductByCategory,
+} = searchProductByCategorySlice.actions;
 export default searchProductByCategorySlice.reducer;

@@ -41,6 +41,7 @@ const AddSubCategoryDrawer = ({
         if (res?.error) {
           toast.error(res?.error.message);
         }
+        console.log(res);
       } catch (error) {
         console.error(error);
       } finally {

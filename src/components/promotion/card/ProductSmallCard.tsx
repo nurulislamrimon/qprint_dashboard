@@ -3,7 +3,7 @@ import { IconX } from "@tabler/icons-react";
 import Image from "next/image";
 import { mainUrl } from "@/constants/mainUrl";
 import { useAppDispatch } from "@/store/hook";
-import { removeFromBestDeals } from "@/store/features/bestDeals/bestDealsSlice";
+import { removeProductFromBestDeals } from "@/store/features/bestDeals/bestDealsSlice";
 
 const ProductSmallCard = ({ data }: any) => {
   const dispatch = useAppDispatch();
@@ -18,7 +18,7 @@ const ProductSmallCard = ({ data }: any) => {
         />
       </div>{" "}
       <h3 className="truncate w-20">{data?.productName}</h3>
-      <p onClick={() => dispatch(removeFromBestDeals(data))}>
+      <p onClick={() => dispatch(removeProductFromBestDeals(data))}>
         <IconX />
       </p>
     </div>

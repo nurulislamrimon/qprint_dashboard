@@ -1,9 +1,6 @@
 "use client";
 import { IconSearch } from "@tabler/icons-react";
-import {
-  useProductsQuery,
-  useSearchProductQuery,
-} from "@/store/features/product/productApi";
+import { useSearchProductQuery } from "@/store/features/product/productApi";
 import { useCategoriesQuery } from "@/store/features/category/categoryApi";
 import { IProduct } from "@/types";
 import ProductCard from "./ProductCard";
@@ -12,39 +9,32 @@ import PosCartCard from "./PosCartCard";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import {
   setBestDeals,
-  setSearchProductEmpty,
+  handleModalOfBestDealsProduct,
 } from "@/store/features/bestDeals/bestDealsSlice";
 import CardSkeleton from "../shared/skeleton/CardSkeleton";
 
 import ProductEmptyState from "./ProductEmptyState";
 import { useState } from "react";
-import ButtonPrimary from "../ui/btn/ButtonPrimary.";
 
 const PosHomepage = () => {
+  const [limit, setLimit] = useState(10);
   const { searchProduct } = useAppSelector((state) => state.bestDealsSlice);
   const { searchProductByCategory } = useAppSelector(
     (state) => state.searchProductByCategorySlice
   );
-  const [page, setPage] = useState(10);
-  const { data, isLoading } = useProductsQuery("");
   const { data: category } = useCategoriesQuery();
   const dispatch = useAppDispatch();
-  const { data: products, isLoading: productLoading } = useSearchProductQuery(
+  const { data: products, isLoading } = useSearchProductQuery(
     `searchTerm=${searchProduct ? searchProduct : " "}&${
       searchProductByCategory
         ? `category.categoryName=${searchProductByCategory}`
         : ""
-    }&limit=${page}`
+    }&limit=${limit}`
   );
 
-  // Load More Product Handler
-  const loadMoreProducts = () => {
-    setPage((prevValue) => (prevValue += 10));
-  };
-
   return (
-    <div className="bg-body-main-bg-color grid grid-cols-1 md:grid-cols-4  gap-1 h-[calc(100vh-90px)] overflow-y-auto w-full overflow-hidden  mt-1">
-      <div className="bg-white md:px-5 md:py-7 p-5 flex flex-col gap-[30px] md:col-span-3 ">
+    <div className="bg-body-main-bg-color grid grid-cols-1 md:grid-cols-4 gap-1 h-[calc(100vh-90px)] overflow-y-auto w-full mt-1">
+      <div className="bg-white md:px-5 md:py-7 p-5 flex flex-col gap-[30px] md:col-span-2 lg:col-span-3">
         <div className="flex md:flex-row flex-col md:items-center md:justify-between md:gap-10 gap-5">
           <div className="flex gap-2.5">
             <span className="text-black md:text-lg text-base font-medium whitespace-nowrap">
@@ -53,9 +43,9 @@ const PosHomepage = () => {
             <div
               className={`${
                 isLoading && "animate-ping"
-              } bg-green-opacity-10 flex items-center justify-center  rounded-full w-7 h-7 p-1 text-green-color  text-[10px]`}
+              } bg-green-opacity-10 flex items-center justify-center rounded-full w-7 h-7 p-1 text-green-color font-bold text-[11px]`}
             >
-              {category?.data?.length}
+              {category?.meta?.total}
             </div>
           </div>
           <PosCategoryCard />
@@ -71,7 +61,7 @@ const PosHomepage = () => {
               onChange={(e) => {
                 const inputValue = e.target.value.trim();
                 if (inputValue === "") {
-                  dispatch(setSearchProductEmpty());
+                  dispatch(handleModalOfBestDealsProduct());
                 } else {
                   dispatch(setBestDeals({ searchProduct: inputValue }));
                 }
@@ -83,7 +73,7 @@ const PosHomepage = () => {
               <ProductEmptyState message="Sorry this product is not available." />
             ) : (
               <div className="pos-product-cards-container-custom-grid">
-                {productLoading
+                {isLoading
                   ? Array.from({ length: 15 }).map((_, index) => (
                       <CardSkeleton key={index} />
                     ))
@@ -96,16 +86,11 @@ const PosHomepage = () => {
                     ))}
               </div>
             )}
-            <div className="flex items-center justify-center mt-5">
-              <div onClick={() => loadMoreProducts()}>
-                <ButtonPrimary type="submit" buttonText="Load More" />
-              </div>
-            </div>
           </div>
         </div>
       </div>
       {/* pos cart  */}
-      <div className="shrink-0">
+      <div className="shrink-0 md:col-span-2 lg:col-span-1">
         <PosCartCard />
       </div>
     </div>

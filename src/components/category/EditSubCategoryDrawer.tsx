@@ -13,12 +13,14 @@ import Loader from "../shared/loaders/Loader";
 interface EditSubCategoryDrawerProps {
   data: any;
   openDrawer?: boolean;
+  setOpenEditDrawer?: boolean;
   handleCloseDrawer?: () => void;
 }
 
 const EditSubCategoryDrawer = ({
   openDrawer,
   handleCloseDrawer,
+  setOpenEditDrawer,
   data,
 }: EditSubCategoryDrawerProps) => {
   const [loading, setLoading] = useState(false);
@@ -44,8 +46,10 @@ const EditSubCategoryDrawer = ({
         toast.success(res?.data?.message);
       }
       if (res?.error) {
-        toast.error(res?.error.message);
+        toast.error(res?.error?.data?.message);
       }
+      // @ts-ignore
+      setOpenEditDrawer();
     } catch (error) {
       console.log(error);
     } finally {

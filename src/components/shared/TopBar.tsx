@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   IconChevronDown,
   IconSearch,
@@ -13,7 +13,7 @@ import Image from "next/image";
 import userPlaceholder from "@/assets/personPlaceholder.png";
 import SideNav from "../SideNav/SideNav";
 import Link from "next/link";
-import { getUserInfo, removeUserInfo } from "@/services/auth.service";
+import { removeUserInfo } from "@/services/auth.service";
 import { authkey } from "@/constants/storageKey";
 import { useRouter } from "next/navigation";
 import { mainUrl } from "@/constants/mainUrl";
@@ -33,6 +33,7 @@ const TopBar = ({ title }: TopBarProps) => {
   const router = useRouter();
 
   const logout = () => {
+    document.cookie = `accessToken=`;
     removeUserInfo(authkey);
     router.push("/login");
   };
@@ -97,7 +98,7 @@ const TopBar = ({ title }: TopBarProps) => {
             {isLoading ? (
               <div className="w-full h-full top-0 left-0 object-cover rounded-full animate-pulse absolute bg-gray-200 "></div>
             ) : (
-              <div className="w-full h-full top-0 border-2 border-fuchsia-700 left-0 object-cover   absolute border-2 border-fuchsia-700 rounded-full ">
+              <div className="w-full h-full top-0 border-2 border-fuchsia-700 left-0 object-cover absolute rounded-full ">
                 <Image
                   src={
                     data?.data?.profilePhoto
@@ -105,9 +106,10 @@ const TopBar = ({ title }: TopBarProps) => {
                       : userPlaceholder
                   }
                   alt="profile"
-                  className="rounded-full"
+                  className="rounded-full "
                   fill
                   sizes="200px"
+                  objectFit="cover"
                 />
               </div>
             )}

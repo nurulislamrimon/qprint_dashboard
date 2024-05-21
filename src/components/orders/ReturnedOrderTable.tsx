@@ -36,7 +36,7 @@ const ReturnedOrderTable = () => {
   return (
     <div className="space-y-5">
       <OrderTableHeader
-        orderTitle="Return"
+        orderTitle="Returned"
         orderQuantity={data?.meta?.total}
         orderQuantityClass="bg-[#233fa314] text-[#3C4F4A]"
         orderTableHeaderInput={
@@ -66,7 +66,7 @@ const ReturnedOrderTable = () => {
                   <tr
                     onClick={() => setOpenDrawerId(order?._id)}
                     key={index}
-                    className="text-center text-[#000000b3] hover:bg-table-row-hover transition-all border-b"
+                    className="text-center text-[#000000b3] hover:bg-table-row-hover transition-all border-b cursor-pointer"
                   >
                     <OrderTableRow data={order} index={index} />
                   </tr>

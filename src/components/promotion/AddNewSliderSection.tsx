@@ -8,6 +8,7 @@ import AddNewSliderDrawer from "./AddNewSliderDrawer";
 import SliderSkeleton from "../shared/skeleton/SliderSkeleton";
 const AddNewSliderSection = () => {
   const { data, isLoading } = useGetSliderQuery("");
+
   const sliderData = useAppSelector((state) => state.slider);
   const offerData = useAppSelector((state) => state.offerSlice);
 
@@ -24,25 +25,22 @@ const AddNewSliderSection = () => {
           })}
         </div>
       ) : (
-        <div className="grid md:grid-cols-2 grid-cols-1 gap-5 mt-4">
+        <div className="grid  lg:grid-cols-2  grid-cols-1 gap-5 mt-4">
           {/* slider 1 */}
           <AddNewSliderCard
             data={data?.data?.slider?.firstSlider}
-            sliderTitle="Add Slider 1"
-            slider="firstSlider"
+            sliderTitle="firstSlider"
           />
           {/* slider 2 */}
           <AddNewSliderCard
             data={data?.data?.slider?.secondSlider}
-            sliderTitle="Add Slider 2"
-            slider="secondSlider"
+            sliderTitle="secondSlider"
           />
 
           {/* slider 3 */}
           <AddNewSliderCard
             data={data?.data?.slider?.thirdSlider}
-            sliderTitle="Add Slider 3"
-            slider="thirdSlider"
+            sliderTitle="thirdSlider"
           />
         </div>
       )}
@@ -53,7 +51,7 @@ const AddNewSliderSection = () => {
 
       <h3 className="text-black-opacity-60 py-7 text-lg">Trending products</h3>
 
-      <div className="grid md:grid-cols-3 grid-cols-1 gap-5 ">
+      <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 ">
         {/* slider 1 */}
 
         {isLoading ? (
@@ -63,13 +61,11 @@ const AddNewSliderSection = () => {
         ) : (
           <>
             <SliderSmallCard
-              offerTitle="Top Offer"
-              offer="topOffer"
+              offerTitle="topOffer"
               data={data?.data?.topOffer}
             />
             <SliderSmallCard
-              offerTitle="Bottom Offer"
-              offer="bottomOffer"
+              offerTitle="bottomOffer"
               data={data?.data?.bottomOffer}
             />
           </>

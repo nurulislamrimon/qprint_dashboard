@@ -15,8 +15,8 @@ const CustomersTable = ({ data, isLoading, index = 0 }: customerProps) => {
   return (
     <>
       <td className="md:table-cell hidden ">{index + 1}</td>
-      <td className="py-5 px-3.5">
-        <div className="flex items-center md:justify-center  gap-1.5 md:gap-3.5">
+      <td className="py-5 px-3.5 flex items-center justify-start">
+        <div className="flex items-center justify-center gap-1.5 md:gap-3.5 lg:ml-20 md:ml-auto">
           <div className="w-[28px] h-[28px] md:w-[50px] md:h-[50px] shrink-0 relative ">
             {isLoading ? (
               <Image
@@ -40,15 +40,13 @@ const CustomersTable = ({ data, isLoading, index = 0 }: customerProps) => {
               />
             )}
           </div>
-          <div>
-            <div className="flex flex-col items-start">
-              <p className="text-xs md:text-lg text-black-opacity-80">
-                {data?.fullName}
-              </p>
-              <span className=" text-sm text-black-opacity-70">
-                {data?.phoneNumber ? data?.phoneNumber : "N/A"}
-              </span>
-            </div>
+          <div className="flex flex-col items-start">
+            <p className="text-xs md:text-lg text-black-opacity-80">
+              {data?.fullName}
+            </p>
+            <span className=" text-sm text-black-opacity-70">
+              {data?.phoneNumber ? data?.phoneNumber : "N/A"}
+            </span>
           </div>
         </div>
       </td>

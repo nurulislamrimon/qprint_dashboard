@@ -66,7 +66,7 @@ const OrderPlacedTable = () => {
                   <tr
                     onClick={() => setOpenDrawerId(singleData?._id)}
                     key={index}
-                    className="text-center text-[#000000b3] hover:bg-table-row-hover transition-all border-b"
+                    className="text-center text-[#000000b3] hover:bg-table-row-hover transition-all border-b cursor-pointer"
                   >
                     <OrderTableRow data={singleData} index={index} />
                   </tr>

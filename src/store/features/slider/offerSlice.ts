@@ -1,41 +1,56 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-export type SliderType = {
-  productPhoto: File | null;
-  sliderTag: string;
+export type IOffer = {
+  offerTitle: string;
+  backgroundColor?: string;
+  backgroundPhoto?: string;
+  productPhoto: string;
   title: string;
+  // for first one
   price: number;
-  discountPercentage: number;
+  // for second one
+  offerTag: string;
   buttonText: string;
   link: string;
-  description: string;
-  discountedPrice: number;
-  sliderTitle: string;
-  slider: string;
-  offerLocalPhotoUrl: string;
+
+  // for background photo and color switcher
+  isBgColorSelected: boolean;
+
+  offerFiles: {};
 };
 
-const initialState: SliderType | Record<string, unknown> = {};
+const initialState: IOffer | {} = {};
 
 const offerSlice = createSlice({
-  name: "slider",
+  name: "offer",
   initialState,
   reducers: {
-    setOffer: (state, action: PayloadAction<Partial<SliderType> | false>) => {
-      if (action.payload === false) {
-        return initialState;
-      } else {
-        return {
-          ...state,
+    setOffer: (state, action: PayloadAction<Partial<IOffer>>) => {
+      return {
+        ...state,
+        ...action.payload,
+      };
+    },
+
+    setOfferFiles: (
+      state: { offerFiles?: Record<string, File> },
+      action: PayloadAction<Record<string, File>>
+    ) => {
+      if (state?.offerFiles) {
+        state.offerFiles = {
+          ...state.offerFiles,
           ...action.payload,
         };
+      } else {
+        state.offerFiles = action.payload;
       }
     },
-    resetOffer(state) {
+
+    resetOffer() {
       return initialState;
     },
   },
 });
 
-export const { setOffer, resetOffer } = offerSlice.actions;
+export const { setOffer, resetOffer, setOfferFiles } = offerSlice.actions;
 export default offerSlice.reducer;

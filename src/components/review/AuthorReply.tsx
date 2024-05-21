@@ -5,8 +5,14 @@ import { IconEditCircle } from "@tabler/icons-react";
 import qLogo from "@/assets/Q.svg";
 import Image from "next/image";
 import React from "react";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
+import { setIsEdited, setReply } from "@/store/features/review/replySlice";
+import { is } from "date-fns/locale";
 
 const AuthorReply = ({ data }: any) => {
+  const dispatch = useAppDispatch();
+  const { reply, isEdited } = useAppSelector((state) => state.reply);
+
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -27,13 +33,16 @@ const AuthorReply = ({ data }: any) => {
           </div>
         </div>
         <div className="flex items-center justify-center gap-5">
-          <button>
+          <div
+            onClick={() => {
+              setReply(data?.data?.reply);
+            }}
+          >
             <IconEditCircle stroke={1} />
-          </button>
-
-          <button>
+          </div>
+          <div>
             <IconTrash stroke={1} />
-          </button>
+          </div>
         </div>
       </div>
       {/* reply */}
