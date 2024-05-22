@@ -21,6 +21,7 @@ import FileInput from "@/components/ui/FileInput";
 import { mainUrl } from "@/constants/mainUrl";
 import Loader from "@/components/shared/loaders/Loader";
 import { toast } from "react-toastify";
+import CustomGlobalNumberInput from "@/components/shared/CustomGlobalNumberInput";
 
 const Setting = () => {
   const [loading, setLoading] = useState(false);
@@ -31,6 +32,7 @@ const Setting = () => {
   const [updatePassword] = useUpdatePasswordMutation();
   const dispatch = useAppDispatch();
   const updatedData = useAppSelector((state) => state.settingSlice);
+  console.log(updatedData);
   const { oldPassword, newPassword, confirmPassword } = useAppSelector(
     (state) => state.updatePasswordSlice
   );
@@ -128,6 +130,17 @@ const Setting = () => {
                   placeholder="+974"
                   value={updatedData?.phoneNumber}
                   name="phoneNumber"
+                  onChange={(e) =>
+                    dispatch(setSetting({ [e.target.name]: e.target.value }))
+                  }
+                />
+
+                <CustomGlobalNumberInput
+                  label="Phone Number"
+                  type="number"
+                  placeholder="+974"
+                  name="phoneNumber"
+                  value={updatedData?.phoneNumber}
                   onChange={(e) =>
                     dispatch(setSetting({ [e.target.name]: e.target.value }))
                   }

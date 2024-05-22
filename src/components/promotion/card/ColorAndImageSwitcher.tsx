@@ -49,7 +49,7 @@ const ColorAndImageSwitcher = ({
                 id="colorPicker"
                 type="color"
                 defaultValue={data?.backgroundColor || "#EDF2EE"}
-                className="h-full w-full"
+                className="min-h-full min-w-full"
                 name="backgroundColor"
                 onChange={handleChange}
               />

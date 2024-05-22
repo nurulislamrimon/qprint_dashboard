@@ -3,7 +3,7 @@ import { IVariant } from "@/types";
 
 interface ProductColorSelectorProps {
   variant: IVariant;
-  handleColorSelect?: (variant: IVariant) => void;
+  handleColorSelect: (variant: IVariant) => void;
   activeVariant?: IVariant | null;
 }
 
@@ -25,6 +25,8 @@ const ProductColorSelector = ({
 
   const handleClick = (index: number) => {
     setSelectedCircle(index === selectedCircle ? null : index);
+
+    handleColorSelect(variant);
   };
 
   const renderCircles = () => {
@@ -34,11 +36,11 @@ const ProductColorSelector = ({
         style={{
           border: ` ${
             index === selectedCircle
-              ? `2px solid ${variant?.variantName}`
+              ? `1.8px solid ${variant?.variantName}`
               : "none"
           }`,
         }}
-        className={`w-5 h-5 rounded-full bg-white cursor-pointer flex items-center justify-center border `}
+        className={`w-5 h-5 rounded-full bg-white cursor-pointer flex items-center justify-center  `}
         onClick={() => handleClick(index)}
       >
         <div

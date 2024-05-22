@@ -1,8 +1,6 @@
 "use client";
 
 import ShopSetupSocialMediaLayout from "@/components/ShopSetup/ShopSetupSocialMediaLayout";
-import whatsappImage from "@/assets/whatsapp.svg";
-import messengerImage from "@/assets/messenger.svg";
 import ShopSetupCommonSubmitBTN from "@/components/ShopSetup/ShopSetupCommonSubmitBTN";
 import {
   useCreateSocialMediaMutation,
@@ -10,10 +8,7 @@ import {
 } from "@/store/features/shopSetup/socialMedia/socialMediaApi";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { FormEvent, useLayoutEffect } from "react";
-import {
-  initiateSocialMediaData,
-  setSocialMedia,
-} from "@/store/features/shopSetup/socialMedia/socialMediaSlice";
+import { initiateSocialMediaData } from "@/store/features/shopSetup/socialMedia/socialMediaSlice";
 import SocialMediaLayoutSkeleton from "@/components/shared/skeleton/SocialMediaLayoutSkeleton";
 import { showError } from "@/helpers/showError";
 

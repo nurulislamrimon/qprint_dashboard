@@ -1,6 +1,4 @@
-// WidgetSlice.ts (Redux slice)
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
 export interface IUserSetting {
   fullName: string;
   email: string;
