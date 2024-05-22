@@ -1,46 +1,48 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface ISocialMedia {
-  _id: string;
   mediaName: string;
   isActive: boolean;
-  userName: string;
+  userName?: string;
+  phoneNumber?: string;
 }
 
-const initialState: ISocialMedia[] = [];
+const initialState: { socialMedias?: ISocialMedia[] } = {};
 
 const socialMediaSlice = createSlice({
   name: "socialMediaSlice",
   initialState,
   reducers: {
-    setSocialMedia: (
+    initiateSocialMediaData: (
       state,
-      action: PayloadAction<ISocialMedia | ISocialMedia[]>
+      action: PayloadAction<{ socialMedias?: ISocialMedia[] } | null>
     ) => {
-      if (action.payload && Array.isArray(action.payload)) {
-        console.log("action.payload sp-1", action.payload);
-
-        return action.payload;
-      } else if (action.payload && typeof action.payload === "object") {
-        const newData = action.payload;
-        const isExist = state.find((item) => item._id === newData._id);
-        const index = state.findIndex((item) => item._id === newData._id);
-
-        console.log("action.payload sp-2", action.payload);
-        return isExist
-          ? [...state.slice(0, index), newData, ...state.slice(index + 1)]
-          : [...state, action.payload];
-      } else {
-        console.log("action.payload sp-3", action.payload);
-        return initialState;
+      console.log(action.payload);
+      if (!action.payload) {
+        return;
       }
+      return (state = action.payload);
     },
+    setSocialMedia: (state, action: PayloadAction<ISocialMedia | null>) => {
+      if (!action.payload) {
+        return;
+      }
+      const mediaName = action.payload?.mediaName;
+      const restMedias = state?.socialMedias
+        ? state.socialMedias?.filter(
+            (existMedia) => existMedia.mediaName !== mediaName
+          )
+        : [];
+      state.socialMedias = [...restMedias, action.payload];
+    },
+
     resetSocialMedia: (state) => {
       return initialState;
     },
   },
 });
 
-export const { setSocialMedia, resetSocialMedia } = socialMediaSlice.actions;
+export const { setSocialMedia, resetSocialMedia, initiateSocialMediaData } =
+  socialMediaSlice.actions;
 
 export default socialMediaSlice.reducer;

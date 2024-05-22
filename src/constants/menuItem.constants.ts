@@ -61,7 +61,7 @@ export const menuItems: IMenuItem[] = [
       },
 
       {
-        label: "Order Placed",
+        label: "Order placed",
         key: "orderPlaced",
         link: "/order-placed",
         notify: 40,
@@ -85,7 +85,7 @@ export const menuItems: IMenuItem[] = [
         notify: 18,
       },
       {
-        label: "Cancel",
+        label: "Cancelled",
         key: "cancel",
         link: "/cancel",
         notify: 5,

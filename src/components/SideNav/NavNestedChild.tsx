@@ -1,4 +1,8 @@
 import { IMenuItem } from "@/interfaces/menu-interface";
+import { useGetAllOrderCountQuery } from "@/store/features/dashboard/orderCount/orderCountApi";
+import { useOflineSalesQuery } from "@/store/features/order/offlineOrderApi";
+import { useProductsQuery } from "@/store/features/product/productApi";
+import { useGetAllQuickOrderQuery } from "@/store/features/quickOrder/quickOrderApi";
 import {
   IconBoxSeam,
   IconBrandSafari,
@@ -20,6 +24,66 @@ const NavNestedChild = ({
 }) => {
   const [isExpanded, setExpanded] = useState(false);
 
+  const { data: delivered } = useGetAllOrderCountQuery(
+    "orderStatus.status=Delivered"
+  );
+  const { data: packaging } = useGetAllOrderCountQuery(
+    "orderStatus.status=Packaging"
+  );
+  const { data: shipping } = useGetAllOrderCountQuery(
+    "orderStatus.status=Shipping"
+  );
+  const { data: orderPlaced } = useGetAllOrderCountQuery(
+    "orderStatus.status=Order placed"
+  );
+  const { data: pending } = useGetAllOrderCountQuery(
+    "orderStatus.status=Pending"
+  );
+  const { data: returned } = useGetAllOrderCountQuery(
+    "orderStatus.status=Returned"
+  );
+  const { data: rejected } = useGetAllOrderCountQuery(
+    "orderStatus.status=Rejected"
+  );
+  const { data: cancelled } = useGetAllOrderCountQuery(
+    "orderStatus.status=Cancelled"
+  );
+  const { data: allOrder } = useGetAllOrderCountQuery("");
+  const { data: posSales } = useOflineSalesQuery("");
+  const { data: allProducts } = useProductsQuery("");
+  const { data: quickOrder } = useGetAllQuickOrderQuery("");
+
+  // handle Notify Function
+  const handleNotify = (label: string) => {
+    switch (label) {
+      case "Delivered":
+        return delivered?.data ?? 0;
+      case "All Order":
+        return allOrder?.data ?? 0;
+      case "Packaging":
+        return packaging?.data ?? 0;
+      case "Shipping":
+        return shipping?.data ?? 0;
+      case "Order placed":
+        return orderPlaced?.data ?? 0;
+      case "Pending":
+        return pending?.data ?? 0;
+      case "Returned":
+        return returned?.data ?? 0;
+      case "Rejected":
+        return rejected?.data ?? 0;
+      case "Cancelled":
+        return cancelled?.data ?? 0;
+      case "Sales":
+        return posSales?.meta?.total ?? 0;
+      case "All Products":
+        return allProducts?.meta?.total ?? 0;
+      case "Quick Order":
+        return quickOrder?.meta?.total ?? 0;
+      default:
+        return null;
+    }
+  };
   return (
     <ul className="flex flex-col ">
       <Link
@@ -82,7 +146,7 @@ const NavNestedChild = ({
                 <div
                   className={`p-2 rounded-full text-green-500  bg-green-100  h-6 w-6  flex items-center justify-center text-[12px] `}
                 >
-                  {item?.notify}
+                  {handleNotify(item.label)}
                 </div>
               )}
             </div>

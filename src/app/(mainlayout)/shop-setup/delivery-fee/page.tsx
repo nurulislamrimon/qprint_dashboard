@@ -11,21 +11,23 @@ import {
 import {
   setfreeShippingAmount,
   setInsideAmount,
+  setIsFreeShippingActive,
   setOutsideAmount,
 } from "@/store/features/shopSetup/shippingcharge/shippingChargeSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
-import { useLayoutEffect, useState } from "react";
+import { is } from "date-fns/locale";
+import { useLayoutEffect } from "react";
 import { toast } from "react-toastify";
 
 const DeliveryFee = () => {
   const dispatch = useAppDispatch();
-  const { inside, outside, freeShippingMinOrderAmount } = useAppSelector(
-    (state) => state.shippingCharge
-  );
-  const [addShippingCharge] = useAddShippingChargeMutation();
+  const { inside, outside, freeShippingMinOrderAmount, isFreeShippingActive } =
+    useAppSelector((state) => state.shippingCharge);
+  const [addShippingCharge, { isLoading: loading }] =
+    useAddShippingChargeMutation();
   const { data } = useGetShippinghargeQuery("");
 
-  const [loading, setLoading] = useState(false);
+  console.log(isFreeShippingActive);
 
   useLayoutEffect(() => {
     dispatch(setInsideAmount(Number(data?.data?.inside)));
@@ -33,17 +35,18 @@ const DeliveryFee = () => {
     dispatch(
       setfreeShippingAmount(Number(data?.data?.freeShippingMinOrderAmount))
     );
+    dispatch(setIsFreeShippingActive(data?.data?.isFreeShippingActive));
   }, [data, dispatch]);
 
   // handle submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setLoading(true);
     e.preventDefault();
     try {
       const res = await addShippingCharge({
         inside,
         outside,
         freeShippingMinOrderAmount,
+        isFreeShippingActive,
       });
 
       if ("data" in res) {
@@ -54,12 +57,12 @@ const DeliveryFee = () => {
       }
     } catch (err: any) {
       console.error(err.message);
-    } finally {
-      setLoading(false);
     }
   };
 
-  function handleOnChange(_id: any, arg1: boolean): void {}
+  const handleOnChange = (_id: any, arg1: boolean): void => {
+    console.log("hkh");
+  };
 
   return (
     <form className="p-8 relative overflow-hidden" onSubmit={handleSubmit}>
@@ -83,11 +86,16 @@ const DeliveryFee = () => {
         />
       </div>
       <hr className="w-full h-[1px] bg-black my-8" />
-      <div>
+      <div className="mb-4">
         <h3>Free Shipping Feature</h3>{" "}
-        <button onClick={() => handleOnChange(data?._id, !data?.isActive)}>
-          {data?.isActive === true ? <RightToggle /> : <LeftToggle />}
-        </button>
+        <div
+          className="max-w-fit"
+          onClick={() =>
+            dispatch(setIsFreeShippingActive(!isFreeShippingActive))
+          }
+        >
+          {isFreeShippingActive === true ? <RightToggle /> : <LeftToggle />}
+        </div>
       </div>
       <CustomGlobalInput
         label="Free Shipping Up To"

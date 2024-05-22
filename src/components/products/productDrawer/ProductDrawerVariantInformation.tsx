@@ -2,46 +2,37 @@
 import ProductColorSelector from "@/components/pos/ProductColorSelector";
 import CustomGlobalInput from "@/components/shared/CustomGlobalInput";
 import Loader from "@/components/shared/loaders/Loader";
-import { useUpdateProductMutation } from "@/store/features/product/productApi";
-import { setStock } from "@/store/features/product/updateProductStockSlice.ts";
+import {
+  useAddStockItemMutation,
+  useUpdateProductMutation,
+} from "@/store/features/product/productApi";
+import { setInStock } from "@/store/features/product/updateProductStockSlice.ts";
+
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { IVariant } from "@/types";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-interface StockValues {
-  [key: string]: number; // Define the keys as strings and the values as numbers
-}
 const ProductDrawerVariantInformation = ({ data, id }: any) => {
-  const [selectedVariant, setSelectedVariant] = useState<IVariant | null>();
   const [loading, setLoading] = useState(false);
+
   const dispatch = useAppDispatch();
 
-  const { inStock } = useAppSelector((state) => state.updateProductStockSlice);
-
-  const [updateProduct] = useUpdateProductMutation();
-
-  const handleColorSelect = (variant: IVariant) => {
-    setSelectedVariant(variant);
-  };
+  const sliceData = useAppSelector((state) => state.updateProductStockSlice);
+  console.log(sliceData);
+  const [addStockItem] = useAddStockItemMutation();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
 
-    // Assuming id and inStock are defined elsewhere in your component/state
-    if (typeof id === "undefined" || id === null) {
-      console.error("Product ID is not defined");
-      setLoading(false);
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("id", id.toString());
-    formData.append("inStock", inStock.toString());
+    const data = {
+      id,
+      variants: sliceData,
+    };
 
     try {
-      const res = await updateProduct({ id, data: formData });
+      const res = await addStockItem(data);
       console.log(res);
       if ("data" in res) {
         toast.success(res?.data?.message);
@@ -64,13 +55,14 @@ const ProductDrawerVariantInformation = ({ data, id }: any) => {
                 <label className="text-black-opacity-60 hidden md:block">
                   Item Variant
                 </label>
-                <div className="flex flex-col-reverse md:flex-row md:items-center gap-2.5  bg-blue-opacity-10 p-3.5 md:py-3 md:pl-3.5 md:pr-12 rounded-custom-5px">
-                  <ProductColorSelector
-                    key={i}
-                    variant={variant}
-                    handleColorSelect={handleColorSelect}
-                  />
-                  <span>
+                <div className="flex flex-col-reverse md:flex-row md:items-center gap-2.5  bg-[#F3F3F3] p-3.5 md:py-3 md:pl-3.5 md:pr-12 rounded-custom-5px">
+                  <div
+                    style={{
+                      backgroundColor: `${variant?.variantName}`,
+                    }}
+                    className={`w-5 h-5 rounded-full`}
+                  ></div>
+                  <span className="hidden md:block text-base">
                     {variant?.variantName ? variant?.variantName : ""}
                   </span>
                 </div>
@@ -79,7 +71,14 @@ const ProductDrawerVariantInformation = ({ data, id }: any) => {
                 label={"Add new in stock"}
                 type={"number"}
                 placeholder="Add new in stock"
-                onChange={(e) => dispatch(setStock(e.target.value))}
+                onChange={(e) =>
+                  dispatch(
+                    setInStock({
+                      variantName: variant?.variantName,
+                      quantity: Number(e.target.value),
+                    })
+                  )
+                }
               />
             </div>
             <span className="text-black-opacity-60 text-sm ">

@@ -19,6 +19,15 @@ export const categoryApi: any = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["category"],
     }),
+    // create subcategory
+    createSubcategory: build.mutation({
+      query: (data) => ({
+        url: `/category/${data.id}`,
+        method: "PUT",
+        data: data.data,
+      }),
+      invalidatesTags: ["category"],
+    }),
 
     // get a single category
 
@@ -39,10 +48,20 @@ export const categoryApi: any = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["category"],
     }),
+    // delete subcategory
+    deleteSubategory: build.mutation({
+      query: (data) => ({
+        url: `/category/${data.id}`,
+        method: "PUT",
+        data: data.data,
+      }),
+      invalidatesTags: ["category"],
+    }),
+
     // update sub category
     updateSubCategory: build.mutation({
       query: (data) => ({
-        url: `/category/${data.id}`,
+        url: `/category/subcategory/${data.id}`,
         method: "PUT",
         data: data.data,
       }),
@@ -68,4 +87,6 @@ export const {
   useUpdateSubCategoryMutation,
   useCreateCategoryMutation,
   useDeleteCategoryMutation,
+  useCreateSubcategoryMutation,
+  useDeleteSubategoryMutation,
 } = categoryApi;

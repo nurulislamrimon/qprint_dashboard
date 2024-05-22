@@ -105,7 +105,9 @@ const PrintingRequestDrawer = ({ openModal, handleCloseModal, id }: any) => {
               />
             </div>
             <PrintingDeliveryAddress data={printingRequestData} />
-            <Attatchment />
+            <Attatchment
+              filePath={printingRequestData?.data?.printingRequestFile}
+            />
             <OrderTable data={printingRequestData} />
             <div className="flex items-center md:justify-end justify-normal p-5">
               <OrderCalculation data={printingRequestData} />

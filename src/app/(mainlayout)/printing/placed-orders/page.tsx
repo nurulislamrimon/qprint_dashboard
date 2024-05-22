@@ -15,6 +15,7 @@ const PlacedOrders = () => {
   const { data: orderPlaced, isLoading } = usePrintingRequestsQuery(
     "orderStatus.status=Order placed"
   );
+  console.log(orderPlaced?.data, "Hello");
 
   const [openDrawerId, setOpenDrawerId] = useState<string | false>(false);
 

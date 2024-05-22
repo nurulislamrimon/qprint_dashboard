@@ -1,22 +1,26 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface InStock {
-  inStock: number;
+interface IInStock {
+  variantName: string;
+  quantity: number;
 }
 
-const initialState: InStock = {
-  inStock: 0,
-};
+const initialState: IInStock[] = [];
 
 const updateProductStockSlice = createSlice({
   name: "updateProductStock",
   initialState,
   reducers: {
-    setStock: (state, action) => {
-      state.inStock = action.payload;
+    setInStock: (state, action: PayloadAction<IInStock>) => {
+      const variantName = action.payload.variantName;
+      const restVariants = state.filter(
+        (existVariant) => existVariant.variantName !== variantName
+      );
+
+      return (state = [...restVariants, action.payload]);
     },
   },
 });
 
-export const { setStock } = updateProductStockSlice.actions;
+export const { setInStock } = updateProductStockSlice.actions;
 export default updateProductStockSlice.reducer;

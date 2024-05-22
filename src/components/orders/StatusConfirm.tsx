@@ -75,7 +75,7 @@ const StatusConfirm = ({
         </div>
         {option === "Rejected" ? (
           <div className="flex items-center justify-center">
-            <div className="text-start space-y-2 [&>:nth-child(1)]:text-gray-400">
+            <div className=" flex gap-2 flex-col [&>:nth-child(1)]:text-gray-400 [&>:nth-child(1)]:text-start [&>:nth-child(3)]:text-start">
               <label htmlFor="reasonOfRejection">Reason of Rejection</label>
               <input
                 type="text"

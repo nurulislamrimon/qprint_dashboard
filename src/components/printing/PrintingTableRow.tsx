@@ -1,6 +1,10 @@
-import pdfLogo from "@/assets/pdf_logo.png";
 import { getDateFormat } from "@/utils/getDateFormat";
 import Image from "next/image";
+import {
+  getDisplayName,
+  getFileExtension,
+  getLogoForFile,
+} from "@/utils/pdfFileShorter";
 
 const PrintingTableRow = ({ data }: any) => {
   return (
@@ -44,18 +48,35 @@ const PrintingTableRow = ({ data }: any) => {
           {data?.orderStatus?.status}
         </span>
       </td>
-      <td className=" px-3.5 py-3">
-        <div className="flex items-center justify-center gap-2.5">
-          <div className="md:w-5 md:h-5 w-3 h-3">
-            <Image src={pdfLogo} alt="pdf logo" className="w-full" />
-          </div>
-          {data?.printingRequestFile?.length >= 10 ? (
-            <span className="md:text-base text-xs">
-              {data?.printingRequestFile?.slice(0, 10)}
-            </span>
-          ) : (
-            <span> {data?.printingRequestFile}</span>
-          )}
+      <td className="px-3.5 py-3">
+        <div className="flex items-center justify-center gap-1">
+          {data?.printingRequestFile &&
+            data.printingRequestFile !== "undefined" && (
+              <div className="w-5 h-5 shrink-0">
+                {(() => {
+                  const extension = getFileExtension(
+                    data.printingRequestFile
+                  ) as "pdf" | "png" | "jpg" | "jpeg" | "svg" | "psd";
+                  const logoSrc = getLogoForFile(extension);
+                  if (logoSrc) {
+                    return (
+                      <Image
+                        src={logoSrc}
+                        alt={"Printing File"}
+                        className="w-full h-full"
+                      />
+                    );
+                  }
+                  return null;
+                })()}
+              </div>
+            )}
+          <span className="line-clamp-2 text-xs md:text-base">
+            {data?.printingRequestFile &&
+            data.printingRequestFile !== "undefined"
+              ? getDisplayName(data.printingRequestFile)
+              : "No Attachment"}
+          </span>
         </div>
       </td>
     </>

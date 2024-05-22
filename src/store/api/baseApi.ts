@@ -30,5 +30,6 @@ export const baseApi = createApi({
     "best-deals",
     "social-media",
     "review",
+    "order-counted",
   ],
 });

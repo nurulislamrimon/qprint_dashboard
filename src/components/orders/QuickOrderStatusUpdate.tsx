@@ -11,6 +11,7 @@ const QuickOrderStatusUpdate = ({
   data,
   quickOrderUpdate,
 }: any) => {
+  const [reasonError, setReasonError] = useState("");
   useEffect(() => {
     if (!isVisible) {
       handleQuickOrderModal();
@@ -21,28 +22,37 @@ const QuickOrderStatusUpdate = ({
       {
         id: data?._id,
         data: {
-          status: option,
+          status: option.trim(), // Trim the status value
         },
       };
+
     if (option === "Rejected") {
       const reasonOfRejectionInput = document.getElementById(
         "reasonOfRejection"
       ) as HTMLInputElement | null;
-      const reasonOfRejection = reasonOfRejectionInput?.value || "";
+      const reasonOfRejection = reasonOfRejectionInput?.value.trim() || ""; // Trim the reason of rejection
 
-      // Update the value object with the reasonOfRejection
-      value.data.reasonOfRejection = reasonOfRejection;
+      if (!reasonOfRejection) {
+        setReasonError("Reason of rejection is required");
+        return;
+      } else {
+        setReasonError("");
+        value.data.reasonOfRejection = reasonOfRejection;
+      }
     }
+
     try {
       const res = await quickOrderUpdate(value);
-
       if (res?.data) {
-        toast.success(res.data.message);
-      } else if (res?.error) {
-        toast.error(res.error.message);
+        toast.success(res?.data?.message);
+      }
+
+      if (res?.error) {
+        toast.error(res?.error.message);
+        // console.log(res?.error.message);
       }
     } catch (error) {
-      console.error("Error:", error);
+      // console.error("Error updating status:", error); // Debugging line
     }
     handleQuickOrderModal();
   };
@@ -51,28 +61,35 @@ const QuickOrderStatusUpdate = ({
     <CustomGlobalModal
       isVisible={isVisible}
       setOpenModal={handleQuickOrderModal}
-      mainClassName="md:w-[365px] w-[300px] h-[220px]  md:h-[250px]"
+      mainClassName={`w-[300px] ${
+        option === "Rejected"
+          ? "md:w-[365px] h-[220px] md:h-[300px]"
+          : "md:w-[365px] h-[220px] md:h-[250px]"
+      }`}
     >
       <div className="md:py-[30px] px-5 py-5 md:gap-[30px] gap-5 flex flex-col items-center">
         <div>
-          <IconAlertCircle className="text-fuchsia-500 w-11 h-11" />
+          <IconAlertCircle className="text-fuchsia-800 w-11 h-11" />
         </div>
         {option === "Rejected" ? (
-          <div className="text-start space-y-1">
-            <label htmlFor="">reasonOfRejection</label>
-            {/* <input
-              type="text"
-              name=""
-              id=""
-              className="w-[300px] resize-none border py-2.5 pl-5 outline-none rounded-custom-5px active:border-main-border-color focus:border-main-border-color"
-            /> */}
-
-            <input
-              type="text"
-              id="reasonOfRejection"
-              name=""
-              className="w-[300px] resize-none border py-2.5 pl-5 outline-none rounded-custom-5px active:border-main-border-color focus:border-main-border-color"
-            />
+          <div className="flex items-center justify-center">
+            <div className=" flex gap-2 flex-col [&>:nth-child(1)]:text-gray-400 [&>:nth-child(1)]:text-start [&>:nth-child(3)]:text-start">
+              <label htmlFor="reasonOfRejection">Reason of Rejection</label>
+              <input
+                type="text"
+                id="reasonOfRejection"
+                name=""
+                className="w-[300px] resize-none border py-2.5 pl-5 outline-none rounded-custom-5px active:border-main-border-color focus:border-main-border-color"
+                placeholder="Reason"
+              />
+              <p
+                className={`mt-1 text-xs ${
+                  reasonError ? "text-red-500" : "text-gray-500"
+                }`}
+              >
+                {reasonError || "*This field is required"}
+              </p>
+            </div>
           </div>
         ) : (
           <span>

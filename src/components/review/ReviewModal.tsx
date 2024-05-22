@@ -22,8 +22,7 @@ import { useAppSelector } from "@/store/hook";
 
 const ReviewModal = ({ openModal, handleCloseModal, id, customerId }: any) => {
   const { data, isLoading } = useReviewQuery(id);
-  const { reply, isEdited } = useAppSelector((state) => state.reply);
-  console.log(reply, isEdited);
+  const { reply, id: isEdited } = useAppSelector((state) => state.reply);
 
   const { data: customerInfo } = useGetUserByIdQuery(customerId);
 
@@ -173,16 +172,16 @@ const ReviewModal = ({ openModal, handleCloseModal, id, customerId }: any) => {
             </div>
           </div>
           {/* ==Author Reply Button== */}
-
-          <div
-            className={`fixed bottom-2 mx-auto md:w-[460px] w-[calc(100vw-40px)]
-      }`}
-          >
-            <ReplySendBTN id={id} />
-            <span className="text-black-opacity-50 italic text-sm">
-              This reply will be on product view page
-            </span>
-          </div>
+          {(!data?.data?.reply || isEdited === data?.data?.id) && (
+            <div
+              className={`fixed bottom-2 mx-auto md:w-[460px] w-[calc(100vw-40px)]`}
+            >
+              <ReplySendBTN id={id} />
+              <span className="text-black-opacity-50 italic text-sm">
+                This reply will be on product view page
+              </span>
+            </div>
+          )}
         </div>
       </CustomGlobalDrawer>
       {deleteModal && (

@@ -2,12 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type Reply = {
   reply: string;
-  isEdited: boolean;
+  id: string;
 };
 
 const initialState: Reply = {
   reply: "",
-  isEdited: false,
+  id: "",
 };
 
 const replySlice = createSlice({
@@ -17,8 +17,8 @@ const replySlice = createSlice({
     setReply: (state, action: PayloadAction<string>) => {
       state.reply = action.payload;
     },
-    setIsEdited: (state, action: PayloadAction<boolean>) => {
-      state.isEdited = action.payload;
+    setIsEdited: (state, action: PayloadAction<string>) => {
+      state.id = action.payload;
     },
     clearReplyData: (state) => {
       state.reply = "";

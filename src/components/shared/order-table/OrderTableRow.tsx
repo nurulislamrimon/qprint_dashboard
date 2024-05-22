@@ -152,6 +152,16 @@ const OrderTableRow = ({
       <td className="pl-2.5">
         <span className=" border hover:border-red-regular py-2 px-1 rounded-custom-5px text-sm hover:text-navy-blue cursor-pointer [width:clamp(58.5px,4vw,200px)] md:w-full">
           <select
+            disabled={
+              (datas &&
+                ["Rejected", "Returned", "Cancelled"].includes(
+                  datas.orderStatus.status
+                )) ||
+              (quickOrder &&
+                ["Rejected", "Returned", "Cancelled"].includes(
+                  quickOrder.orderStatus.status
+                ))
+            }
             onClick={(e) => e.stopPropagation()}
             className="outline-none cursor-pointer py-2 bg-transparent hover:bg-transparent w-auto"
             value={selectedOption}

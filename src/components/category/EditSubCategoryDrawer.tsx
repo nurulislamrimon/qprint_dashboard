@@ -9,6 +9,7 @@ import { setSubCategory } from "@/store/features/category/subCategorySlice";
 import { useLayoutEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Loader from "../shared/loaders/Loader";
+import { showError } from "@/helpers/showError";
 
 interface EditSubCategoryDrawerProps {
   data: any;
@@ -23,9 +24,9 @@ const EditSubCategoryDrawer = ({
   setOpenEditDrawer,
   data,
 }: EditSubCategoryDrawerProps) => {
-  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
-  const [updateSubCategory] = useUpdateSubCategoryMutation();
+  const [updateSubCategory, { isLoading: loading }] =
+    useUpdateSubCategoryMutation();
   const { subcategoryName } = useAppSelector((state) => state.subCategorySlice);
 
   useLayoutEffect(() => {
@@ -34,7 +35,6 @@ const EditSubCategoryDrawer = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
 
     try {
       const res = await updateSubCategory({
@@ -43,17 +43,13 @@ const EditSubCategoryDrawer = ({
       });
 
       if (res?.data) {
-        toast.success(res?.data?.message);
+        toast.success(res.data.message);
+        // @ts-ignore
+        setOpenEditDrawer();
       }
-      if (res?.error) {
-        toast.error(res?.error?.data?.message);
-      }
-      // @ts-ignore
-      setOpenEditDrawer();
     } catch (error) {
-      console.log(error);
+      showError(error);
     } finally {
-      setLoading(false);
     }
   };
   return (

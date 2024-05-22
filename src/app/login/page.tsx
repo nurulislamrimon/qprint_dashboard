@@ -3,27 +3,33 @@ import { useUserLoginMutation } from "@/store/features/auth/authApi";
 import { useRouter } from "next/navigation";
 import { storeUserInfo } from "@/services/auth.service";
 import { RootState } from "@/store/store";
-import { setPhoneNumber, setPassword } from "@/store/features/auth/authSlice";
+import {
+  setPhoneNumber,
+  setPassword,
+  setIsDayExtended,
+} from "@/store/features/auth/authSlice";
 import CustomGlobalInput from "@/components/shared/CustomGlobalInput";
 import ButtonPrimary from "@/components/ui/btn/ButtonPrimary.";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import logo from "@/assets/logo.png";
 import Image from "next/image";
 import { showError } from "@/helpers/showError";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import TransparentLoader from "@/components/shared/TransparentLoader";
 import Loader from "@/components/shared/loaders/Loader";
 import { isAuthorizedRole } from "@/utils/isAuthorizedRole";
 interface ILogin {
   email: string;
   password: string;
+  isDayExtended?: boolean;
 }
 
 const Login = () => {
   const dispatch = useAppDispatch();
-  const { email, password }: ILogin = useAppSelector(
+  const { email, password, isDayExtended }: ILogin = useAppSelector(
     (state: RootState) => state.authSlice
   );
+
   const [userLogin, { error, isLoading }] = useUserLoginMutation();
   const router = useRouter();
 
@@ -36,7 +42,12 @@ const Login = () => {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await userLogin({ email, password }).unwrap();
+      const res = await userLogin({
+        email,
+        password,
+        isDayExtended: isDayExtended,
+      }).unwrap();
+
       if (
         !res?.data?.accessToken ||
         !res?.data?.user ||
@@ -97,6 +108,7 @@ const Login = () => {
 
               <div className="flex items-center justify-start gap-2">
                 <input
+                  onChange={(e) => dispatch(setIsDayExtended(e.target.checked))}
                   type="checkbox"
                   id="remember-me"
                   name="remember-me"

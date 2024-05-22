@@ -7,6 +7,7 @@ const PosOrderHomePage = () => {
   const data = useAppSelector((state) => state.posSaleSlice);
 
   const { data: totalOfflineSales } = useOflineSalesQuery("");
+  console.log("totalOfflineSales", totalOfflineSales);
 
   return (
     <div className="bg-white  flex flex-col gap-5 mt-1 h-[calc(100vh-90px)] overflow-y-scroll">
@@ -16,7 +17,7 @@ const PosOrderHomePage = () => {
             Order Placed
           </span>
           <div className="bg-blue-opacity-10  rounded-full px-2 py-1 text-blue-color text-center text-[10px]">
-            {totalOfflineSales?.data?.length}
+            {totalOfflineSales?.meta?.total}
           </div>
         </div>
       </div>

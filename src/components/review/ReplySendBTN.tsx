@@ -15,6 +15,9 @@ const ReplySendBTN = (id: { id: string }) => {
 
   useLayoutEffect(() => {
     dispatch(setReply(data?.data?.reply));
+    if (data?.data?.reply === undefined) {
+      dispatch(clearReplyData());
+    }
   }, [dispatch, data]);
 
   const [updateReview] = useUpdateReviewMutation();
@@ -25,7 +28,7 @@ const ReplySendBTN = (id: { id: string }) => {
     e.preventDefault();
     try {
       const res = await updateReview({ reply, id: id.id });
-      clearReplyData();
+      dispatch(clearReplyData());
     } catch (error) {
       console.log(error);
     } finally {

@@ -8,6 +8,8 @@ import OrderTableDrawer from "../shared/order-table/OrderTableDrawer";
 import { useGetOnlineOrderQuery } from "@/store/features/order/onlineOrderApi";
 import DateRangePicker from "../shared/DateRangePicker";
 import OrderTableSkeleton from "../shared/skeleton/OrderTableSkeleton";
+import { useGetAllOrderCountQuery } from "@/store/features/dashboard/orderCount/orderCountApi";
+import { useOflineSalesQuery } from "@/store/features/order/offlineOrderApi";
 
 const PackagingTable = () => {
   const [status, setStatus] = useState("Packaging");
@@ -20,6 +22,9 @@ const PackagingTable = () => {
         : ""
     }`
   );
+  const { data: posSales } = useOflineSalesQuery("");
+  console.log("posOrder", posSales);
+
   const [openDrawerId, setOpenDrawerId] = useState<string | false>(false);
 
   // Handle Drawer funtion

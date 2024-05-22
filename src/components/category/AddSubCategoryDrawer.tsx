@@ -1,4 +1,4 @@
-import { useUpdateSubCategoryMutation } from "@/store/features/category/categoryApi";
+import { useCreateSubcategoryMutation } from "@/store/features/category/categoryApi";
 import CustomGlobalDrawer from "../shared/CustomGlobalDrawer";
 import CustomGlobalInput from "../shared/CustomGlobalInput";
 import DrawerModalCloseBTN from "../shared/DrawerModalCloseBTN";
@@ -21,7 +21,7 @@ const AddSubCategoryDrawer = ({
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const { subcategoryName } = useAppSelector((state) => state.subCategorySlice);
-  const [updateSubCategory] = useUpdateSubCategoryMutation();
+  const [createSubcategory] = useCreateSubcategoryMutation();
   const formData = new FormData();
 
   // handle submit
@@ -33,7 +33,7 @@ const AddSubCategoryDrawer = ({
       formData.append("createSubcategories", subcategoryName);
 
       try {
-        const res = await updateSubCategory({ data: formData, id: id });
+        const res = await createSubcategory({ data: formData, id: id });
         handleModal();
         if (res?.data) {
           toast.success(res?.data?.message);

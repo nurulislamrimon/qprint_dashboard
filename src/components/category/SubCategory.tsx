@@ -2,7 +2,11 @@
 import { IconEdit, IconTrashX } from "@tabler/icons-react";
 import { useState } from "react";
 import EditSubCategoryDrawer from "./EditSubCategoryDrawer";
-import { useUpdateSubCategoryMutation } from "@/store/features/category/categoryApi";
+import {
+  useDeleteSubategoryMutation,
+  useUpdateCategoryMutation,
+  useUpdateSubCategoryMutation,
+} from "@/store/features/category/categoryApi";
 import SubCategoryDeleteModal from "./SubCategoryDeleteModal";
 import { toast } from "react-toastify";
 interface SubCategoryProps {
@@ -10,11 +14,10 @@ interface SubCategoryProps {
 }
 
 const SubCategory = ({ data, id }: any) => {
-  // console.log(data);
-  const [loading, setLoading] = useState(false);
   const [openEditDrawer, setOpenEditDrawer] = useState(false);
   const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
-  const [updateSubCategory] = useUpdateSubCategoryMutation();
+  const [deleteSubategory, { isLoading: loading }] =
+    useDeleteSubategoryMutation();
   const formData = new FormData();
 
   const handleCloseConfirmationModal = () => {
@@ -29,27 +32,30 @@ const SubCategory = ({ data, id }: any) => {
   // handle delete
   const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setLoading(true);
 
     formData.append("deleteSubcategories", data?.subcategoryId);
 
+    const value = {
+      data: formData,
+      id: id,
+      sub: data?.subcategoryId,
+    };
+    console.log(value);
     try {
-      const res = await updateSubCategory({
+      const res = await deleteSubategory({
         data: formData,
-        id: data?.subcategoryId,
+        id: id,
       });
+      console.log(res);
+      handleCloseConfirmationModal();
       if (res?.data) {
         toast.success(res?.data?.message);
-        handleCloseConfirmationModal();
       }
       if (res?.error) {
         toast.error(res?.error.message);
       }
-      console.log(res);
     } catch (error) {
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 
