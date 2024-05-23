@@ -11,11 +11,12 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import DateRangePicker from "../shared/DateRangePicker";
+import EarningStatisticsChartSkeleton from "../shared/skeleton/EarningStatisticsChartSkaleton";
 
 const SellingStatisticsChart = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const { data } = useGetEarningChartAllAmountQuery(
+  const { data, isLoading } = useGetEarningChartAllAmountQuery(
     `createdAt[lte]=${endDate}&createdAt[gte]=${startDate}`
   );
 
@@ -59,48 +60,54 @@ const SellingStatisticsChart = () => {
         </div>
       </div>
       <div className="w-full [height:clamp(300px,50vw,400px)] mx-auto pr-2.5 sm:pl-3.5 lg:pl-0">
-        <ResponsiveContainer className={"[height:clamp(300px,50vw,400px)]"}>
-          <AreaChart
-            data={data?.data}
-            margin={{
-              top: 22,
-              right: 0,
-              left: 30,
-              bottom: 0,
-            }}
-          >
-            <defs>
-              <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="55%" stopColor="#7f35cd80" stopOpacity={1} />
-                <stop offset="96%" stopColor="#fff" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid
-              horizontal={false}
-              // vertical={false}
-              strokeDasharray="3 3"
-            />
-            <XAxis
-              dataKey="createdAt"
-              className="[font-size:clamp(12px,2vw,14px)]"
-            />
+        {isLoading ? (
+          <div className="h-full">
+            <EarningStatisticsChartSkeleton />
+          </div>
+        ) : (
+          <ResponsiveContainer className={"[height:clamp(300px,50vw,400px)]"}>
+            <AreaChart
+              data={data?.data}
+              margin={{
+                top: 22,
+                right: 0,
+                left: 30,
+                bottom: 0,
+              }}
+            >
+              <defs>
+                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="55%" stopColor="#7f35cd80" stopOpacity={1} />
+                  <stop offset="96%" stopColor="#fff" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid
+                horizontal={false}
+                // vertical={false}
+                strokeDasharray="3 3"
+              />
+              <XAxis
+                dataKey="createdAt"
+                className="[font-size:clamp(12px,2vw,14px)]"
+              />
 
-            <YAxis
-              tickFormatter={formatYAxisTick}
-              // domain={[0, "dataMax"]}
-              className="[font-size:clamp(12px,2vw,15px)]"
-              tickMargin={10}
-            />
-            <Tooltip />
-            <Area
-              type="monotone"
-              dataKey="totalAmount"
-              stroke="#7f35cdcc"
-              fill="url(#colorUv)"
-              fillOpacity={0.3}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+              <YAxis
+                tickFormatter={formatYAxisTick}
+                // domain={[0, "dataMax"]}
+                className="[font-size:clamp(12px,2vw,15px)]"
+                tickMargin={10}
+              />
+              <Tooltip />
+              <Area
+                type="monotone"
+                dataKey="totalAmount"
+                stroke="#7f35cdcc"
+                fill="url(#colorUv)"
+                fillOpacity={0.3}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        )}
       </div>
     </div>
   );

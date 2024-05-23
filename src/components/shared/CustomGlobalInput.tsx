@@ -3,13 +3,13 @@ import { ReactNode } from "react";
 interface CustomGlobalInputProps {
   label?: string;
   type?:
-  | "text"
-  | "number"
-  | "email"
-  | "textarea"
-  | "password"
-  | "date"
-  | undefined;
+    | "text"
+    | "number"
+    | "email"
+    | "textarea"
+    | "password"
+    | "date"
+    | undefined;
   placeholder?: string;
   className?: string;
   containerStyle?: string;
@@ -18,6 +18,7 @@ interface CustomGlobalInputProps {
   name?: string;
   value?: string | number | any;
   defaultValue?: string | number;
+  required?: boolean;
   onChange?: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
@@ -34,6 +35,7 @@ const CustomGlobalInput = ({
   disabled,
   name,
   value,
+  required,
   onChange,
 }: CustomGlobalInputProps) => {
   return (

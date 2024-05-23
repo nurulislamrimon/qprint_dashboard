@@ -4,11 +4,10 @@ import { IconTrash } from "@tabler/icons-react";
 import { IconEditCircle } from "@tabler/icons-react";
 import qLogo from "@/assets/Q.svg";
 import Image from "next/image";
-import React from "react";
 import { useAppDispatch } from "@/store/hook";
 import { setIsEdited, setReply } from "@/store/features/review/replySlice";
 
-const AuthorReply = ({ data }: any) => {
+const AuthorReply = ({ data, handleDeleteModal }: any) => {
   const dispatch = useAppDispatch();
 
   return (
@@ -31,20 +30,23 @@ const AuthorReply = ({ data }: any) => {
           </div>
         </div>
         <div className="flex items-center justify-center gap-5">
-          <div
+          <button
+            className="hover:text-blue-600 transition-all"
             onClick={() => {
               dispatch(setIsEdited(data?.data?._id));
               setReply(data?.data?.reply);
             }}
           >
             <IconEditCircle stroke={1} />
-          </div>
-          <div>
+          </button>
+          <button
+            className="hover:text-red-500 transition-all"
+            onClick={() => handleDeleteModal()}
+          >
             <IconTrash stroke={1} />
-          </div>
+          </button>
         </div>
       </div>
-      {/* reply */}
       <p className="mt-4 text-black-opacity-60 text-sm">{data?.data?.reply}</p>
     </div>
   );

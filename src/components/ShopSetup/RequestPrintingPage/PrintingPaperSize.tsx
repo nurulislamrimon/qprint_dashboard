@@ -24,7 +24,6 @@ const PrintingPaperSize = () => {
   const [openModal, setOpenModal] = useState(false);
   const [openSettingModal, setOpenSettingModal] = useState(false);
   const { data: allPaperSize, isLoading } = useAllPaperSizeQuery("");
-  console.log(allPaperSize);
   const { data: paperUnit } = usePaperUnitQuery("");
 
   const handleCloseSettingModal = () => {

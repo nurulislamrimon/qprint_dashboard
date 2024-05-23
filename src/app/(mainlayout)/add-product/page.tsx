@@ -9,12 +9,10 @@ import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { useCreateProductMutation } from "@/store/features/product/productApi";
 import AddProductUi from "./_components/AddProductUi";
 import { ISpecification, IVariant } from "@/types";
-import { ChangeEvent, Fragment } from "react";
+import { ChangeEvent } from "react";
 import { showError } from "@/helpers/showError";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import Loading from "../loading";
-import TransparentLoader from "@/components/shared/TransparentLoader";
 import Loader from "@/components/shared/loaders/Loader";
 
 const AddProduct = () => {

@@ -4,9 +4,10 @@ import { IconPlus } from "@tabler/icons-react";
 import SubCategory from "./SubCategory";
 import AddSubCategoryDrawer from "./AddSubCategoryDrawer";
 import { useCategoriesQuery } from "@/store/features/category/categoryApi";
-import { useAppSelector } from "@/store/hook";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
 import CategorySkeleton from "../shared/skeleton/CategorySkeleton";
 import MainCategoryItem from "./MainCategoryItem";
+import { setSubCategoryProps } from "@/store/features/category/subCategoryPropsSlice";
 
 export type Category = {
   _id: string;
@@ -18,6 +19,8 @@ export type Category = {
 
 const CategoryHomePage = () => {
   const { data, isLoading } = useCategoriesQuery();
+  const dispatch = useAppDispatch();
+
   const { _id, subcategories } = useAppSelector(
     (state) => state.subCategoryPropsSlice
   );
@@ -28,8 +31,21 @@ const CategoryHomePage = () => {
     setOpenDrawer((prevState) => !prevState);
   };
 
-  const containerRef = useRef<HTMLDivElement>(null);
+  // set initial subcategories and updated subcategories
+  useEffect(() => {
+    if (data?.data && data?.data.length && _id) {
+      dispatch(
+        setSubCategoryProps(
+          data?.data.find((item: { _id: string }) => item._id === _id)
+        )
+      );
+    } else {
+      data?.data?.length && dispatch(setSubCategoryProps(data?.data[0]));
+    }
+  }, [data?.data, dispatch, _id]);
 
+  //  for mobile version only
+  const containerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const container = containerRef.current;
 
@@ -47,6 +63,7 @@ const CategoryHomePage = () => {
       };
     }
   }, [containerRef]);
+
   return (
     <div className="mt-1 bg-white md:px-5 md:py-7 px-3 py-5 h-[calc(100vh-90px)] overflow-y-auto grid grid-cols-1 gap-7 md:grid-cols-4">
       <div className="md:border-r md:border-b-0 border-b flex flex-col gap-[30px]">
@@ -82,7 +99,12 @@ const CategoryHomePage = () => {
         <div className="flex flex-col mt-[30px]">
           <div className="flex flex-col gap-3.5 pb-3.5">
             {subcategories?.map((subCategory: any) => (
-              <SubCategory key={subCategory?._id} data={subCategory} id={_id} />
+              <SubCategory
+                key={subCategory?._id}
+                data={subCategory}
+                initialLoading={isLoading}
+                id={_id}
+              />
             ))}
           </div>
 

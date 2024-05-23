@@ -23,11 +23,15 @@ const DeliveryFee = () => {
   const dispatch = useAppDispatch();
   const { inside, outside, freeShippingMinOrderAmount, isFreeShippingActive } =
     useAppSelector((state) => state.shippingCharge);
-  const [addShippingCharge, { isLoading: loading }] =
+  const [addShippingCharge, { isLoading: updateLoading }] =
     useAddShippingChargeMutation();
-  const { data } = useGetShippinghargeQuery("");
+  const {
+    data,
+    error: updateError,
+    isLoading: initialLoading,
+  } = useGetShippinghargeQuery("");
 
-  console.log(isFreeShippingActive);
+  const loading = initialLoading || updateLoading;
 
   useLayoutEffect(() => {
     dispatch(setInsideAmount(Number(data?.data?.inside)));
@@ -58,10 +62,6 @@ const DeliveryFee = () => {
     } catch (err: any) {
       console.error(err.message);
     }
-  };
-
-  const handleOnChange = (_id: any, arg1: boolean): void => {
-    console.log("hkh");
   };
 
   return (

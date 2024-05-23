@@ -17,7 +17,7 @@ const initialState: userType = {
   password: "",
   confirmPassword: "",
   role: "",
-  phoneNumber: "",
+  phoneNumber: "974",
   profilePhoto: null,
   userLocalUrl: "",
 };
@@ -33,7 +33,11 @@ const userAdminSlice = createSlice({
       state.email = action.payload;
     },
     setAdminPhoneNumber: (state, action) => {
-      state.phoneNumber = action.payload;
+      if (!action.payload.startsWith("974")) {
+        state.phoneNumber = "974" + action.payload;
+      } else {
+        state.phoneNumber = action.payload;
+      }
     },
     setPassword: (state, action) => {
       state.password = action.payload;

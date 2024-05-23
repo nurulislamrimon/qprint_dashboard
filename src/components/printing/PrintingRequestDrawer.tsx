@@ -12,9 +12,14 @@ import { usePrintingRequestByIdQuery } from "@/store/features/printingRequest/pr
 import PrintingStatusUpdateModal from "./PrintingStatusUpdateModal";
 import OrderDrawerInformation from "../shared/order-table/orderTableDrawer/OrderDrawerInformation";
 import RejectModal from "./RejectModal";
+import Loader from "../shared/loaders/Loader";
 
 const PrintingRequestDrawer = ({ openModal, handleCloseModal, id }: any) => {
-  const { data: printingRequestData } = usePrintingRequestByIdQuery(id);
+  const {
+    data: printingRequestData,
+    error: updateError,
+    isLoading: loading,
+  } = usePrintingRequestByIdQuery(id);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [openRejectModal, setOpenCancelModal] = useState(false);
   const handleUpdateModal = () => {
@@ -38,6 +43,7 @@ const PrintingRequestDrawer = ({ openModal, handleCloseModal, id }: any) => {
           isVisible={openModal}
         >
           <div className="py-5 h-screen overflow-y-auto">
+            {loading && <Loader />}
             <div className="flex items-center justify-between px-5">
               <span className="text-black-opacity-50 text-lg">
                 Order Details

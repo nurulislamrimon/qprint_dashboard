@@ -1,23 +1,24 @@
 import CustomGlobalInput from "@/components/shared/CustomGlobalInput";
 import FileUploader from "@/components/shared/FileUploader/FileUploader";
 import Loader from "@/components/shared/loaders/Loader";
-import FileInput from "@/components/ui/FileInput";
 import ButtonPrimary from "@/components/ui/btn/ButtonPrimary.";
-import ButtonSecondary from "@/components/ui/btn/ButtonSecondary";
 import { useAddDealsOfTheDayAndWidgetMutation } from "@/store/features/DealsOfTheDayAndWidget/dealsOfTheDayAndWidgetApi";
 import {
   setDeals,
   setWidgetFiles,
 } from "@/store/features/DealsOfTheDayAndWidget/widgetSlice";
 import { useAppDispatch } from "@/store/hook";
-import { useState } from "react";
+
 import { toast } from "react-toastify";
 
-const WidgetInput = (data: any) => {
+const WidgetInput = ({ data, initialLoading }: any) => {
+  console.log(data);
   const dispatch = useAppDispatch();
-  const [addWidget] = useAddDealsOfTheDayAndWidgetMutation();
+  const [addWidget, { isLoading: updateLoading }] =
+    useAddDealsOfTheDayAndWidgetMutation();
   const formData = new FormData();
-  const [loading, setLoading] = useState(false);
+
+  const loading = updateLoading || initialLoading;
 
   // File and input handler
   const handleChange = (
@@ -52,7 +53,6 @@ const WidgetInput = (data: any) => {
       );
     }
 
-    setLoading(true);
     try {
       const res = await addWidget(formData);
       if ("data" in res) {
@@ -63,8 +63,6 @@ const WidgetInput = (data: any) => {
       }
     } catch (error) {
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
   return (
@@ -83,7 +81,7 @@ const WidgetInput = (data: any) => {
           type="text"
           placeholder="32% Discount"
           name="title"
-          value={data?.data?.title || ""}
+          value={data?.title || ""}
           onChange={handleChange}
         />
         <CustomGlobalInput
@@ -91,7 +89,7 @@ const WidgetInput = (data: any) => {
           type="text"
           placeholder="Brother Ink"
           name="tag"
-          value={data?.data?.tag || ""}
+          value={data?.tag || ""}
           onChange={handleChange}
         />
         <CustomGlobalInput
@@ -99,7 +97,7 @@ const WidgetInput = (data: any) => {
           type="text"
           placeholder="For all electronics products"
           name="description"
-          value={data?.data?.description || ""}
+          value={data?.description || ""}
           onChange={handleChange}
         />
         <div className="flex w-full gap-5   overflow-hidden ">
@@ -109,7 +107,7 @@ const WidgetInput = (data: any) => {
               type="text"
               placeholder="Shop Now"
               name="buttonText"
-              value={data?.data?.buttonText || ""}
+              value={data?.buttonText || ""}
               onChange={handleChange}
             />
           </div>
@@ -119,7 +117,7 @@ const WidgetInput = (data: any) => {
               type="text"
               placeholder="https://"
               name="link"
-              value={data?.data?.link || ""}
+              value={data?.link || ""}
               onChange={handleChange}
             />
           </div>
@@ -128,7 +126,7 @@ const WidgetInput = (data: any) => {
           <FileUploader
             name="productPhoto"
             className="border border-dashed   min-h-48 h-full min-w-48 w-auto relative cursor-pointer flex items-center justify-center text-black-opacity-60 text-xs "
-            data={data.data}
+            data={data}
             multiple={true}
             onChange={handleChange}
             accept="image/jpg,image/jpeg,image/png"

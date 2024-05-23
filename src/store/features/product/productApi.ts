@@ -9,6 +9,13 @@ export const productApi = baseApi.injectEndpoints({
       }),
       providesTags: ["product"],
     }),
+    stockAlertProducts: build.query({
+      query: (query: string) => ({
+        url: "/product/stock-alert?" + query,
+        method: "GET",
+      }),
+      providesTags: ["product"],
+    }),
     // get individual product
     getSingleProduct: build.query({
       query: (id) => ({
@@ -78,4 +85,5 @@ export const {
   useDeleteProductMutation,
   useUpdateProductMutation,
   useAddStockItemMutation,
+  useStockAlertProductsQuery,
 } = productApi;

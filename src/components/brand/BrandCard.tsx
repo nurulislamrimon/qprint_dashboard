@@ -17,13 +17,14 @@ import { useRouter } from "next/navigation";
 import Loader from "../shared/loaders/Loader";
 
 const BrandCard = ({ data, isLoading }: any) => {
-  const [loading, setLoading] = useState(false);
-
-  const { data: brandData } = useBrandQuery(data?._id);
+  const {
+    data: brandData,
+    error: updateError,
+    isLoading: loading,
+  } = useBrandQuery(data?._id);
 
   const router = useRouter();
 
-  const [deleteBrand] = useDeleteBrandMutation();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openModal, setOpenModal] = useState(false);
 
@@ -35,32 +36,6 @@ const BrandCard = ({ data, isLoading }: any) => {
   // handle close delete modal
   const handCloseleDeleteModal = () => {
     setOpenDeleteModal(false);
-  };
-
-  // handle delete
-  const deleteHandler = async (id: string) => {
-    setLoading(true);
-    try {
-      const res = await deleteBrand(id);
-
-      if (res && "data" in res) {
-        toast.success(res.data.message);
-        handCloseleDeleteModal();
-      }
-      if (
-        res &&
-        "error" in res &&
-        res.error !== null &&
-        typeof res.error === "object" &&
-        "message" in res.error
-      ) {
-        toast.error(res.error.message as string);
-      }
-    } catch (err: any) {
-      console.error(err.message);
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -132,7 +107,6 @@ const BrandCard = ({ data, isLoading }: any) => {
 
         {openDeleteModal && (
           <DeleteBrandModal
-            deleteHandler={deleteHandler}
             openDeleteModal={openDeleteModal}
             handCloseleDeleteModal={handCloseleDeleteModal}
             id={data?._id}

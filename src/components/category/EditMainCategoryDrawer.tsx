@@ -20,13 +20,15 @@ const EditMainCategoryDrawer = ({
   isVisible,
   setOpenDrawer,
   handleModal,
+  initialLoading,
 }: any) => {
-  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
-  const [updateCategory] = useUpdateCategoryMutation();
+  const [updateCategory, { isLoading: updateLoading }] =
+    useUpdateCategoryMutation();
   const { categoryName, categoryLocalUrl, categoryPhoto } = useAppSelector(
     (state) => state.categorySlice
   );
+  const loading = updateLoading || initialLoading;
   const formData = new FormData();
 
   useLayoutEffect(() => {
@@ -36,7 +38,6 @@ const EditMainCategoryDrawer = ({
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    setLoading(true);
 
     if (categoryName !== data?.categoryName) {
       formData.append("categoryName", categoryName);
@@ -45,8 +46,6 @@ const EditMainCategoryDrawer = ({
 
     try {
       const res = await updateCategory({ formData: formData, id: data._id });
-      console.log(res);
-
       if (res?.data) {
         toast.success(res?.data?.message);
         setOpenDrawer(false);
@@ -56,8 +55,6 @@ const EditMainCategoryDrawer = ({
       }
     } catch (error) {
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 

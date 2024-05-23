@@ -30,15 +30,14 @@ export const printingRequestApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["printing-request"],
     }),
-    // Update Printing request status
-    downloadPrintingRequesFile: build.mutation({
-      query: (data) => ({
-        url: `/download-file`,
-        method: "POST",
-        data: data,
-      }),
-      invalidatesTags: ["printing-request"],
-    }),
+    // // Update Printing request status
+    // downloadPrintingRequesFile: build.mutation({
+    //   query: (data) => ({
+    //     url: `/download-file`,
+    //     method: "POST",
+    //     data: data,
+    //   }),
+    // }),
   }),
 });
 
@@ -46,5 +45,5 @@ export const {
   usePrintingRequestByIdQuery,
   usePrintingRequestsQuery,
   useUpdatePrintingRequestStatusMutation,
-  useDownloadPrintingRequesFileMutation,
+  // useDownloadPrintingRequesFileMutation,
 } = printingRequestApi;

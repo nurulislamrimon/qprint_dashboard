@@ -26,23 +26,15 @@ import Loader from "../shared/loaders/Loader";
 
 const UpdateUserModal = ({ openModal, setOpenModal, handleClose, id }: any) => {
   const dispatch = useAppDispatch();
-  const {
-    fullName,
-    email,
-    password,
-    phoneNumber,
-    role,
-    confirmPassword,
-    profilePhoto,
-    userLocalUrl,
-  } = useAppSelector((state) => state.userAdminSlice);
+  const { fullName, email, phoneNumber, role, profilePhoto, userLocalUrl } =
+    useAppSelector((state) => state.userAdminSlice);
 
-  const [updateAdministrators] = useUpdateAdministratorsMutation();
-  const { data } = useGetUserByIdQuery(id);
+  const [updateAdministrators, { error: updateError, isLoading: loading }] =
+    useUpdateAdministratorsMutation();
+
+  const { data, isLoading: userUpdating } = useGetUserByIdQuery(id);
 
   // handle loader
-
-  const [loading, setLoading] = useState(false);
 
   // get existing data
   useLayoutEffect(() => {
@@ -66,7 +58,6 @@ const UpdateUserModal = ({ openModal, setOpenModal, handleClose, id }: any) => {
   };
 
   const handleSubmit = async (e: any) => {
-    setLoading(true);
     e.preventDefault();
     const data = {
       role: role,
@@ -94,10 +85,9 @@ const UpdateUserModal = ({ openModal, setOpenModal, handleClose, id }: any) => {
       dispatch(clearUserData());
     } catch (error) {
       console.error("validation error", error);
-    } finally {
-      setLoading(false);
     }
   };
+  const spinner = loading || userUpdating;
   return (
     <div>
       <CustomGlobalModal
@@ -106,14 +96,15 @@ const UpdateUserModal = ({ openModal, setOpenModal, handleClose, id }: any) => {
         mainClassName="md:w-[780px] w-full md:h-auto h-full overflow-y-auto"
       >
         <div className="relative md:p-[30px] p-5 overflow-hidden">
-          {loading && <Loader />}
+          {spinner && <Loader />}
           <div className="absolute right-5 top-5">
             <DrawerModalCloseBTN handleClose={handleClose} />
           </div>
-          <form action="" onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
             <div className="flex items-center justify-center">
               <div>
                 <FileInput
+                  imageType="Profile"
                   className="!border-solid !rounded-full"
                   name="userPhoto"
                   onChange={handleFileChange}

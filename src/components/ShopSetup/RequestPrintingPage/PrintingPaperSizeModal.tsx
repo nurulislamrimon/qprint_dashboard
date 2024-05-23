@@ -19,12 +19,11 @@ const PrintingPaperSizeModal = ({ openModal, handleCloseModal }: any) => {
   const { height, width, printingSetupType } = useAppSelector(
     (state) => state.paperSize
   );
-  const [loading, setLoading] = useState(false);
 
-  const [createPrintingSetup] = useCreatePrintingSetupMutation();
+  const [createPrintingSetup, { error: createError, isLoading: loading }] =
+    useCreatePrintingSetupMutation();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setLoading(true);
     e.preventDefault();
 
     try {
@@ -38,8 +37,6 @@ const PrintingPaperSizeModal = ({ openModal, handleCloseModal }: any) => {
     } catch (error) {
       console.log(error);
       toast.error("Error occurred while adding new Printing Paper Size");
-    } finally {
-      setLoading(false);
     }
     clearPaperSize();
   };
@@ -62,6 +59,7 @@ const PrintingPaperSizeModal = ({ openModal, handleCloseModal }: any) => {
           <form action="" onSubmit={handleSubmit}>
             <div className="grid grid-cols-2 items-center gap-5 mb-5">
               <CustomGlobalInput
+                required
                 label="Width"
                 type="number"
                 placeholder="10"
@@ -69,6 +67,7 @@ const PrintingPaperSizeModal = ({ openModal, handleCloseModal }: any) => {
                 onChange={(e) => dispatch(setWidth(Number(e.target.value)))}
               />
               <CustomGlobalInput
+                required
                 label="Height"
                 type="number"
                 placeholder="20"

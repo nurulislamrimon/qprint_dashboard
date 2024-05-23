@@ -21,9 +21,12 @@ const EditPrintingPaperSizeModal = ({
   handleCloseModal,
   id,
 }: any) => {
-  const [updatePrintingSetup] = useUpdatePrintingSetupMutation();
-  const { data } = usePrintingSetupQuery(id);
-  const [loading, setLoading] = useState(false);
+  const [
+    updatePrintingSetup,
+    { error: updateError, isLoading: updateLoading },
+  ] = useUpdatePrintingSetupMutation();
+  const { data, isLoading: initialLoading } = usePrintingSetupQuery(id);
+  const loading = initialLoading || updateLoading;
 
   const dispatch = useAppDispatch();
 
@@ -47,7 +50,6 @@ const EditPrintingPaperSizeModal = ({
   };
 
   const handleSubmit = (e: any) => {
-    setLoading(true);
     e.preventDefault();
     const data = {
       height: height,
@@ -61,8 +63,6 @@ const EditPrintingPaperSizeModal = ({
     } catch (error) {
       console.log(error);
       toast.error("Printing paper size update couldn't update! try again");
-    } finally {
-      setLoading(false);
     }
   };
 

@@ -14,7 +14,7 @@ const TableBodyCard = ({ data }: any) => {
   const [openModal, setOpenModal] = useState(false);
 
   const handleCloseModal = () => {
-    setOpenModal(false);
+    setOpenModal((prevState) => !prevState);
   };
 
   return (
@@ -54,7 +54,6 @@ const TableBodyCard = ({ data }: any) => {
                   ? `${mainUrl}${customerInfo?.data?.profilePhoto}`
                   : personPlaceholder
               }
-              // src={`${mainUrl}${data?.reviewer?.profilePhoto}`}
               width={100}
               height={100}
               className="rounded-full w-[25px] h-[25px] md:w-[40px] md:h-[40px]"

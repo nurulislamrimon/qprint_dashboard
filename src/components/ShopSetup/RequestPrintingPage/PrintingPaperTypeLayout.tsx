@@ -1,9 +1,7 @@
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import { PaperType } from "./PrintingPaperType";
-import { useDeletePrintingSetupMutation } from "@/store/features/shopSetup/printingSetup/printingSetupApi";
 import { useState } from "react";
 import EditPrintingPaperTypeModal from "./EditPrintingPaperTypeModal";
-import { toast } from "react-toastify";
 import DeleteRequesetPrintingModal from "./DeleteRequesetPrintingModal";
 
 type PaperTypeData = {
@@ -11,7 +9,6 @@ type PaperTypeData = {
 };
 
 const PrintingPaperTypeLayout = ({ data }: PaperTypeData) => {
-  const [deletePrintingSetup] = useDeletePrintingSetupMutation();
   const [openModal, setOpenModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 

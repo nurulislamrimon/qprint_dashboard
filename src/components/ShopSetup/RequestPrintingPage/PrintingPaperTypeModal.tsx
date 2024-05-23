@@ -13,16 +13,15 @@ import { useState } from "react";
 import Loader from "@/components/shared/loaders/Loader";
 
 const PrintingPaperTypeModal = ({ openModal, handleCloseModal }: any) => {
-  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const { price, printingSetupType, paperType } = useAppSelector(
     (state) => state.paperType
   );
-  const [createPrintingSetup] = useCreatePrintingSetupMutation();
+  const [createPrintingSetup, { error: createError, isLoading: loading }] =
+    useCreatePrintingSetupMutation();
 
   // handle submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setLoading(true);
     e.preventDefault();
 
     const data = {
@@ -42,8 +41,6 @@ const PrintingPaperTypeModal = ({ openModal, handleCloseModal }: any) => {
       }
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
   return (

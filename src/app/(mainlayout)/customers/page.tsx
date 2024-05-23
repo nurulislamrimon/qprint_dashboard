@@ -15,12 +15,12 @@ const Customers = () => {
             isLoading && "animate-ping"
           }`}
         >
-          {customers?.data?.length}
+          {customers?.meta?.total}
         </div>
       </h1>
       <div>
-        <table className="w-full text-center">
-          <thead className="border-b sticky top-0 bg-white z-50">
+        <table className="w-full ">
+          <thead className="border-b sticky top-0 bg-white z-50 text-center">
             <tr>
               {[
                 "SL",
@@ -32,9 +32,11 @@ const Customers = () => {
                 return (
                   <th
                     key={index}
-                    className={`text-black-opacity-50 text-xs md:text-base font-normal py-5 ${
+                    className={`text-black-opacity-50 text-xs md:text-base font-normal py-5 text-left ${
                       th === "Transparent" && "md:table-cell hidden text-white"
-                    } ${th === "SL" && "md:table-cell hidden"}`}
+                    } ${th === "SL" && "md:table-cell hidden pl-5"} ${
+                      th === "Customer Name" && "md:pl-0 pl-3.5"
+                    }`}
                   >
                     {th}
                   </th>

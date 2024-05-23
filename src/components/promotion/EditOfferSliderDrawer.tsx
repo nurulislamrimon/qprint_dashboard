@@ -18,10 +18,15 @@ import Loader from "../shared/loaders/Loader";
 import { showError } from "@/helpers/showError";
 import FileUploader from "../shared/FileUploader/FileUploader";
 
-const EditOfferSliderDrawer = ({ data }: { data: IOffer | any }) => {
-  const [addSlider, { isLoading: loading }] = useAddSliderMutation();
+const EditOfferSliderDrawer = (
+  initialLoading: any,
+  { data }: { data: IOffer | any }
+) => {
+  const [addSlider, { isLoading: updateLoading }] = useAddSliderMutation();
   const formData = new FormData();
   const dispatch = useAppDispatch();
+
+  const loading = initialLoading || updateLoading;
 
   // ---------------------
   // handle change

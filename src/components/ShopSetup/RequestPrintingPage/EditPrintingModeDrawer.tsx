@@ -20,10 +20,12 @@ const EditPrintingModeDrawer = ({ openModal, handleCloseModal, id }: any) => {
   const { price, printingColorMode } = useAppSelector(
     (state) => state.printingColorMode
   );
-  const [updatePrintingSetup] = useUpdatePrintingSetupMutation();
-  const { data } = usePrintingSetupQuery(id);
-
-  const [loading, setLoading] = useState(false);
+  const [
+    updatePrintingSetup,
+    { error: updateError, isLoading: updateLoading },
+  ] = useUpdatePrintingSetupMutation();
+  const { data, isLoading: initialLoading } = usePrintingSetupQuery(id);
+  const loading = initialLoading || updateLoading;
 
   useLayoutEffect(() => {
     dispatch(setPrintingMode(data?.data?.printingColorMode));
@@ -32,8 +34,6 @@ const EditPrintingModeDrawer = ({ openModal, handleCloseModal, id }: any) => {
 
   // handle submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setLoading(true);
-
     e.preventDefault();
 
     const data = {
@@ -52,8 +52,6 @@ const EditPrintingModeDrawer = ({ openModal, handleCloseModal, id }: any) => {
       }
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
   return (

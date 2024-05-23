@@ -22,8 +22,10 @@ import FileUploader from "../shared/FileUploader/FileUploader";
 import { showError } from "@/helpers/showError";
 
 const BestDealsSection = () => {
-  const { data } = useGetBestDealsQuery("");
-  const [addBestDeals, { isLoading: loading }] = useAddBestDealsMutation();
+  const { data, isLoading: initialLoading } = useGetBestDealsQuery("");
+  const [addBestDeals, { isLoading: updateLoading }] =
+    useAddBestDealsMutation();
+  const loading = initialLoading || updateLoading;
   const [showBottomModal, setShowBottomModal] = useState(false);
   // get search data
   const dispatch = useAppDispatch();

@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import productImgPlaceholder from "@/assets/placeholderImgIcon.svg";
 import Loader from "../shared/loaders/Loader";
 import { showError } from "@/helpers/showError";
+import StockaAlert from "@/app/(mainlayout)/products/stock-alert/page";
 
 const ProductsTableRow = ({ data, index, isLoading }: any) => {
   const [loading, setLoading] = useState(false);
@@ -23,7 +24,7 @@ const ProductsTableRow = ({ data, index, isLoading }: any) => {
   const [deleteProduct] = useDeleteProductMutation();
   const [updateProduct] = useUpdateProductMutation();
 
-  const [activeVariant, setActiveVariant] = useState<IVariant | null>(
+  const [activeVariant, setActiveVariant] = useState<IVariant | any>(
     data.variants.find((variant: IVariant) => variant.isDefault) ?? null
   );
 
@@ -139,10 +140,10 @@ const ProductsTableRow = ({ data, index, isLoading }: any) => {
       </td>
       <td>
         <div
-          className={` md:w-16 w-12 flex items-center justify-center md:text-lg text-sm  font-medium md:px-5 px-3 md:py-1.5 py-0.5 rounded-custom-5px   ${
-            data?.data?.variants[0]?.inStock <= 100
-              ? "bg-main-bg-color-opacity-32 text-fuchsia-800"
-              : "bg-green-opacity-10 text-green-color"
+          className={` md:w-16 w-12 flex items-center justify-center md:text-lg text-sm  font-medium md:px-5 px-3 md:py-1.5 py-0.5 rounded-custom-5px ${
+            activeVariant?.inStock > activeVariant?.stockAlert
+              ? "bg-green-v2-opacity-10 text-green-color"
+              : "bg-main-bg-color-opacity-32 text-fuchsia-800"
           }`}
         >
           {activeVariant?.inStock}
@@ -169,7 +170,7 @@ const ProductsTableRow = ({ data, index, isLoading }: any) => {
 
       <td onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-center md:gap-3.5 gap-2.5">
-          <Link href={"edit-product/" + data?._id}>
+          <Link href={"/edit-product/" + data?._id}>
             <IconEdit stroke={1} className="text-green-color" />
           </Link>
 

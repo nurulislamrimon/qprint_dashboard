@@ -1,20 +1,39 @@
 import CustomGlobalModal from "../shared/CustomGlobalModal";
 import { IconTrash } from "@tabler/icons-react";
 import GlobalActionButton from "../shared/GlobalActionButton";
-import { useGetUserByIdQuery } from "@/store/features/users/usersApi";
+import {
+  useDeleteAdminMutation,
+  useGetUserByIdQuery,
+} from "@/store/features/users/usersApi";
 import Loader from "../shared/loaders/Loader";
+import { toast } from "react-toastify";
 
 const UserDeleteModal = ({
   openDeleteModal,
-  handCloseleDeleteModal,
+  handleModal,
   id,
-  deleteHandler,
-  data,
   setOpenDeleteModal,
-  loading,
 }: any) => {
   const { data: user } = useGetUserByIdQuery(id);
+  const [deleteAdmin, { error: deleteError, isLoading: loading }] =
+    useDeleteAdminMutation();
 
+  // user delete handler
+  const userDeleteHandler = async (id: string) => {
+    try {
+      const res = await deleteAdmin(id);
+      if ("data" in res) {
+        toast.success("User Deleted Successfully");
+      }
+      if ("error" in res) {
+        // @ts-ignore
+        toast.error(res.data?.error?.message);
+      }
+      handleModal();
+    } catch (error: any) {
+      console.error(error);
+    }
+  };
   return (
     <div>
       <CustomGlobalModal
@@ -33,12 +52,12 @@ const UserDeleteModal = ({
           </span>
           <div className="flex items-center gap-5">
             <button
-              onClick={handCloseleDeleteModal}
+              onClick={handleModal}
               className="px-10 py-2.5 border rounded-custom-5px"
             >
               No
             </button>
-            <div onClick={() => deleteHandler(user?.data?._id)}>
+            <div onClick={() => userDeleteHandler(user?.data?._id)}>
               <GlobalActionButton
                 type="submit"
                 buttonText="Yes"

@@ -4,10 +4,15 @@ export interface IUserSetting {
   email: string;
   phoneNumber: string;
   profilePhoto: File | null;
-  localProfilePhotoUrl: string | null;
 }
 
-const initialState: IUserSetting | Record<string, unknown> = {};
+const initialState: IUserSetting | Record<string, any> = {
+  fullName: "",
+  email: "",
+  phoneNumber: "974",
+  profilePhoto: null,
+  profilePhotoFile: {},
+};
 
 const settingSlice = createSlice({
   name: "setting",
@@ -26,9 +31,12 @@ const settingSlice = createSlice({
         };
       }
     },
+    setProfilePhotFile: (state, action) => {
+      state.profilePhotoFile = action.payload;
+    },
   },
 });
 
-export const { setSetting } = settingSlice.actions;
+export const { setSetting, setProfilePhotFile } = settingSlice.actions;
 
 export default settingSlice.reducer;

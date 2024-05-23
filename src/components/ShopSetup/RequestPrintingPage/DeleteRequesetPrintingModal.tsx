@@ -7,18 +7,16 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 
 interface DeleteModalProps {
-  handleModal?: () => void;
+  handleModal?: (() => void | undefined) | any;
   id?: any;
 }
 
 const DeleteRequesetPrintingModal = ({ handleModal, id }: DeleteModalProps) => {
-  const [loading, setLoading] = useState(false);
-  const [deletePrintingSetup] = useDeletePrintingSetupMutation();
+  const [deletePrintingSetup, { error: deleteError, isLoading: loading }] =
+    useDeletePrintingSetupMutation();
   //handle delete
   const handleDelete = async (e: any) => {
     e.preventDefault();
-    setLoading(true);
-
     try {
       const res = await deletePrintingSetup(id);
 
@@ -28,10 +26,9 @@ const DeleteRequesetPrintingModal = ({ handleModal, id }: DeleteModalProps) => {
       if (res?.error) {
         toast.error(res?.error?.message);
       }
+      handleModal();
     } catch (error) {
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
   return (

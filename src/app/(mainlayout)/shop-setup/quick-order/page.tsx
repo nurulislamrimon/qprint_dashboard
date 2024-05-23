@@ -13,10 +13,12 @@ import Loader from "@/components/shared/loaders/Loader";
 const QuickOrder = () => {
   const [isQuickOrderActive, setIsQuickOrderActive] = useState(false);
   const [selectedOption, setSelectedOption] = useState("deliveryCharge");
-  const [addQuickOrderCharge] = useAddQuickOrderChargeMutation();
-  const { data, isLoading } = useGetQuickOrderChargeQuery("");
+  const [addQuickOrderCharge, { isLoading: updateLoading }] =
+    useAddQuickOrderChargeMutation();
+  const { data, isLoading: initialLoading } = useGetQuickOrderChargeQuery("");
   const [deliveryCharge, setDeliveryCharge] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  const loading = initialLoading || updateLoading;
 
   useEffect(() => {
     if (data && data.data) {
@@ -48,7 +50,6 @@ const QuickOrder = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setLoading(true);
     e.preventDefault();
 
     try {
@@ -74,8 +75,6 @@ const QuickOrder = () => {
       }
     } catch (error) {
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -102,7 +101,7 @@ const QuickOrder = () => {
 
         <div
           className={`flex items-center gap-2 my-[30px] ${
-            !isQuickOrderActive || isLoading
+            !isQuickOrderActive || loading
               ? "opacity-50 pointer-events-none"
               : ""
           }`}
@@ -111,7 +110,7 @@ const QuickOrder = () => {
             type="radio"
             checked={selectedOption === "freeShipping"}
             onChange={() => handleOptionChange("freeShipping")}
-            disabled={!isQuickOrderActive || isLoading}
+            disabled={!isQuickOrderActive || loading}
             className="form-radio text-green-500 h-5 w-5 checked:bg-fuchsia-800 cursor-pointer"
           />
           <label className="text-black-opacity-70  text-xl" htmlFor="">
@@ -121,7 +120,7 @@ const QuickOrder = () => {
 
         <div
           className={`flex md:flex-col flex-col-reverse gap-5 mb-[30px] ${
-            !isQuickOrderActive || isLoading
+            !isQuickOrderActive || loading
               ? "opacity-50 pointer-events-none"
               : ""
           }`}
@@ -131,7 +130,7 @@ const QuickOrder = () => {
               type="radio"
               checked={selectedOption === "deliveryCharge"}
               onChange={() => handleOptionChange("deliveryCharge")}
-              disabled={!isQuickOrderActive || isLoading}
+              disabled={!isQuickOrderActive || loading}
               className="form-radio text-green-500 h-5 w-5 checked:bg-fuchsia-800 cursor-pointer"
             />
             <label className="text-black-opacity-70  text-xl" htmlFor="">
@@ -147,7 +146,7 @@ const QuickOrder = () => {
               value={deliveryCharge || 0}
               // @ts-ignore
               onChange={handleChange}
-              disabled={!isQuickOrderActive || isLoading}
+              disabled={!isQuickOrderActive || loading}
             />
           )}
         </div>

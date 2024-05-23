@@ -19,14 +19,16 @@ import { toast } from "react-toastify";
 
 const Seo = () => {
   const dispatch = useAppDispatch();
-  const [loading, setLoading] = useState(false);
 
   const { metaPhoto, metaTitle, metaDescription, metaLocalUrl } =
     useAppSelector((state) => state.seoSlice);
 
-  const [createSeo] = useCreateSeoMutation();
+  const [createSeo, { error: updateError, isLoading: updateLoading }] =
+    useCreateSeoMutation();
 
-  const { data } = useGetSeoQuery("");
+  const { data, isLoading: initialLoading } = useGetSeoQuery("");
+
+  const loading = initialLoading || updateLoading;
 
   useLayoutEffect(() => {
     dispatch(setMetaPhoto(data?.data?.metaPhoto));
@@ -50,8 +52,6 @@ const Seo = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setLoading(true);
-
     e.preventDefault();
     const formData = new FormData();
 
@@ -63,6 +63,7 @@ const Seo = () => {
 
     try {
       const res = await createSeo(formData);
+      console.log(res);
       if (res && "data" in res) {
         toast.success(res.data.message);
       }
@@ -77,8 +78,6 @@ const Seo = () => {
       }
     } catch (err) {
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
   return (

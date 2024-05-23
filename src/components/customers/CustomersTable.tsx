@@ -14,46 +14,38 @@ interface customerProps {
 const CustomersTable = ({ data, isLoading, index = 0 }: customerProps) => {
   return (
     <>
-      <td className="md:table-cell hidden ">{index + 1}</td>
-      <td className="py-5 px-3.5 flex items-center justify-start">
-        <div className="flex items-center justify-center gap-1.5 md:gap-3.5 lg:ml-20 md:ml-auto">
+      <td className="md:table-cell hidden text-left text-black-opacity-80 md:text-lg pr-24 pl-5">
+        {index + 1}
+      </td>
+      <td className="md:px-0 pl-3.5  py-4">
+        <div className="flex items-center gap-3.5">
           <div className="w-[28px] h-[28px] md:w-[50px] md:h-[50px] shrink-0 relative ">
-            {isLoading ? (
-              <Image
-                src={imgPlaceholder}
-                alt="profile"
-                objectFit="cover"
-                fill
-                className="w-full border h-full top-0 left-0 object-cover rounded-full"
-              />
-            ) : (
-              <Image
-                src={
-                  data?.profilePhoto
-                    ? `${mainUrl}${data.profilePhoto}`
-                    : imgPlaceholder
-                }
-                alt="profile"
-                objectFit="cover"
-                fill
-                className="w-full border h-full top-0 left-0 object-cover rounded-full"
-              />
-            )}
+            <Image
+              src={
+                data?.profilePhoto
+                  ? `${mainUrl}${data.profilePhoto}`
+                  : imgPlaceholder
+              }
+              alt="profile"
+              objectFit="cover"
+              fill
+              className="w-full border h-full top-0 left-0 object-cover rounded-full"
+            />
           </div>
           <div className="flex flex-col items-start">
             <p className="text-xs md:text-lg text-black-opacity-80">
               {data?.fullName}
             </p>
             <span className=" text-sm text-black-opacity-70">
-              {data?.phoneNumber ? data?.phoneNumber : "N/A"}
+              {data?.phoneNumber}
             </span>
           </div>
         </div>
       </td>
-      <td className="text-xs md:text-lg text-black-opacity-80">
-        <div>
-          <span className="text-xs md:text-lg text-black-opacity-70">
-            {data?.email ? data?.email : "N/A"}
+      <td className="flex items-center py-4 ">
+        <div className="flex items-center">
+          <span className="text-xs md:text-lg text-black-opacity-70 line-clamp-1">
+            {data?.email}
           </span>
         </div>
       </td>
@@ -64,13 +56,15 @@ const CustomersTable = ({ data, isLoading, index = 0 }: customerProps) => {
           </span>
         </div>
       </td>
-      <td className="md:table-cell hidden">
+      <td className="md:table-cell hidden ">
         <Link
           onClick={(e) => e.stopPropagation()}
           href={`customers/${data?._id}`}
         >
-          <div className="border hover:border-main-border-color px-4 py-1 transition-all rounded-md w-14 flex items-center justify-center">
-            <ViewEye />
+          <div className="flex items-center justify-center">
+            <div className="border hover:border-main-border-color px-4 py-1 transition-all rounded-md w-14 flex items-center justify-center">
+              <ViewEye />
+            </div>
           </div>
         </Link>
       </td>

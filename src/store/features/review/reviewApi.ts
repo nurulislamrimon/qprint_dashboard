@@ -57,6 +57,15 @@ export const reviewApi: any = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["review"],
     }),
+    // delete  author reply
+    deleteAuthorReply: build.mutation({
+      query: (data) => ({
+        url: `/review/reply/${data.id}`,
+        method: "PUT",
+        data: { reply: data.reply },
+      }),
+      invalidatesTags: ["review"],
+    }),
 
     //delete review
 
@@ -78,4 +87,5 @@ export const {
   useDeleteReviewMutation,
   useReviewWithReplyQuery,
   useReviewWithoutReplyQuery,
+  useDeleteAuthorReplyMutation,
 } = reviewApi;

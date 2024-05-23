@@ -69,6 +69,7 @@ const MainCategoryItem = ({ data, isLoading }: MainCategoryProps) => {
       {updateCategoryDrawer && (
         <EditMainCategoryDrawer
           data={data}
+          initialLoading={isLoading}
           isVisible={updateCategoryDrawer}
           setOpenDrawer={setUpdateCategoryDrawer}
           handleModal={handleModal}

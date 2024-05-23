@@ -11,6 +11,8 @@ import { FormEvent, useLayoutEffect } from "react";
 import { initiateSocialMediaData } from "@/store/features/shopSetup/socialMedia/socialMediaSlice";
 import SocialMediaLayoutSkeleton from "@/components/shared/skeleton/SocialMediaLayoutSkeleton";
 import { showError } from "@/helpers/showError";
+import { toast } from "react-toastify";
+import Loader from "@/components/shared/loaders/Loader";
 
 const SocialMediaChat = () => {
   const { data, isLoading } = useGetSocialMediaQuery();
@@ -29,7 +31,12 @@ const SocialMediaChat = () => {
 
     try {
       const res = await updateSocialMedia(socialMediaData);
-      console.log(res);
+      if (res.data) {
+        toast.success(res.data.message);
+      }
+      if (res.error) {
+        toast.error(res.error.message);
+      }
     } catch (error) {
       showError(error);
     }
@@ -40,6 +47,7 @@ const SocialMediaChat = () => {
       onSubmit={handleSubmit}
       className="flex flex-col md:flex-row gap-[30px] p-8"
     >
+      {loading && <Loader />}
       {isLoading
         ? [...Array(2)].map((_, index) => {
             return <SocialMediaLayoutSkeleton key={index} />;
@@ -51,7 +59,7 @@ const SocialMediaChat = () => {
                 (media) => media.mediaName === mediaName
               )}
               mediaName={mediaName}
-              loading={loading || isLoading}
+              loading={loading || loading}
             />
           ))}
       <div className="flex items-center justify-center fixed bottom-5 inset-x-0 mx-5 md:mx-auto">

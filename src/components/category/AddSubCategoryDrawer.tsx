@@ -18,17 +18,17 @@ const AddSubCategoryDrawer = ({
   handleModal,
   id,
 }: AddSubCategoryDrawerProps) => {
-  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const { subcategoryName } = useAppSelector((state) => state.subCategorySlice);
-  const [createSubcategory] = useCreateSubcategoryMutation();
+  const [createSubcategory, { isLoading: loading }] =
+    useCreateSubcategoryMutation();
   const formData = new FormData();
 
   // handle submit
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+
     if (subcategoryName) {
       formData.append("createSubcategories", subcategoryName);
 
@@ -44,8 +44,6 @@ const AddSubCategoryDrawer = ({
         console.log(res);
       } catch (error) {
         console.error(error);
-      } finally {
-        setLoading(false);
       }
     }
   };

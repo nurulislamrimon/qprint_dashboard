@@ -36,7 +36,10 @@ export const getDisplayName = (fileName: string, maxLength = 20) => {
   if (fileName.length > maxLength) {
     const extIndex = fileName.lastIndexOf(".");
     const extension = extIndex !== -1 ? fileName.slice(extIndex) : "";
-    return `${fileName.slice(0, maxLength - 3)}...${extension}`;
+    const fileNameWithoutExtension = fileName.includes("/")
+      ? fileName.split("/")?.[1].slice(0, extIndex)
+      : fileName.slice(0, extIndex);
+    return `${fileNameWithoutExtension.slice(0, 15)}...${extension}`;
   }
   return fileName;
 };

@@ -17,13 +17,11 @@ const PrintingModeModal = ({ openModal, handleCloseModal }: any) => {
   const { price, printingSetupType, printingColorMode } = useAppSelector(
     (state) => state.printingColorMode
   );
-  const [loading, setLoading] = useState(false);
 
-  const [createPrintingSetup] = useCreatePrintingSetupMutation();
+  const [createPrintingSetup, { error: createError, isLoading: loading }] =
+    useCreatePrintingSetupMutation();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setLoading(true);
-
     e.preventDefault();
     const data = {
       price: price,
@@ -43,8 +41,6 @@ const PrintingModeModal = ({ openModal, handleCloseModal }: any) => {
       }
     } catch (error) {
       console.log("Mode error:", error);
-    } finally {
-      setLoading(false);
     }
     handleCloseModal(false);
   };

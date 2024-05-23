@@ -20,7 +20,6 @@ const ShopSetupSocialMediaLayout = ({
   mediaName: string;
   loading: boolean;
 }) => {
-  console.log(data);
   const dispatch = useAppDispatch();
 
   return (

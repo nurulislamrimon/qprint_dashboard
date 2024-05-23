@@ -5,15 +5,15 @@ export const printInvoiceFn = () => {
 export const generateOptions = (status: any) => {
   switch (status) {
     case "Order placed":
-      return ["Order placed", "Packaging", "Rejected"];
+      return ["Update Status", "Packaging", "Rejected"];
     case "Packaging":
-      return ["Packaging", "Shipping", "Rejected"];
+      return ["Update Status", "Shipping", "Rejected"];
     case "Shipping":
-      return ["Shipping", "Delivered"];
+      return ["Update Status", "Delivered", "Returned"];
     case "Delivered":
-      return ["Delivered"];
+      return ["Delivered", "Returned"];
     case "Pending":
-      return ["Pending", " Order placed", "Rejected"];
+      return ["Update Status", " Order placed", "Rejected"];
     case "Returned":
       return ["Returned"];
     case "Cancelled":

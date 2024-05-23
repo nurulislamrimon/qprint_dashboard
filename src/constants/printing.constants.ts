@@ -6,15 +6,26 @@ export const printingRequestNavMenu = [
     href: "/all-printing-request",
   },
   {
+    label: "Pending",
+    key: "pendingKey",
+    href: "/pending",
+  },
+  {
     label: "Placed Orders",
     key: "placedOrders",
     href: "/placed-orders",
     isActive: true,
   },
+
   {
     label: "Printing",
     key: "printingKey",
     href: "/printing",
+  },
+  {
+    label: "Packaging",
+    key: "packagingKey",
+    href: "/packaging",
   },
   {
     label: "Shipping",

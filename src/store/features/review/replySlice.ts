@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 type Reply = {
   reply: string;
   id: string;
+  openDeleteModal: boolean;
 };
 
 const initialState: Reply = {
   reply: "",
   id: "",
+  openDeleteModal: false,
 };
 
 const replySlice = createSlice({
@@ -23,9 +25,13 @@ const replySlice = createSlice({
     clearReplyData: (state) => {
       state.reply = "";
     },
+    setOpenDeleteModal: (state, action: PayloadAction<boolean>) => {
+      state.openDeleteModal = action.payload;
+    },
   },
 });
 
-export const { setReply, setIsEdited, clearReplyData } = replySlice.actions;
+export const { setReply, setIsEdited, clearReplyData, setOpenDeleteModal } =
+  replySlice.actions;
 
 export default replySlice.reducer;

@@ -8,6 +8,7 @@ import { useState } from "react";
 import StatusConfirm from "@/components/orders/StatusConfirm";
 import { useQuickOrderUpdateOrderStatusMutation } from "@/store/features/quickOrder/quickOrderApi";
 import QuickOrderStatusUpdate from "@/components/orders/QuickOrderStatusUpdate";
+import TransparentLoader from "../TransparentLoader";
 
 export interface OrderTableRowProps {
   data: {
@@ -15,7 +16,6 @@ export interface OrderTableRowProps {
     createdAt?: string;
     buyer?: string;
     fullName?: string;
-    // name?: string;
     paymentMethod?: string;
     totalPrice?: number;
     status?: string;
@@ -32,65 +32,52 @@ const OrderTableRow = ({
   quickOrder,
   loadingMore,
 }: any) => {
-  // console.log(quickOrder);
-
-  const [updateStatus] = useUpdateOrderStatusMutation();
-  const [quickOrderUpdate] = useQuickOrderUpdateOrderStatusMutation();
+  const [quickOrderUpdate, { isLoading: qStatusLoading }] =
+    useQuickOrderUpdateOrderStatusMutation();
 
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openQuickOrderModal, setQuickOrderModal] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState("");
 
   const handleModal = () => {
-    setOpenModal((prevState) => {
-      if (!prevState) {
-        setSelectedOption("");
-      }
-      return !prevState;
-    });
+    setOpenModal((prevState) => !prevState);
   };
+
   const handleQuickOrderModal = () => {
-    setQuickOrderModal((prevState) => {
-      if (!prevState) {
-        setSelectedOption("");
-      }
-      return !prevState;
-    });
+    setQuickOrderModal((prevState) => !prevState);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = e.target.value;
-    setSelectedOption(selectedValue); // Update the selected option state
+    setSelectedOption(selectedValue);
 
-    // Determine which modal to open based on the order type
-    if (datas) {
-      // Regular order modal
-      setOpenModal(true);
-    } else if (quickOrder) {
-      // Quick order modal
-      setQuickOrderModal(true);
+    if (selectedValue !== "Update Status") {
+      if (datas) {
+        setOpenModal(true);
+      } else if (quickOrder) {
+        setQuickOrderModal(true);
+      }
     }
   };
-  const datas = dashboardTableData ? dashboardTableData : data && data;
+
+  const datas = dashboardTableData ? dashboardTableData : data;
 
   return (
     <>
-      {dashboardTableData ? (
-        ""
-      ) : (
-        <td className="text-left pl-5  hidden md:table-cell ">{index + 1}</td>
+      {!dashboardTableData && (
+        <td className="text-left pl-5 hidden md:table-cell">{index + 1}</td>
       )}
 
-      <td className="text-left pl-5 hidden md:table-cell ">
+      <td className="text-left pl-5 hidden md:table-cell">
         {datas ? `#${datas.orderId}` : ""}
         {quickOrder ? `#${quickOrder.orderId}` : ""}
       </td>
 
-      <td className="px-6  whitespace-nowrap font-normal hidden md:table-cell">
+      <td className="px-6 whitespace-nowrap font-normal hidden md:table-cell">
         {datas ? getDateFormat(datas.createdAt) : ""}
         {quickOrder ? getDateFormat(quickOrder.createdAt) : ""}
       </td>
-      <td className="flex flex-col text-center md:table-cell whitespace-nowrap pr-3 md:px-5  [font-size:clamp(13px,3vw,16px)]">
+      <td className="flex flex-col text-center md:table-cell whitespace-nowrap pr-3 md:px-5 [font-size:clamp(13px,3vw,16px)]">
         {datas ? datas?.buyer?.fullName : ""}
         {quickOrder ? quickOrder?.buyer?.fullName : ""}
         <small className="md:hidden">
@@ -98,50 +85,20 @@ const OrderTableRow = ({
           {quickOrder ? getDateFormat(quickOrder.updatedAt) : ""}
         </small>
       </td>
-      <td className="px-6  font-normal hidden md:table-cell">
-        {datas ? datas?.payment?.paymentMethod : ""}{" "}
+      <td className="px-6 font-normal hidden md:table-cell">
+        {datas ? datas?.payment?.paymentMethod : ""}
         {quickOrder ? quickOrder?.payment?.paymentMethod : ""}
       </td>
-      <td className="px-3 md:px-6  [font-size:clamp(13px,3vw,16px)] whitespace-nowrap">
+      <td className="px-3 md:px-6 [font-size:clamp(13px,3vw,16px)] whitespace-nowrap">
         {datas ? datas?.totalPayable : ""}
         {quickOrder ? quickOrder?.totalPayable : ""} QR
       </td>
       <td className="mr-5 py-3">
         <div
-          className={` cursor-default whitespace-nowrap text-center rounded-full pl-2 py-2 px-[13px] shrink-0 [font-size:clamp(10px,3vw,16px)] ${
+          className={`cursor-default whitespace-nowrap text-center rounded-full pl-2 py-2 px-[13px] shrink-0 [font-size:clamp(10px,3vw,16px)] ${
             datas
-              ? datas?.orderStatus?.status === "Order placed"
-                ? "text-[#3B82F6] bg-[#3b82f61a]"
-                : datas?.orderStatus?.status === "Packaging"
-                ? "text-[#000000b3] bg-[#8787871a]"
-                : datas?.orderStatus?.status === "Shipping"
-                ? "text-[#E79D00] bg-[#e73c171a]"
-                : datas?.orderStatus?.status === "Delivered"
-                ? "text-[#03A609] bg-[#03a6091a]"
-                : datas?.orderStatus?.status === "Rejected"
-                ? "text-[#E73C17] bg-[#e73c171a]"
-                : datas?.orderStatus?.status === "Returned"
-                ? "text-[#3C4F4A] bg-[#233fa314]"
-                : datas?.orderStatus?.status === "Cancelled" &&
-                  "text-[#E73C17] bg-[#e73c171a]"
-              : ""
-          } ${
-            quickOrder
-              ? quickOrder?.orderStatus?.status === "Order placed"
-                ? "text-[#3B82F6] bg-[#3b82f61a]"
-                : quickOrder?.orderStatus?.status === "Packaging"
-                ? "text-[#000000b3] bg-[#8787871a]"
-                : quickOrder?.orderStatus?.status === "Shipping"
-                ? "text-[#E79D00] bg-[#e73c171a]"
-                : quickOrder?.orderStatus?.status === "Delivered"
-                ? "text-[#03A609] bg-[#03a6091a]"
-                : quickOrder?.orderStatus?.status === "Rejected"
-                ? "text-[#E73C17] bg-[#e73c171a]"
-                : quickOrder?.orderStatus?.status === "Returned"
-                ? "text-[#3C4F4A] bg-[#233fa314]"
-                : quickOrder?.orderStatus?.status === "Cancelled" &&
-                  "text-[#E73C17] bg-[#e73c171a]"
-              : ""
+              ? getStatusClass(datas?.orderStatus?.status)
+              : getStatusClass(quickOrder?.orderStatus?.status)
           }`}
           onClick={(e) => e.stopPropagation()}
         >
@@ -150,7 +107,7 @@ const OrderTableRow = ({
         </div>
       </td>
       <td className="pl-2.5">
-        <span className=" border hover:border-red-regular py-2 px-1 rounded-custom-5px text-sm hover:text-navy-blue cursor-pointer [width:clamp(58.5px,4vw,200px)] md:w-full">
+        <span className="border hover:border-red-regular py-2 px-1 rounded-custom-5px text-sm hover:text-navy-blue cursor-pointer [width:clamp(58.5px,4vw,200px)] md:w-full">
           <select
             disabled={
               (datas &&
@@ -170,36 +127,23 @@ const OrderTableRow = ({
             {datas
               ? generateOptions(datas?.orderStatus?.status).map(
                   (option, index) => (
-                    <option
-                      onClick={() => setSelectedOption(option)} // Add onClick event to each option
-                      key={index}
-                      value={option}
-                    >
+                    <option key={index} value={option}>
                       {option}
                     </option>
                   )
                 )
-              : ""}
-            {quickOrder
-              ? generateOptions(quickOrder?.orderStatus?.status).map(
+              : quickOrder &&
+                generateOptions(quickOrder?.orderStatus?.status).map(
                   (option, index) => (
-                    <option
-                      onClick={() => setSelectedOption(option)} // Add onClick event to each option
-                      key={index}
-                      value={option}
-                    >
+                    <option key={index} value={option}>
                       {option}
                     </option>
                   )
-                )
-              : ""}
+                )}
           </select>
         </span>
       </td>
-      <td className="hidden md:flex items-center justify-center w-full h-full pl-7  gap-x-2 text-[#000000b3] [&>:first-child]:cursor-pointer [&>:last-child]:cursor-pointer [font-size:clamp(13px,3vw,16px)] pt-5">
-        {/* <button onClick={printInvoiceFn}>
-          <IconPrinter />
-        </button> */}
+      <td className="hidden md:flex items-center justify-center w-full h-full pl-7 gap-x-2 text-[#000000b3] [&>:first-child]:cursor-pointer [&>:last-child]:cursor-pointer [font-size:clamp(13px,3vw,16px)] pt-5">
         {datas ? (
           <Link
             onClick={(e) => e.stopPropagation()}
@@ -218,14 +162,12 @@ const OrderTableRow = ({
           )
         )}
 
-        {/* Render StatusConfirm modal conditionally */}
         {openModal && (
           <StatusConfirm
-            isVisible={openModal} // Pass openModal state
-            handleModal={handleModal} // Close modal function
+            isVisible={openModal}
+            handleModal={handleModal}
             option={selectedOption}
             data={datas}
-            updateStatus={updateStatus}
           />
         )}
         {openQuickOrderModal && (
@@ -234,17 +176,37 @@ const OrderTableRow = ({
             handleQuickOrderModal={handleQuickOrderModal}
             option={selectedOption}
             data={quickOrder}
-            quickOrderUpdate={quickOrderUpdate}
           />
         )}
       </td>
       {loadingMore && (
-        <div className="flex items-center justify-center  w-full">
-          <span className="loading loading-dots loading-lg bg-main-bg-color "></span>
+        <div className="flex items-center justify-center w-full">
+          <span className="loading loading-dots loading-lg bg-main-bg-color"></span>
         </div>
       )}
     </>
   );
+};
+
+const getStatusClass = (status: any) => {
+  switch (status) {
+    case "Order placed":
+      return "text-[#3B82F6] bg-[#3b82f61a]";
+    case "Packaging":
+      return "text-[#000000b3] bg-[#8787871a]";
+    case "Shipping":
+      return "text-[#E79D00] bg-[#e73c171a]";
+    case "Delivered":
+      return "text-[#03A609] bg-[#03a6091a]";
+    case "Rejected":
+      return "text-[#E73C17] bg-[#e73c171a]";
+    case "Returned":
+      return "text-[#3C4F4A] bg-[#233fa314]";
+    case "Cancelled":
+      return "text-[#E73C17] bg-[#e73c171a]";
+    default:
+      return "";
+  }
 };
 
 export default OrderTableRow;

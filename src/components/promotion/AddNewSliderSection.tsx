@@ -82,7 +82,7 @@ const AddNewSliderSection = () => {
       {/* Top and bottom slider card drawer  */}
 
       {offerData && Object.keys(offerData).length ? (
-        <EditOfferSliderDrawer data={offerData} />
+        <EditOfferSliderDrawer data={offerData} initialLoading={isLoading} />
       ) : (
         ""
       )}

@@ -16,6 +16,7 @@ interface EditSubCategoryDrawerProps {
   openDrawer?: boolean;
   setOpenEditDrawer?: boolean;
   handleCloseDrawer?: () => void;
+  initialLoading?: any;
 }
 
 const EditSubCategoryDrawer = ({
@@ -23,11 +24,13 @@ const EditSubCategoryDrawer = ({
   handleCloseDrawer,
   setOpenEditDrawer,
   data,
+  initialLoading,
 }: EditSubCategoryDrawerProps) => {
   const dispatch = useAppDispatch();
-  const [updateSubCategory, { isLoading: loading }] =
+  const [updateSubCategory, { isLoading: updateLoading }] =
     useUpdateSubCategoryMutation();
   const { subcategoryName } = useAppSelector((state) => state.subCategorySlice);
+  const loading = initialLoading || updateLoading;
 
   useLayoutEffect(() => {
     dispatch(setSubCategory(data?.subcategoryName));
@@ -49,7 +52,6 @@ const EditSubCategoryDrawer = ({
       }
     } catch (error) {
       showError(error);
-    } finally {
     }
   };
   return (

@@ -11,7 +11,10 @@ import {
 } from "@/store/features/auth/authApi";
 import React, { useLayoutEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
-import { setSetting } from "@/store/features/auth/settingSlice";
+import {
+  setProfilePhotFile,
+  setSetting,
+} from "@/store/features/auth/settingSlice";
 import {
   setConfirmPassword,
   setNewPassword,
@@ -22,22 +25,28 @@ import { mainUrl } from "@/constants/mainUrl";
 import Loader from "@/components/shared/loaders/Loader";
 import { toast } from "react-toastify";
 import CustomGlobalNumberInput from "@/components/shared/CustomGlobalNumberInput";
+import { showError } from "@/helpers/showError";
+import FileUploader from "@/components/shared/FileUploader/FileUploader";
 
 const Setting = () => {
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  console.log(error);
-  const { data } = useGetMeQuery("");
-  const [updateMe] = useUpdateMeMutation();
-  const [updatePassword] = useUpdatePasswordMutation();
+  const { data, isLoading: initialLoading } = useGetMeQuery("");
+  const [updateMe, { error: updateError, isLoading: updateLoading }] =
+    useUpdateMeMutation();
+  const [
+    updatePassword,
+    { isLoading: updatePasswordLoading, error: updatePasswordError },
+  ] = useUpdatePasswordMutation();
   const dispatch = useAppDispatch();
   const updatedData = useAppSelector((state) => state.settingSlice);
+
   console.log(updatedData);
+
   const { oldPassword, newPassword, confirmPassword } = useAppSelector(
     (state) => state.updatePasswordSlice
   );
 
-  // console.log(updatedData);
+  const loading = initialLoading || updateLoading || updatePasswordLoading;
 
   const formData = new FormData();
 
@@ -45,25 +54,42 @@ const Setting = () => {
     dispatch(setSetting(data?.data));
   }, [data, dispatch]);
 
+  // get the new value
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const fieldName = e.target?.name;
+
+    // set file
+    if (e.target instanceof HTMLInputElement && e.target?.files) {
+      const files = e.target?.files;
+      if (files && files.length) {
+        const objUrl = URL.createObjectURL(files[0]);
+        dispatch(setSetting({ [fieldName]: objUrl }));
+        dispatch(setProfilePhotFile({ [fieldName]: files[0] }));
+      }
+    } else {
+      const value = e.target.value;
+      dispatch(setSetting({ [fieldName]: value }));
+    }
+  };
+  const { fullName, phoneNumber, profilePhotoFile } = updatedData;
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
 
     try {
-      Object.entries(updatedData).forEach(([key, value]) => {
-        if (key !== "email") {
-          if (typeof value !== "string") {
-            formData.append(key, JSON.stringify(value));
-          } else {
-            formData.append(key, value);
-          }
-        }
-      });
-      const res = await updateMe(formData);
-      // @ts-ignore
-      toast.success(res?.data?.message);
+      formData.append("fullName", fullName as string);
+      formData.append("phoneNumber", phoneNumber as string);
+      formData.append("profilePhoto", profilePhotoFile?.profilePhoto);
 
-      // update password
+      const res = await updateMe(formData);
+      if (res && "data" in res) {
+        toast.success(res.data.message);
+      }
 
       const updatePasswordData = {
         oldPassword: oldPassword,
@@ -73,21 +99,19 @@ const Setting = () => {
 
       if (oldPassword !== "" && newPassword !== "" && confirmPassword !== "") {
         const pasRes = await updatePassword(updatePasswordData);
-        // @ts-ignore
-        toast.success(pasRes?.data?.message);
+
+        if (pasRes && "data" in pasRes) {
+          toast.success(pasRes.data.message);
+        }
         console.log(pasRes);
-        // @ts-ignore
-        if (pasRes?.error?.data?.message) {
-          // @ts-ignore
-          setError(pasRes?.error?.data?.message);
-          // @ts-ignore
-          toast.error(pasRes?.error?.data?.message);
+
+        if (pasRes && "error" in pasRes) {
+          setError("Please Check Your Password Input");
+          showError(pasRes);
         }
       }
     } catch (error) {
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -111,9 +135,7 @@ const Setting = () => {
                   type="text"
                   placeholder="Steven"
                   value={updatedData?.fullName}
-                  onChange={(e) =>
-                    dispatch(setSetting({ [e.target.name]: e.target.value }))
-                  }
+                  onChange={handleChange}
                 />
 
                 <CustomGlobalInput
@@ -124,53 +146,26 @@ const Setting = () => {
                   disabled={true}
                   className="opacity-50"
                 />
-                <CustomGlobalInput
-                  label="Phone Number"
-                  type="number"
-                  placeholder="+974"
-                  value={updatedData?.phoneNumber}
-                  name="phoneNumber"
-                  onChange={(e) =>
-                    dispatch(setSetting({ [e.target.name]: e.target.value }))
-                  }
-                />
-
                 <CustomGlobalNumberInput
+                  type="tel"
                   label="Phone Number"
-                  type="number"
-                  placeholder="+974"
                   name="phoneNumber"
                   value={updatedData?.phoneNumber}
-                  onChange={(e) =>
-                    dispatch(setSetting({ [e.target.name]: e.target.value }))
-                  }
+                  onChange={handleChange}
                 />
               </div>
 
               <div className="md:order-none order-1">
                 <div className=" flex items-center justify-center">
-                  <FileInput
-                    imageType="Profile"
-                    className="!rounded-full !border-solid"
+                  <FileUploader
                     name="profilePhoto"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      if (e.target?.files?.length) {
-                        dispatch(
-                          setSetting({ [e.target.name]: e.target?.files[0] })
-                        );
-                        // create image url using file value
-                        const reader = URL.createObjectURL(e.target?.files[0]);
-
-                        dispatch(setSetting({ localProfilePhotoUrl: reader }));
-                      }
-                    }}
-                    imageBottomText=""
-                    localUrl={
-                      updatedData?.localProfilePhotoUrl === undefined
-                        ? `${mainUrl}${updatedData?.profilePhoto}`
-                        : updatedData?.localProfilePhotoUrl
-                    }
-                  />
+                    className=" h-48 w-48 relative cursor-pointer border  !rounded-full flex flex-col gap-2.5 items-center justify-center  text-center text-black-opacity-60 text-xs overflow-hidden"
+                    multiple={true}
+                    data={updatedData.profilePhoto}
+                    accept="image/jpg,image/jpeg,image/png"
+                    onChange={handleChange}
+                    maxSize={2}
+                  ></FileUploader>
                 </div>
               </div>
             </div>

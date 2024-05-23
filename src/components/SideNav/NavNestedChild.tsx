@@ -1,5 +1,11 @@
 import { IMenuItem } from "@/interfaces/menu-interface";
-import { useGetAllOrderCountQuery } from "@/store/features/dashboard/orderCount/orderCountApi";
+import {
+  useGetAllOnlineOrderCountQuery,
+  useGetAllPosOfflineOrderCountQuery,
+  useGetAllProductCountQuery,
+  useGetAllQuickOrderCountQuery,
+  useGetAllStockAlertCountQuery,
+} from "@/store/features/dashboard/orderCount/orderCountApi";
 import { useOflineSalesQuery } from "@/store/features/order/offlineOrderApi";
 import { useProductsQuery } from "@/store/features/product/productApi";
 import { useGetAllQuickOrderQuery } from "@/store/features/quickOrder/quickOrderApi";
@@ -24,34 +30,35 @@ const NavNestedChild = ({
 }) => {
   const [isExpanded, setExpanded] = useState(false);
 
-  const { data: delivered } = useGetAllOrderCountQuery(
-    "orderStatus.status=Delivered"
-  );
-  const { data: packaging } = useGetAllOrderCountQuery(
-    "orderStatus.status=Packaging"
-  );
-  const { data: shipping } = useGetAllOrderCountQuery(
-    "orderStatus.status=Shipping"
-  );
-  const { data: orderPlaced } = useGetAllOrderCountQuery(
-    "orderStatus.status=Order placed"
-  );
-  const { data: pending } = useGetAllOrderCountQuery(
+  const { data: allOrder } = useGetAllOnlineOrderCountQuery("");
+  const { data: quickOrder } = useGetAllQuickOrderCountQuery("");
+  const { data: pending } = useGetAllOnlineOrderCountQuery(
     "orderStatus.status=Pending"
   );
-  const { data: returned } = useGetAllOrderCountQuery(
+  const { data: orderPlaced } = useGetAllOnlineOrderCountQuery(
+    "orderStatus.status=Order placed"
+  );
+  const { data: packaging } = useGetAllOnlineOrderCountQuery(
+    "orderStatus.status=Packaging"
+  );
+  const { data: shipping } = useGetAllOnlineOrderCountQuery(
+    "orderStatus.status=Shipping"
+  );
+  const { data: delivered } = useGetAllOnlineOrderCountQuery(
+    "orderStatus.status=Delivered"
+  );
+  const { data: returned } = useGetAllOnlineOrderCountQuery(
     "orderStatus.status=Returned"
   );
-  const { data: rejected } = useGetAllOrderCountQuery(
-    "orderStatus.status=Rejected"
-  );
-  const { data: cancelled } = useGetAllOrderCountQuery(
+  const { data: cancelled } = useGetAllOnlineOrderCountQuery(
     "orderStatus.status=Cancelled"
   );
-  const { data: allOrder } = useGetAllOrderCountQuery("");
-  const { data: posSales } = useOflineSalesQuery("");
-  const { data: allProducts } = useProductsQuery("");
-  const { data: quickOrder } = useGetAllQuickOrderQuery("");
+  const { data: rejected } = useGetAllOnlineOrderCountQuery(
+    "orderStatus.status=Rejected"
+  );
+  const { data: posSales } = useGetAllPosOfflineOrderCountQuery("");
+  const { data: allProducts } = useGetAllProductCountQuery("");
+  const { data: stockAlert } = useGetAllStockAlertCountQuery("");
 
   // handle Notify Function
   const handleNotify = (label: string) => {
@@ -75,11 +82,13 @@ const NavNestedChild = ({
       case "Cancelled":
         return cancelled?.data ?? 0;
       case "Sales":
-        return posSales?.meta?.total ?? 0;
+        return posSales?.data ?? 0;
       case "All Products":
-        return allProducts?.meta?.total ?? 0;
+        return allProducts?.data ?? 0;
       case "Quick Order":
-        return quickOrder?.meta?.total ?? 0;
+        return quickOrder?.data ?? 0;
+      case "Stock Alert":
+        return stockAlert?.data ?? 0;
       default:
         return null;
     }

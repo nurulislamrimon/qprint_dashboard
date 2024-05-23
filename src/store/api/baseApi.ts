@@ -31,5 +31,7 @@ export const baseApi = createApi({
     "social-media",
     "review",
     "order-counted",
+    "subcategory",
+    "individual-category",
   ],
 });

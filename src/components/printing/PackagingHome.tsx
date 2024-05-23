@@ -17,9 +17,9 @@ export type PrintingTableData = {
   status?: string;
 };
 
-const PrintingHome = () => {
-  const { data: printingData, isLoading } = usePrintingRequestsQuery(
-    "orderStatus.status=Printing"
+const PackagingHome = () => {
+  const { data: packagingData, isLoading } = usePrintingRequestsQuery(
+    "orderStatus.status=Packaging"
   );
   // console.log(printingData);
 
@@ -29,7 +29,7 @@ const PrintingHome = () => {
   };
   return (
     <div className="bg-[#F4F4F5] mt-5">
-      {printingData?.data?.length === 0 ? (
+      {packagingData?.data?.length === 0 ? (
         <PrintingEmptyState />
       ) : (
         <table className="w-full">
@@ -45,7 +45,7 @@ const PrintingHome = () => {
                     </tr>
                   );
                 })
-              : printingData?.data?.map((data: any, index: number) => (
+              : packagingData?.data?.map((data: any, index: number) => (
                   <tr
                     onClick={() => setOpenModal(data?._id)}
                     key={index.toString()}
@@ -69,4 +69,4 @@ const PrintingHome = () => {
   );
 };
 
-export default PrintingHome;
+export default PackagingHome;

@@ -17,8 +17,6 @@ import {
 } from "@/store/features/users/userSlice";
 import { useCreateAdministratorMutation } from "@/store/features/users/usersApi";
 import FileInput from "../ui/FileInput";
-import { mainUrl } from "@/constants/mainUrl";
-import { useState } from "react";
 import Loader from "../shared/loaders/Loader";
 
 const AddUserModal = ({ handleModal }: any) => {
@@ -33,7 +31,8 @@ const AddUserModal = ({ handleModal }: any) => {
     profilePhoto: profilePhoto,
     userLocalUrl,
   } = useAppSelector((state) => state.userAdminSlice);
-  const [createAdministrator] = useCreateAdministratorMutation();
+  const [createAdministrator, { error: createError, isLoading: loading }] =
+    useCreateAdministratorMutation();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -46,12 +45,9 @@ const AddUserModal = ({ handleModal }: any) => {
     }
   };
 
-  const [loading, setLoading] = useState(false);
-
   const formData = new FormData();
 
   const handleSubmit = async (e: any) => {
-    setLoading(true);
     e.preventDefault();
 
     // data appended
@@ -69,11 +65,14 @@ const AddUserModal = ({ handleModal }: any) => {
         toast.success(res.data.message);
         handleModal();
       }
+      if ("error" in res) {
+        // @ts-ignore
+        toast.error(res.error?.data?.message);
+      }
+
       dispatch(clearUserData());
     } catch (error) {
-      console.error("validation error", error);
-    } finally {
-      setLoading(false);
+      console.error(error);
     }
   };
 
@@ -93,6 +92,7 @@ const AddUserModal = ({ handleModal }: any) => {
             <div className="flex items-center justify-center">
               <div>
                 <FileInput
+                  imageType="Upload"
                   className="!border-solid !rounded-full"
                   name="userPhoto"
                   onChange={handleFileChange}

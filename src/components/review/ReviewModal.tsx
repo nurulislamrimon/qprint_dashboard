@@ -19,40 +19,42 @@ import GlobalActionButton from "../shared/GlobalActionButton";
 import { toast } from "react-toastify";
 import { useGetUserByIdQuery } from "@/store/features/users/usersApi";
 import { useAppSelector } from "@/store/hook";
+import DeleteAuthorReplyModal from "./DeleteAuthorReplyModal";
+import DeleteCustomerReviewModal from "./DeleteCustomerReviewModal";
 
 const ReviewModal = ({ openModal, handleCloseModal, id, customerId }: any) => {
-  const { data, isLoading } = useReviewQuery(id);
-  const { reply, id: isEdited } = useAppSelector((state) => state.reply);
-
-  const { data: customerInfo } = useGetUserByIdQuery(customerId);
-
-  const [loading, setLoading] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteAuthorReply, setDeleteAuthorReply] = useState(false);
+  const { data, isLoading } = useReviewQuery(id);
+  const { id: isEdited } = useAppSelector((state) => state.reply);
+  const { data: customerInfo } = useGetUserByIdQuery(customerId);
 
   const handleDeleteModal = () => {
     setDeleteModal((prevState) => !prevState);
   };
 
-  const [deleteReview] = useDeleteReviewMutation();
+  const handleAuthorReplyDeleteModal = () => {
+    setDeleteAuthorReply((prevState) => !prevState);
+  };
+
+  const [deleteReview, { isLoading: loading }] = useDeleteReviewMutation();
 
   // handle delete
   const handleDelete = async (e: any) => {
     e.preventDefault();
-    setLoading(true);
+
     try {
       const res = await deleteReview(data?.data?._id);
       if (res?.data) {
         toast.success(res?.data?.message);
-        setDeleteModal(false);
       }
       if (res?.error) {
         toast.error(res?.error?.message);
       }
       handleDeleteModal();
+      handleCloseModal();
     } catch (err: any) {
       console.error(err.message);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -64,6 +66,7 @@ const ReviewModal = ({ openModal, handleCloseModal, id, customerId }: any) => {
         modalWidthControlClassName="w-full md:w-[500px]"
       >
         <div className="p-5 overflow-hidden">
+          {isLoading && <Loader />}
           <div className="flex justify-between items-center mb-[30px]">
             <span className="text-black-opacity-50 text-lg">Review</span>
 
@@ -168,7 +171,14 @@ const ReviewModal = ({ openModal, handleCloseModal, id, customerId }: any) => {
             {/* ==Author Reply== */}
 
             <div className="mt-7 ml-5">
-              {data?.data?.reply ? <AuthorReply data={data} /> : ""}
+              {data?.data?.reply ? (
+                <AuthorReply
+                  handleDeleteModal={handleAuthorReplyDeleteModal}
+                  data={data}
+                />
+              ) : (
+                ""
+              )}
             </div>
           </div>
           {/* ==Author Reply Button== */}
@@ -185,45 +195,19 @@ const ReviewModal = ({ openModal, handleCloseModal, id, customerId }: any) => {
         </div>
       </CustomGlobalDrawer>
       {deleteModal && (
-        <CustomGlobalModal
-          isVisible={handleDeleteModal}
-          setOpenModal={handleDeleteModal}
-          mainClassName="w-[450px]"
-        >
-          <form onSubmit={handleDelete}>
-            <div className="flex flex-col gap-10 items-center px-10 py-8 relative overflow-hidden">
-              {loading && <Loader />}
-              <div className="bg-red-opacity-10 rounded-full p-2.5">
-                <IconAlertTriangle
-                  className="text-red-color"
-                  width={24}
-                  height={24}
-                />
-              </div>
-              <div className="flex flex-col gap-5">
-                <span className="text-lg">
-                  Are you sure, delete this review?
-                </span>
-                <div className="flex items-center justify-center gap-10">
-                  <button
-                    onClick={() => handleDeleteModal()}
-                    type="reset"
-                    className="flex border items-center justify-center px-10 py-3.5 rounded-md"
-                  >
-                    No
-                  </button>
-                  <div>
-                    <GlobalActionButton
-                      type="submit"
-                      buttonText="Yes"
-                      buttonStyleClassName="px-10 py-3.5"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </form>
-        </CustomGlobalModal>
+        <DeleteCustomerReviewModal
+          handleModal={handleDeleteModal}
+          handleDelete={handleDelete}
+          loading={loading}
+        />
+      )}
+
+      {deleteAuthorReply && (
+        <DeleteAuthorReplyModal
+          handleModal={handleAuthorReplyDeleteModal}
+          data={data}
+          handleMainModal={handleCloseModal}
+        />
       )}
     </div>
   );

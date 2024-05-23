@@ -16,13 +16,13 @@ import { useState } from "react";
 import Loader from "../shared/loaders/Loader";
 
 const AddNewBrandModal = ({ open, handleClose }: any) => {
-  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const { brandName, brandPhoto, brandlocalUrl } = useAppSelector(
     (state) => state.createBand
   );
 
-  const [createBrand] = useCreateBrandMutation();
+  const [createBrand, { error: createError, isLoading: loading }] =
+    useCreateBrandMutation();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -36,7 +36,6 @@ const AddNewBrandModal = ({ open, handleClose }: any) => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setLoading(true);
     e.preventDefault();
     const formData = new FormData();
     formData.append("brandName", brandName);
@@ -54,8 +53,6 @@ const AddNewBrandModal = ({ open, handleClose }: any) => {
       }
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
 

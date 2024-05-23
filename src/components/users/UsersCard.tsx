@@ -23,13 +23,10 @@ interface UsersCardProps {
 }
 
 const UsersCard = ({ data }: UsersCardProps) => {
-  const [deleteAdmin] = useDeleteAdminMutation();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openModal, setOpenModal] = useState(false);
 
   const { data: userData } = useGetMeQuery("");
-
-  const [loading, setLoading] = useState(false);
 
   const handleClose = () => {
     setOpenModal(false);
@@ -37,22 +34,7 @@ const UsersCard = ({ data }: UsersCardProps) => {
 
   // delete confirmaton modal
   const handleCloseDeleteModal = () => {
-    setOpenDeleteModal(false);
-  };
-
-  // user delete handler
-  const userDeleteHandler = async (id: string) => {
-    setLoading(true);
-    try {
-      const res = await deleteAdmin(id);
-
-      toast.success("User Deleted Successfully");
-      handleCloseDeleteModal();
-    } catch (error: any) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+    setOpenDeleteModal((prevState) => !prevState);
   };
 
   return (
@@ -116,12 +98,10 @@ const UsersCard = ({ data }: UsersCardProps) => {
       {openDeleteModal && (
         <UserDeleteModal
           setOpenDeleteModal={setOpenDeleteModal}
-          deleteHandler={userDeleteHandler}
           openDeleteModal={openDeleteModal}
-          handCloseleDeleteModal={handleCloseDeleteModal}
+          handleModal={handleCloseDeleteModal}
           id={data?._id}
           data={data}
-          loading={loading}
         />
       )}
     </div>

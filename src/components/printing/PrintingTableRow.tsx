@@ -5,6 +5,7 @@ import {
   getFileExtension,
   getLogoForFile,
 } from "@/utils/pdfFileShorter";
+import handleDownloadFile from "@/utils/downloadFile";
 
 const PrintingTableRow = ({ data }: any) => {
   return (
@@ -32,8 +33,8 @@ const PrintingTableRow = ({ data }: any) => {
       <td>
         <span
           className={`${
-            data?.orderStatus?.status === "Order placed"
-              ? "text-blue-color bg-blue-opacity-10"
+            data?.orderStatus?.status === "Pending"
+              ? "text-[#95a5a6] bg-[#99e0e5]"
               : data?.orderStatus?.status === "Shipping"
               ? "text-yellow-color bg-yellow-opacity-10"
               : data?.orderStatus?.status === "Delivered"
@@ -42,6 +43,10 @@ const PrintingTableRow = ({ data }: any) => {
               ? "text-black-opacity-70  bg-gray-opacity-10 "
               : data?.orderStatus?.status === "Cancelled"
               ? "text-red-color bg-red-opacity-10"
+              : data?.orderStatus?.status === "Packaging"
+              ? "text-black-opacity-70 bg-main-bg-color-opacity-32"
+              : data?.orderStatus?.status === "Order placed"
+              ? "text-blue-color bg-blue-opacity-10"
               : ""
           } md:text-sm text-custom-10px whitespace-nowrap  py-1.5 md:px-4 px-1 rounded-full`}
         >
@@ -71,12 +76,18 @@ const PrintingTableRow = ({ data }: any) => {
                 })()}
               </div>
             )}
-          <span className="line-clamp-2 text-xs md:text-base">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDownloadFile(data?.printingRequestFile);
+            }}
+            className="line-clamp-2 text-xs md:text-base"
+          >
             {data?.printingRequestFile &&
             data.printingRequestFile !== "undefined"
-              ? getDisplayName(data.printingRequestFile)
+              ? getDisplayName(data?.printingRequestFile)
               : "No Attachment"}
-          </span>
+          </button>
         </div>
       </td>
     </>

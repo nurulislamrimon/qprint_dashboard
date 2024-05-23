@@ -10,20 +10,23 @@ import { useQuickOrderQuery } from "@/store/features/quickOrder/quickOrderApi";
 import { useOnlineOrderQuery } from "@/store/features/sales/salesApi";
 import OrderStatusUpdate from "./orderTableDrawer/OrderStatusUpdate";
 import RejectConfirmationModal from "@/components/printing/RejectConfirmationModal";
+import Loader from "../loaders/Loader";
 
 const OrderTableDrawer = ({ handleCloseDrawer, openDrawer, id }: any) => {
   const [openShippingModal, setOpenShippingModal] = useState(false);
   const [rejectConfirmationModal, setRejectConfirmationModal] = useState(false);
 
-  const { data: onlineOrderData } = useOnlineOrderQuery(id);
-  const { data: quickOrderData } = useQuickOrderQuery(id);
+  const { data: onlineOrderData, isLoading: loadingOnlineOrder } =
+    useOnlineOrderQuery(id);
+  const { data: quickOrderData, isLoading: loadingQuickOrder } =
+    useQuickOrderQuery(id);
   const handleShippingModalClose = () => {
     setOpenShippingModal(false);
   };
   const handleRejectConfirmationModal = () => {
     setRejectConfirmationModal(false);
   };
-
+  const loading = loadingOnlineOrder || loadingQuickOrder;
   return (
     <div>
       <div>
@@ -33,6 +36,7 @@ const OrderTableDrawer = ({ handleCloseDrawer, openDrawer, id }: any) => {
           modalWidthControlClassName="w-full md:w-[750px]"
         >
           <div className="py-5 h-screen overflow-y-auto">
+            {loading && <Loader />}
             <div className="flex items-center justify-between px-5">
               <span className="text-black-opacity-50 text-lg print:hidden">
                 Order Details

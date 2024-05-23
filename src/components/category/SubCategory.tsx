@@ -9,11 +9,12 @@ import {
 } from "@/store/features/category/categoryApi";
 import SubCategoryDeleteModal from "./SubCategoryDeleteModal";
 import { toast } from "react-toastify";
+import { showError } from "@/helpers/showError";
 interface SubCategoryProps {
   subCategoryName?: string;
 }
 
-const SubCategory = ({ data, id }: any) => {
+const SubCategory = ({ data, id, initialLoading }: any) => {
   const [openEditDrawer, setOpenEditDrawer] = useState(false);
   const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
   const [deleteSubategory, { isLoading: loading }] =
@@ -35,18 +36,12 @@ const SubCategory = ({ data, id }: any) => {
 
     formData.append("deleteSubcategories", data?.subcategoryId);
 
-    const value = {
-      data: formData,
-      id: id,
-      sub: data?.subcategoryId,
-    };
-    console.log(value);
     try {
       const res = await deleteSubategory({
         data: formData,
         id: id,
       });
-      console.log(res);
+
       handleCloseConfirmationModal();
       if (res?.data) {
         toast.success(res?.data?.message);
@@ -55,7 +50,7 @@ const SubCategory = ({ data, id }: any) => {
         toast.error(res?.error.message);
       }
     } catch (error) {
-      console.error(error);
+      showError(error);
     }
   };
 
@@ -94,6 +89,7 @@ const SubCategory = ({ data, id }: any) => {
           data={data}
           handleDelete={handleDelete}
           handleModal={handleCloseConfirmationModal}
+          initialLoading={initialLoading}
         />
       )}
     </div>

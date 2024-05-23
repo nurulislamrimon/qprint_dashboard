@@ -22,9 +22,12 @@ const EditPrintingPaperTypeModal = ({
 }: any) => {
   const dispatch = useAppDispatch();
   const { price, paperType } = useAppSelector((state) => state.paperType);
-  const [updatePrintingSetup] = useUpdatePrintingSetupMutation();
-  const { data } = usePrintingSetupQuery(id);
-  const [loading, setLoading] = useState(false);
+  const [
+    updatePrintingSetup,
+    { error: updateError, isLoading: updateLoading },
+  ] = useUpdatePrintingSetupMutation();
+  const { data, isLoading: initialLoading } = usePrintingSetupQuery(id);
+  const loading = initialLoading || updateLoading;
 
   useLayoutEffect(() => {
     dispatch(setPaperType(data?.data?.paperType));
@@ -33,7 +36,6 @@ const EditPrintingPaperTypeModal = ({
 
   // handle submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setLoading(true);
     e.preventDefault();
 
     const data = {
@@ -53,8 +55,6 @@ const EditPrintingPaperTypeModal = ({
       }
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
   return (

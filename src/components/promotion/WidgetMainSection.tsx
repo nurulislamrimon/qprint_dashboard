@@ -11,7 +11,9 @@ import {
 } from "@/store/features/DealsOfTheDayAndWidget/widgetSlice";
 
 const WidgetMainSection = () => {
-  const { data } = useGetDealsOfTheDayAndWidgetQuery("");
+  const { data, isLoading: initialLoading } =
+    useGetDealsOfTheDayAndWidgetQuery("");
+
   const dispatch = useAppDispatch();
   const widgetData = useAppSelector((state) => state.widget);
 
@@ -24,7 +26,7 @@ const WidgetMainSection = () => {
   return (
     <div className="grid lg:grid-cols-[auto_300px] gap-1 grid-cols-1 overflow-y-auto h-[calc(100vh-90px)]">
       {/* Right section for widget input */}
-      <WidgetInput data={widgetData} />
+      <WidgetInput data={widgetData} initialLoading={initialLoading} />
 
       {/* Left section for widget preview */}
       <div className="bg-white lg:mt-1 mt-0 md:py-7 p-5 h-full lg:h-[calc(100vh-90px)] ">

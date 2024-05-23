@@ -8,7 +8,6 @@ import CardSkeleton from "../shared/skeleton/CardSkeleton";
 
 const BrandHomePage = () => {
   const { data, isLoading } = useBrandsQuery("");
-  console.log(data);
 
   return (
     <div className="md:px-[30px] md:py-5 px-5 py-[30px]">

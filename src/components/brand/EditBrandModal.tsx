@@ -8,7 +8,7 @@ import CustomGlobalDrawer from "../shared/CustomGlobalDrawer";
 import DrawerModalCloseBTN from "../shared/DrawerModalCloseBTN";
 import CustomGlobalInput from "../shared/CustomGlobalInput";
 import ButtonPrimary from "../ui/btn/ButtonPrimary.";
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect } from "react";
 import { toast } from "react-toastify";
 import {
   clearBrandData,
@@ -21,10 +21,10 @@ import { mainUrl } from "@/constants/mainUrl";
 import Loader from "../shared/loaders/Loader";
 
 const EditBrandModal = ({ open, handleClose, id }: any) => {
-  const [loading, setLoading] = useState(false);
   const { data } = useBrandQuery(id);
   const dispatch = useAppDispatch();
-  const [updateBrand] = useUpdateBrandMutation();
+  const [updateBrand, { error: updateError, isLoading: loading }] =
+    useUpdateBrandMutation();
   const { brandName, brandPhoto, brandlocalUrl } = useAppSelector(
     (state: RootState) => state.editBrandSlice
   );
@@ -48,7 +48,6 @@ const EditBrandModal = ({ open, handleClose, id }: any) => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setLoading(true);
     e.preventDefault();
     const formData = new FormData();
     formData.append("brandName", brandName);
@@ -72,8 +71,6 @@ const EditBrandModal = ({ open, handleClose, id }: any) => {
     } catch (error) {
       // toast.error(error?.message)
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 
