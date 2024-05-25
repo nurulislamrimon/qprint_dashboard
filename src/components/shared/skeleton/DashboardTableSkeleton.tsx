@@ -40,7 +40,7 @@ const DashboardTableSkeleton = () => {
       </td>
       {/* status */}
       <td className=" py-3 animate-pulse">
-        <div className="block mx-auto w-20 md:w-48 py-1.5 bg-gray-200 rounded-full text-inherit">
+        <div className="block  py-1.5 bg-gray-200 rounded-full text-inherit">
           &nbsp;
         </div>
       </td>

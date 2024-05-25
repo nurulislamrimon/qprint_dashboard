@@ -13,65 +13,6 @@ import { useGetOnlineOrderQuery } from "@/store/features/order/onlineOrderApi";
 import { useAppSelector } from "@/store/hook";
 
 const AllOrderReportDetails = () => {
-  // slice
-  // const { status, last30Days, last60Days, currentDate } = useAppSelector(
-  //   (state) => state.allOrderReportDetails
-  // );
-
-  // // Fetch data for the last 30 days
-  // const { data: dataLast30Days } = useGetOnlineOrderQuery(
-  //   `orderStatus.status=${status}${
-  //     last30Days && currentDate
-  //       ? `&createdAt[gte]=${last30Days}&createdAt[lte]=${currentDate}`
-  //       : ""
-  //   }`
-  // );
-
-  // // Fetch data for the last 60 days
-  // const { data: dataLast60Days } = useGetOnlineOrderQuery(
-  //   `orderStatus.status=${status}${
-  //     last60Days && currentDate
-  //       ? `&createdAt[gte]=${last60Days}&createdAt[lte]=${currentDate}`
-  //       : ""
-  //   }`
-  // );
-
-  // // get percentage
-  // const calculatePercentageDifference = (
-  //   last30days: number,
-  //   last60days: number
-  // ) => {
-  //   if (last30days === 0) {
-  //     return last60days > 0 ? 100 : 0;
-  //   }
-
-  //   const firstMonth = last60days - last30days;
-  //   const decreasePercentage = ((firstMonth - last30days) / firstMonth) * 100;
-
-  //   return decreasePercentage;
-  // };
-
-  // // get icon
-  // const getTrendingIcon = (
-  //   last30days: number,
-  //   last60days: number
-  // ): React.ReactNode => {
-  //   const decreasePercentage = calculatePercentageDifference(
-  //     last30days,
-  //     last60days
-  //   );
-
-  //   if (decreasePercentage < 0) {
-  //     return <IconTrendingUp style={{ color: "green" }} />;
-  //   } else if (decreasePercentage > 0) {
-  //     return <IconTrendingDown style={{ color: "red" }} />;
-  //   } else {
-  //     return null;
-  //   }
-  // };
-
-  // Calculate the difference in data between the last 30 and 60 day
-
   const { data: allOrder } = useOnlineOrdersQuery("");
 
   const { data: returned } = useGetbusinessAnalyticsQuery(
@@ -94,7 +35,7 @@ const AllOrderReportDetails = () => {
   }
 
   return (
-    <div className=" h-full space-y-[2.5%]">
+    <div className=" h-full md:h-[480px] flex items-center justify-between flex-col gap-2">
       {/* Delevered */}
       <OrderReportDetail
         orderReportCardMainClass="hover:border-[#03A609] h-[23%]"
@@ -149,7 +90,7 @@ const AllOrderReportDetails = () => {
       {/* Canceled */}
       <OrderReportDetail
         status="Canceled"
-        orderReportCardMainClass="hover:border-black h-[23%]"
+        orderReportCardMainClass="hover:border-black h-[24.6%] md:h-[23%]"
         icon={Canceled}
         imageClassName="rounded-full bg-[#0000001a] p-3 w-full"
         orderReportTitle="Canceled"

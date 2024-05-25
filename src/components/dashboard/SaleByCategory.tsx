@@ -1,21 +1,15 @@
 "use client";
 import { useGetSaleByCateagoryQuery } from "@/store/features/dashboard/saleByCategory/saleByCategoryApi";
 import { useEffect, useMemo, useState } from "react";
-// import React, { useState } from "react";
+
 import { PieChart, Pie, Cell, Tooltip, Legend, Scatter, Line } from "recharts";
-// interface PieChart {
+import DashboardSalebyCategorySkeleton from "../shared/skeleton/DashboardSalebyCategorySkeleton";
 
-// }
-
-// interface Product {
-//   totalSellingPrice: number;
-//   name: string;
-// }
 const SaleByCategory = () => {
   const [timePeriod, setTimePeriod] = useState("week"); // Set default time period to "week"
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const { data: mainData } = useGetSaleByCateagoryQuery(
+  const { data: mainData, isLoading } = useGetSaleByCateagoryQuery(
     `createdAt[gte]=${startDate.toISOString()}&createdAt[lt]=${endDate.toISOString()}`
   );
 
@@ -75,7 +69,7 @@ const SaleByCategory = () => {
         <div className="flex flex-col gap-y-1.5">
           <span className="flex items-center gap-1.5">
             <strong className="font-bold [font-size:_clamp(10px,3vw,18px)] ">
-              Total : {totalSellingPrice}
+              Total : {totalSellingPrice ? totalSellingPrice : "0.000000"}
               QR
             </strong>
           </span>
@@ -96,46 +90,56 @@ const SaleByCategory = () => {
           </select>
         </span>
       </div>
-      <div className="flex items-center justify-center relative w-full h-full">
-        {/* this recharts  */}
-        <div className="relative">
-          <PieChart width={250} height={500} className="z-20">
-            <Pie
-              data={mainData?.data.slice(0, 4)}
-              cx={120}
-              cy={200}
-              width={500}
-              innerRadius={60}
-              outerRadius={80}
-              fill="#8884d8"
-              paddingAngle={5}
-              dataKey="totalSellingPrice"
-            >
-              {mainData?.data?.slice(0, 4)?.map((data: any, index: number) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
-                />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend height={200} />
-            <Scatter name="red" dataKey="name" fill="red" />
-            <Line type="monotone" dataKey="name" stroke="#ff7300" />
-          </PieChart>
-        </div>
 
-        <div className="flex items-center justify-center flex-col md:gap-1 absolute top-[26%] sm:top-[30%] md:top-[25%] lg:top-[31%] z-0">
-          <span className="text-base [font-size:clamp(10px,3vw,15px)] ">
-            {mainData?.data[0]?.name}
-          </span>
-          <span>
-            <strong className="font-bold [font-size:_clamp(8px,3vw,15px)]">
-              {mainData?.data[0]?.totalSellingPrice} QAR
-            </strong>
-          </span>
+      {isLoading ? (
+        <div className="flex items-center justify-center h-[90%]">
+          {" "}
+          <DashboardSalebyCategorySkeleton />
         </div>
-      </div>
+      ) : (
+        <div className="flex items-center justify-center relative w-full h-full">
+          {/* this recharts  */}
+          <div className="relative">
+            <PieChart width={250} height={500} className="z-20">
+              <Pie
+                data={mainData?.data.slice(0, 4)}
+                cx={120}
+                cy={200}
+                width={500}
+                innerRadius={60}
+                outerRadius={80}
+                fill="#8884d8"
+                paddingAngle={5}
+                dataKey="totalSellingPrice"
+              >
+                {mainData?.data
+                  ?.slice(0, 4)
+                  ?.map((data: any, index: number) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+              </Pie>
+              <Tooltip />
+              <Legend height={200} />
+              <Scatter name="red" dataKey="name" fill="red" />
+              <Line type="monotone" dataKey="name" stroke="#ff7300" />
+            </PieChart>
+          </div>
+
+          <div className="flex items-center justify-center flex-col md:gap-1 absolute top-[26%] sm:top-[30%] md:top-[25%] lg:top-[31%] z-0">
+            <span className="text-base [font-size:clamp(10px,3vw,15px)] ">
+              {mainData?.data[0]?.name}
+            </span>
+            <span>
+              <strong className="font-bold [font-size:_clamp(8px,3vw,15px)]">
+                {mainData?.data[0]?.totalSellingPrice} QAR
+              </strong>
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

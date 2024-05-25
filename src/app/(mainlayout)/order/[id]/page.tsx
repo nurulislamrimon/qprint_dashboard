@@ -3,7 +3,6 @@ import { useOnlineSalesQuery } from "@/store/features/order/onlineOrderApi";
 import OrderTableCalculation from "@/components/shared/order-table/order-table-details/OrderTableCalculation";
 import OrderTableDetails from "@/components/shared/order-table/order-table-details/OrderTableDetails";
 import OrderCustomerInformation from "@/components/shared/order-table/order-table-details/OrderCustomerInformation";
-
 import OrderTableInformation from "@/components/shared/order-table/order-table-details/OrderTableInformation";
 import OrderTableAndShippingInfo from "@/components/shared/order-table/order-table-details/OrderTableAndShippingInfo";
 import OrderDeliveredAddress from "@/components/shared/order-table/order-table-details/OrderDeliveredAddress";
@@ -12,7 +11,6 @@ import OrderCancelReason from "@/components/shared/order-table/order-table-detai
 
 const OrderDetails = ({ params }: { params: { id: string } }) => {
   const { data: allOrder } = useOnlineSalesQuery(params.id);
-  console.log(allOrder, "Helo from order details");
   const { data: quickOrder } = useQuickOrderQuery(params.id);
 
   const combinedData = allOrder?.data

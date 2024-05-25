@@ -7,7 +7,6 @@ import confirmedOrder from "@/assets/confirmedOrder.svg";
 import pandingOrderIcon from "@/assets/paddingOrderIcon.svg";
 import Packaging from "@/assets/packagingIcon.svg";
 import Link from "next/link";
-import QuickOrderTable from "../orders/QuickOrderTable";
 
 const AllBusinessAnalytics = () => {
   const { data: orderPlaced } = useGetbusinessAnalyticsQuery(

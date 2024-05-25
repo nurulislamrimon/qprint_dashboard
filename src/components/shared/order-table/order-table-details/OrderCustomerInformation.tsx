@@ -7,7 +7,6 @@ import React from "react";
 import userImagePlaceholder from "@/assets/personPlaceholder.png";
 
 const OrderCustomerInformation = ({ allOrder, quickOrder }: any) => {
-  console.log(allOrder, "for photo");
   return (
     <div className="flex flex-col gap-7">
       <div className="flex items-center gap-2.5">

@@ -105,7 +105,7 @@ const TotalSelsSummarys = () => {
   // All User  query parcantage end
 
   return (
-    <div className="w-full h md:w-[35%] flex justify-between flex-col gap-5">
+    <div className="w-full h-[522px]  md:w-[35%] flex justify-between flex-col gap-5 overflow-auto">
       <TotalSelsSummary
         totalSelsSummaryMainClass="hover:border-fuchsia-600"
         totalSelsSummaryIconClass="bg-[#EFFFED]"
@@ -113,14 +113,16 @@ const TotalSelsSummarys = () => {
         altName=""
         imageClassName=""
         totalSelsSummaryTitle="Total Sold Amount"
-        totalSelsSummaryPrice={totalSoldAmount?.data?.map(
-          (data: any) => data?.totalAmount
-        )}
+        totalSelsSummaryPrice={
+          totalSoldAmount
+            ? totalSoldAmount?.data?.map((data: any) => data?.totalAmount)
+            : "0.00"
+        }
         tendingIcon={trendingIcon}
         tendingIconClass={
           parcentageNumber >= 0 ? "text-[#FF0000]" : "text-green-600"
         }
-        percentage={parcentageNumber.toFixed(0)}
+        percentage={parcentageNumber ? parcentageNumber.toFixed(0) : 0}
         QR="QR"
         TotalSelsSummarySubtitle={
           parcentageNumber >= 0 ? "decrease" : " increase"
@@ -134,14 +136,18 @@ const TotalSelsSummarys = () => {
         altName=""
         imageClassName=""
         totalSelsSummaryTitle="Product Sold"
-        totalSelsSummaryPrice={totalProductSold?.data?.map(
-          (data: any) => data?.totalAmount
-        )}
+        totalSelsSummaryPrice={
+          totalProductSold
+            ? totalProductSold?.data?.map((data: any) => data?.totalAmount)
+            : "0.00"
+        }
         tendingIcon={trendingIconsProductSold}
         tendingIconClass={
           parcentageProductSold >= 0 ? "text-[#FF0000]" : "text-green-600"
         }
-        percentage={Math.abs(parcentageProductSold).toFixed(0)}
+        percentage={
+          parcentageProductSold ? Math.abs(parcentageProductSold).toFixed(0) : 0
+        }
         TotalSelsSummarySubtitle={
           parcentageProductSold >= 0 ? "decrease" : " increase"
         }
@@ -154,12 +160,16 @@ const TotalSelsSummarys = () => {
         altName=""
         imageClassName=""
         totalSelsSummaryTitle="Custommer"
-        totalSelsSummaryPrice={allUsers?.meta?.total}
+        totalSelsSummaryPrice={allUsers ? allUsers?.meta?.total : "0.00"}
         tendingIcon={trendingIconsTotalCustomer}
         tendingIconClass={
           parcentageTotalCustomer >= 0 ? "text-[#FF0000]" : "text-green-600"
         }
-        percentage={Math.abs(parcentageTotalCustomer).toFixed(0)}
+        percentage={
+          parcentageTotalCustomer
+            ? Math.abs(parcentageTotalCustomer).toFixed(0)
+            : 0
+        }
         TotalSelsSummarySubtitle={
           parcentageTotalCustomer >= 0 ? "decrease" : " increase"
         }

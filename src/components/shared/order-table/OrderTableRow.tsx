@@ -1,14 +1,11 @@
 "use client";
-import { IconPrinter, IconZoomIn } from "@tabler/icons-react";
+import { IconZoomIn } from "@tabler/icons-react";
 import Link from "next/link";
 import { getDateFormat } from "@/utils/getDateFormat";
-import { generateOptions, printInvoiceFn } from "@/constants/printInvoiceFn";
-import { useUpdateOrderStatusMutation } from "@/store/features/order/ordersApi";
+import { generateOptions } from "@/constants/printInvoiceFn";
 import { useState } from "react";
 import StatusConfirm from "@/components/orders/StatusConfirm";
-import { useQuickOrderUpdateOrderStatusMutation } from "@/store/features/quickOrder/quickOrderApi";
 import QuickOrderStatusUpdate from "@/components/orders/QuickOrderStatusUpdate";
-import TransparentLoader from "../TransparentLoader";
 
 export interface OrderTableRowProps {
   data: {
@@ -32,9 +29,6 @@ const OrderTableRow = ({
   quickOrder,
   loadingMore,
 }: any) => {
-  const [quickOrderUpdate, { isLoading: qStatusLoading }] =
-    useQuickOrderUpdateOrderStatusMutation();
-
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openQuickOrderModal, setQuickOrderModal] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState("");
@@ -62,10 +56,33 @@ const OrderTableRow = ({
 
   const datas = dashboardTableData ? dashboardTableData : data;
 
+  const getStatusClass = (status: any) => {
+    switch (status) {
+      case "Order placed":
+        return "text-[#3B82F6] bg-[#3b82f61a]";
+      case "Packaging":
+        return "text-[#000000b3] bg-[#8787871a]";
+      case "Shipping":
+        return "text-[#E79D00] bg-[#e73c171a]";
+      case "Delivered":
+        return "text-[#03A609] bg-[#03a6091a]";
+      case "Rejected":
+        return "text-[#E73C17] bg-[#e73c171a]";
+      case "Returned":
+        return "text-[#3C4F4A] bg-[#233fa314]";
+      case "Cancelled":
+        return "text-[#E73C17] bg-[#e73c171a]";
+      case "Pending":
+        return "text-black-400 bg-yellow-200";
+      default:
+        return "";
+    }
+  };
+
   return (
     <>
       {!dashboardTableData && (
-        <td className="text-left pl-5 hidden md:table-cell">{index + 1}</td>
+        <td className="text-left pl-5 hidden md:table-cell ">{index + 1}</td>
       )}
 
       <td className="text-left pl-5 hidden md:table-cell">
@@ -86,8 +103,13 @@ const OrderTableRow = ({
         </small>
       </td>
       <td className="px-6 font-normal hidden md:table-cell">
-        {datas ? datas?.payment?.paymentMethod : ""}
-        {quickOrder ? quickOrder?.payment?.paymentMethod : ""}
+        {datas
+          ? datas?.payment?.paymentMethod || datas?.payment?.paymentGateway
+          : ""}
+        {quickOrder
+          ? quickOrder?.payment?.paymentMethod ||
+            quickOrder?.payment?.paymentGateway
+          : ""}
       </td>
       <td className="px-3 md:px-6 [font-size:clamp(13px,3vw,16px)] whitespace-nowrap">
         {datas ? datas?.totalPayable : ""}
@@ -186,27 +208,6 @@ const OrderTableRow = ({
       )}
     </>
   );
-};
-
-const getStatusClass = (status: any) => {
-  switch (status) {
-    case "Order placed":
-      return "text-[#3B82F6] bg-[#3b82f61a]";
-    case "Packaging":
-      return "text-[#000000b3] bg-[#8787871a]";
-    case "Shipping":
-      return "text-[#E79D00] bg-[#e73c171a]";
-    case "Delivered":
-      return "text-[#03A609] bg-[#03a6091a]";
-    case "Rejected":
-      return "text-[#E73C17] bg-[#e73c171a]";
-    case "Returned":
-      return "text-[#3C4F4A] bg-[#233fa314]";
-    case "Cancelled":
-      return "text-[#E73C17] bg-[#e73c171a]";
-    default:
-      return "";
-  }
 };
 
 export default OrderTableRow;

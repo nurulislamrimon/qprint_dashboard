@@ -1,18 +1,10 @@
 "use client";
-import {
-  homeOrderTableTheads,
-  homeOrders,
-  orderTableTheads,
-  orders,
-} from "@/constants/order.constants";
+import { homeOrderTableTheads } from "@/constants/order.constants";
 import React, { useState } from "react";
 import OrderTableRow from "./OrderTableRow";
 import OrderTableThead from "./OrderTableThead";
-// import { useOrdersQuery } from "@/store/features/sales/salesApi";
 import OrderTableDrawer from "./OrderTableDrawer";
 import { useOnlineOrdersQuery } from "@/store/features/sales/salesApi";
-import DateRangePicker from "../DateRangePicker";
-import OrderTableSkeleton from "../skeleton/OrderTableSkeleton";
 import DashboardTableSkeleton from "../skeleton/DashboardTableSkeleton";
 
 const OrderTable = () => {

@@ -22,7 +22,6 @@ const PackagingTable = () => {
     }`
   );
   const { data: posSales } = useOflineSalesQuery("");
-  console.log("posOrder", posSales);
 
   const [openDrawerId, setOpenDrawerId] = useState<string | false>(false);
 

@@ -1,6 +1,4 @@
 import AllOrderTable from "@/components/orders/AllOrderTable";
-import TopBar from "@/components/shared/TopBar";
-import OrderDetails from "@/components/shared/order-details/OrderDetails";
 
 const OrderPage = () => {
   return (

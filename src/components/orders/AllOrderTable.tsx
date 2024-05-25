@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import OrderTableThead from "../shared/order-table/OrderTableThead";
-import { orderTableTheads, orders } from "@/constants/order.constants";
+import { orderTableTheads } from "@/constants/order.constants";
 import OrderTableRow from "../shared/order-table/OrderTableRow";
 import OrderTableHeader from "../shared/order-table/OrderTableHeader";
 import OrderTableDrawer from "../shared/order-table/OrderTableDrawer";

@@ -120,16 +120,15 @@ const BestDealsSection = () => {
       }
     });
     try {
-      console.log(restFiles, rest);
-      // // const res = await addBestDeals(formData);
-      // console.log(res);
-      // if (res && "data" in res) {
-      //   toast.success(res.data.message);
-      //   // togglePreviewModal();
-      // }
-      // if (res && "error" in res) {
-      //   toast.error(res.error as unknown as string);
-      // }
+      const res = await addBestDeals(formData);
+
+      if (res && "data" in res) {
+        toast.success(res.data.message);
+        // togglePreviewModal();
+      }
+      if (res && "error" in res) {
+        toast.error(res.error as unknown as string);
+      }
     } catch (error) {
       showError(error);
     }

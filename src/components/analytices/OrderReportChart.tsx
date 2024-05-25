@@ -37,9 +37,9 @@ const OrderReportChart = () => {
   };
 
   return (
-    <div className="w-full h-full md:h-[485px] md:w-[65%] md:border rounded-custom-10px md:p-4">
-      <div className="flex items-center justify-between px-4 md:px-7 mb-3">
-        <span className="[font-size:clamp(14px,4vw,18px)] font-medium whitespace-nowrap">
+    <div className="w-full h-full md:h-[480px] md:w-[65%] md:border rounded-custom-10px md:px-4 md:pt-4">
+      <div className="flex items-center justify-between  mb-3">
+        <span className="[font-size:clamp(14px,4vw,18px)] font-medium whitespace-nowrap px-3 md:px-7">
           Order Report
         </span>
         <DateRangePicker
@@ -47,7 +47,7 @@ const OrderReportChart = () => {
           onChange={handleDateRangeChange}
         />
       </div>
-      <div className="w-full h-full md:h-[385px] mx-auto pr-2.5 md:pr-0">
+      <div className="w-full h-full md:h-[375px] mx-auto pr-2.5 md:pr-0">
         {isLoading ? (
           <OrderReportChartSkaleton />
         ) : (

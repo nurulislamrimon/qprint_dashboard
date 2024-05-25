@@ -59,9 +59,9 @@ const DateRangePicker = ({ selectedDateRange, onChange }: any) => {
 
   return (
     <div className="relative">
-      <div className="border flex gap-2.5 w-auto md:px-5 px-3 py-2.5 rounded-custom-10px cursor-pointer">
-        <div className="flex items-center justify-end">
-          <div className="flex items-center gap-2.5">
+      <div className="border flex gap-2 w-auto md:px-2.5 px-1  rounded-custom-5px cursor-pointer">
+        <div className="flex items-center justify-center ">
+          <div className="flex items-center gap-2 ">
             <span>
               <IconCalendarMonth
                 stroke={1}
@@ -70,23 +70,25 @@ const DateRangePicker = ({ selectedDateRange, onChange }: any) => {
             </span>
             <span
               onClick={() => setOpen((open) => !open)}
-              className="md:text-base text-sm text-black-opacity-60 select-none"
+              className="[font-size:clamp(5px,5vw,14px)] whitespace-nowrap text-black-opacity-60 select-none"
             >
               {`${format(range[0].startDate, "MMM dd, yyyy")}`}
             </span>
           </div>
         </div>
-        <span className="text-base text-black-opacity-60">-</span>
-        <div className="flex items-center gap-2.5">
-          <span>
+        <span className="text-base text-black-opacity-60 py-1 md:py-1.5 ">
+          -
+        </span>
+        <div className="flex items-center gap-2 ">
+          {/* <span>
             <IconCalendarMonth
               stroke={1}
               className="text-black-opacity-70 md:w-5 w-4"
             />
-          </span>
+          </span> */}
           <span
             onClick={() => setOpen((open) => !open)}
-            className="md:text-base text-sm text-black-opacity-60 select-none"
+            className="[font-size:clamp(5px,5vw,14px)] whitespace-nowrap text-black-opacity-60 select-none"
           >
             {`${format(range[0].endDate, "MMM dd, yyyy")}`}
           </span>

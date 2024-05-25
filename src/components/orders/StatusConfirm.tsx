@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import CustomGlobalModal from "../shared/CustomGlobalModal";
 import { IconAlertCircle } from "@tabler/icons-react";
 import { toast } from "react-toastify";
-import TransparentLoader from "../shared/TransparentLoader";
 import { useUpdateOrderStatusMutation } from "@/store/features/order/ordersApi";
 import Loader from "../shared/loaders/Loader";
 
@@ -50,21 +49,14 @@ const StatusConfirm = ({ isVisible, handleModal, option, data }: any) => {
 
     try {
       const res = await updateStatus(value);
-      // console.log("Response from updateStatus:", res); // Debugging line
 
       if ("data" in res) {
         toast.success(res.data.message);
-        // console.log("Success message:", res.data.message); // Fixed line
       } else if ("error" in res) {
         toast.error((res.error as { message: string }).message);
-        // console.log("API Error:", (res.error as { message: string }).message); // Debugging line
-        // console.log("Error details:", res.error); // Detailed error log
       } else {
-        // console.log("Unexpected response:", res); // Debugging line
       }
-    } catch (error) {
-      // console.error("Error updating status:", error); // Debugging line
-    }
+    } catch (error) {}
     handleModal();
   };
 

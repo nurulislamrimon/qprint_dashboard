@@ -10,7 +10,6 @@ interface OrderReportDetailsProps {
   altName?: string;
   orderReportTitle?: string;
   tendingIcon?: string | any;
-
   firstCircleClassName?: string;
   secondCircleClassName?: string;
   imageClassName?: string;
@@ -88,47 +87,6 @@ const OrderReportDetail = ({
     }`
   );
 
-  // get percentage
-  // const calculatePercentageDifference = (
-  //   last30days: number,
-  //   last60days: number
-  // ) => {
-  //   if (last30days === 0) {
-  //     return last60days > 0 ? 100 : 0;
-  //   }
-
-  //   const firstMonth = last60days - last30days;
-  //   const decreasePercentage = ((firstMonth - last30days) / firstMonth) * 100;
-
-  //   return decreasePercentage;
-  // };
-
-  // const calculatePercentageDifference = (
-  //   last30days: number,
-  //   last60days: number
-  // ): { percentage: number; icon: React.ReactNode } => {
-  //   let percentage = 0;
-  //   let icon: React.ReactNode = null;
-
-  //   if (last30days === 0) {
-  //     percentage = last60days > 0 ? 100 : 0;
-  //     if (percentage > 0) {
-  //       icon = <IconTrendingUp style={{ color: "green" }} />;
-  //     }
-  //   } else {
-  //     const firstMonth = last60days - last30days;
-  //     percentage = ((firstMonth - last30days) / firstMonth) * 100;
-
-  //     if (percentage <= 0) {
-  //       icon = <IconTrendingUp style={{ color: "green" }} />;
-  //     } else if (percentage >= 0) {
-  //       icon = <IconTrendingDown style={{ color: "red" }} />;
-  //     }
-  //   }
-
-  //   return { percentage, icon };
-  // };
-
   const { percentage: parcentageNumber, icon: trendingIcon } =
     calculatePercentageDifference(
       dataLast30Days?.meta?.total,
@@ -136,7 +94,7 @@ const OrderReportDetail = ({
     );
   return (
     <div
-      className={` ${orderReportCardMainClass} w-full px-1 py-[20px] md:py-0 border rounded-md hover:duration-300 flex items-center justify-between`}
+      className={` ${orderReportCardMainClass} w-full px-1 py-[20px] md:py-0 border rounded-custom-10px hover:duration-300 flex items-center justify-between`}
     >
       <div className="pl-1 flex items-center gap-x-2 w-[80%]">
         <div className="flex items-center justify-center w-[50px] shrink-0">
@@ -161,7 +119,7 @@ const OrderReportDetail = ({
               }`}
             >
               {/* {parcentageNumberColor} */}
-              {Math.abs(parcentageNumber).toFixed(0)}%
+              {parcentageNumber ? Math.abs(parcentageNumber).toFixed(0) : "0"}%
             </span>
             <span className="[font-size:clamp(8px,70vw,13px)] whitespace-nowrap text-gray-400/70 line-clamp-1">
               {parcentageNumber >= 0 ? "Drop" : " Raise"} last 1 month
@@ -197,9 +155,13 @@ const OrderReportDetail = ({
           </g>
         </svg>
         <div className="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2 text-center text-sm text-black-only">
-          <span id={`progressText-${initialProgress}`}>
-            {progress.toString()}%
-          </span>
+          {initialProgress ? (
+            <span id={`progressText-${initialProgress}`}>
+              {progress.toString()}%
+            </span>
+          ) : (
+            "0"
+          )}
         </div>
       </div>
     </div>

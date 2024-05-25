@@ -1,7 +1,6 @@
 import React from "react";
 
 const OrderCancelReason = ({ allOrder, quickOrder }: any) => {
-  console.log(allOrder);
   const lastOrderStatus =
     allOrder?.data.orderStatus[allOrder?.data?.orderStatus.length - 1].status;
   const quickOrderLastOrderStatus =
